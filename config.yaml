@@ -1,0 +1,45 @@
+server:
+  host: 0.0.0.0
+  port: 8000
+  max_players: 4
+  session_ttl: 1800  # 30min in seconds
+
+ollama:
+  model: mistral
+  max_retries: 3
+  temperature: 0.8
+  max_tokens: 400
+
+cache:
+  dir: cache
+  ttl: 7200  # 2h
+
+locations:
+  - la Comté
+  - Fondcombe
+  - les Mines de la Moria
+  - la forêt de Fangorn
+  - Minas Tirith
+  - le Mont Destin
+  - les plaines du Rohan
+  - Isengard
+  - Helm's Deep
+  - la forêt de Lothlórien
+  - la rivière Anduin
+  - la montagne solitaire
+
+blacklist_words:
+  - violence
+  - tuer
+  - mort
+  - sang
+  - sexe
+  - nu
+  - porn
+  - drogue
+  - alcool
+
+prompts:
+  system: "Tu es un maître du jeu D&D/Tolkien pour enfants francophones de 10-14 ans. Raconte TOUJOURS en FRANÇAIS une histoire épique et immersive avec des descriptions riches (8-12 phrases minimum). Structure narrative claire : situation, action, conséquence, suspense. Choix simples et excitants. Ton positif et adapté. IMPORTANT: JAMAIS d'anglais, TOUJOURS du français riche et descriptif."
+
+family_pin: "1234"  # PIN simple pour auth parents

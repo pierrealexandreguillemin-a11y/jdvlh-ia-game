@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "jdvlh-ia-game"
+version = "0.1.0"
+description = "Jeu IA narratif extensible pour enfants LOTR/DnD"
+authors = ["Cline <cline@jdvlh.com>"]
+readme = "README.md"
+package-mode = true
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "0.115.0"
+uvicorn = {extras = ["standard"], version = "0.32.0"}
+pydantic = "2.9.2"
+ollama = "0.3.3"
+sqlalchemy = "2.0.35"
+alembic = "1.13.2"
+slowapi = "0.1.9"
+loguru = "0.7.2"
+python-dotenv = "1.0.1"
+python-multipart = "0.0.9"
+pyyaml = "^6.0.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "8.3.2"
+pytest-cov = "5.0.0"
+black = "24.10.0"
+isort = "5.13.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+dev = "uvicorn jdvlh_ia_game.core.game_server:app --reload"
+test = "pytest"
+migrate = "alembic upgrade head"
