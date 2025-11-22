@@ -1,10 +1,10 @@
 import asyncio
 import time
 from typing import Any, Dict, List
+from pathlib import Path
 
 import yaml
-from fastapi import (Depends, FastAPI, HTTPException, WebSocket,
-                     WebSocketDisconnect)
+from fastapi import Depends, FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -14,7 +14,9 @@ from ..services.event_bus import EventBus
 from ..services.narrative import NarrativeService
 from ..services.state_manager import StateManager
 
-with open("../../../config.yaml", "r", encoding="utf-8") as f:
+# Chemin absolu vers config.yaml
+CONFIG_PATH = Path(__file__).parent.parent / "config" / "config.yaml"
+with open(CONFIG_PATH, "r", encoding="utf-8") as f:
     config = yaml.safe_load(f)
 
 app = FastAPI(title="JDVLH IA Game Server")

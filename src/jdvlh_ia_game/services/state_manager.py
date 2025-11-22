@@ -3,10 +3,13 @@ import json
 import sqlite3
 import time
 from typing import Any, Dict
+from pathlib import Path
 
 import yaml
 
-with open("../../config.yaml", "r", encoding="utf-8") as f:
+# Chemin absolu vers config.yaml
+CONFIG_PATH = Path(__file__).parent.parent / "config" / "config.yaml"
+with open(CONFIG_PATH, "r", encoding="utf-8") as f:
     config = yaml.safe_load(f)
 
 DB_PATH = "game.db"

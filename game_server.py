@@ -7,6 +7,7 @@ import sqlite3
 import re
 from typing import Dict, Any, List
 from datetime import datetime
+from pathlib import Path
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -16,8 +17,9 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 import ollama
 
-# Load config
-with open('config.yaml', 'r', encoding='utf-8') as f:
+# Load config (chemin absolu)
+CONFIG_PATH = Path(__file__).parent / "src" / "jdvlh_ia_game" / "config" / "config.yaml"
+with open(CONFIG_PATH, "r", encoding="utf-8") as f:
     config = yaml.safe_load(f)
 
 # CORS for client
@@ -33,6 +35,7 @@ app.add_middleware(
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 
+
 # Pydantic models
 class NarrativeResponse(BaseModel):
     narrative: str
@@ -41,35 +44,49 @@ class NarrativeResponse(BaseModel):
     animation_trigger: str = "none"
     sfx: str = "ambient"
 
+
 class GameState(BaseModel):
-    context: str = config['prompts']['system'] if 'prompts' in config else "Maître du jeu pour enfants."
+    context: str = (
+        config["prompts"]["system"]
+        if "prompts" in config
+        else "Maître du jeu pour enfants."
+    )
     history: List[str] = []
     current_location: str = "la Comté"
     last_save: str = ""
 
+
 # Global state
-game_states: Dict[str, Dict[str, Any]] = {}  # player_id -> {'state': GameState, 'last_activity': float, 'ws': WebSocket}
+game_states: Dict[str, Dict[str, Any]] = (
+    {}
+)  # player_id -> {'state': GameState, 'last_activity': float, 'ws': WebSocket}
 DB_PATH = "game.db"
+
 
 # Init DB
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("""
+    cursor.execute(
+        """
         CREATE TABLE IF NOT EXISTS game_states (
             player_id TEXT PRIMARY KEY,
             state_json TEXT,
             last_activity REAL
         )
-    """)
+    """
+    )
     conn.commit()
     conn.close()
+
 
 # Load state from DB
 def load_state(player_id: str) -> GameState:
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT state_json FROM game_states WHERE player_id = ?", (player_id,))
+    cursor.execute(
+        "SELECT state_json FROM game_states WHERE player_id = ?", (player_id,)
+    )
     row = cursor.fetchone()
     conn.close()
     if row:
@@ -77,64 +94,78 @@ def load_state(player_id: str) -> GameState:
         return GameState(**data)
     return GameState()
 
+
 # Save state to DB
 def save_state(player_id: str, state: GameState):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute(
         "INSERT OR REPLACE INTO game_states (player_id, state_json, last_activity) VALUES (?, ?, ?)",
-        (player_id, state.model_dump_json(), time.time())
+        (player_id, state.model_dump_json(), time.time()),
     )
     conn.commit()
     conn.close()
 
+
 # Sanitize input
 def sanitize_choice(choice: str) -> str:
-    choice = re.sub(r'[<>;{}()\\\\"]', '', choice.strip())[:100]
+    choice = re.sub(r'[<>;{}()\\\\"]', "", choice.strip())[:100]
     return choice
+
 
 # Content filter
 def is_safe_content(text: str) -> bool:
     text_lower = text.lower()
-    return not any(word in text_lower for word in config.get('blacklist_words', []))
+    return not any(word in text_lower for word in config.get("blacklist_words", []))
+
 
 # Cache functions
-CACHE_DIR = config['cache']['dir']
+CACHE_DIR = config["cache"]["dir"]
 os.makedirs(CACHE_DIR, exist_ok=True)
+
 
 async def pregenerate_cache():
     print("[CACHE] Pré-génération cache...")
-    for loc in config['locations']:
-        safe_loc = loc.replace(' ', '_').replace('é', 'e').replace("'", '')
+    for loc in config["locations"]:
+        safe_loc = loc.replace(" ", "_").replace("é", "e").replace("'", "")
         cache_file = os.path.join(CACHE_DIR, f"{safe_loc}.json")
         if not os.path.exists(cache_file):
             prompt = f"Description épique en 3 phrases de {loc} LOTR pour enfants."
             try:
-                resp = ollama.generate(model=config['ollama']['model'], prompt=prompt)['response']
+                resp = ollama.generate(model=config["ollama"]["model"], prompt=prompt)[
+                    "response"
+                ]
             except:
                 resp = f"Lieu mystérieux: {loc}."
             data = {
                 "description": resp,
-                "background": loc.lower().replace(' ', '_'),
+                "background": loc.lower().replace(" ", "_"),
                 "animation_trigger": "ambient_start",
-                "sfx": "wind" if "forêt" in loc.lower() else "echo"
+                "sfx": "wind" if "forêt" in loc.lower() else "echo",
             }
-            with open(cache_file, 'w', encoding='utf-8') as f:
+            with open(cache_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
     print("[CACHE] Cache prêt!")
 
+
 def get_location_data(location: str) -> Dict[str, Any]:
-    safe_loc = location.replace(' ', '_').replace('é', 'e').replace("'", '')
+    safe_loc = location.replace(" ", "_").replace("é", "e").replace("'", "")
     cache_file = os.path.join(CACHE_DIR, f"{safe_loc}.json")
     if os.path.exists(cache_file):
-        with open(cache_file, 'r', encoding='utf-8') as f:
+        with open(cache_file, "r", encoding="utf-8") as f:
             return json.load(f)
-    return {"description": "Lieu mystérieux...", "background": "default", "animation_trigger": "none", "sfx": "ambient"}
+    return {
+        "description": "Lieu mystérieux...",
+        "background": "default",
+        "animation_trigger": "none",
+        "sfx": "ambient",
+    }
+
 
 # Narrative generation with retry
 async def generate_narrative(player_id: str, choice: str) -> Dict[str, Any]:
     data = game_states.get(player_id, {})
-    state = data.get('state', GameState())
+    state = data.get("state", GameState())
     choice = sanitize_choice(choice)
 
     # Prompt renforcé pour narratif riche EN FRANÇAIS
@@ -175,26 +206,30 @@ Réponds EXACTEMENT en JSON valide:
         "choices": ["Continuer", "Explorer", "Retourner"],
         "location": state.current_location,
         "animation_trigger": "none",
-        "sfx": "ambient"
+        "sfx": "ambient",
     }
 
-    for attempt in range(config['ollama']['max_retries']):
+    for attempt in range(config["ollama"]["max_retries"]):
         try:
             options = {
-                "temperature": config['ollama']['temperature'],
-                "num_predict": config['ollama']['max_tokens']
+                "temperature": config["ollama"]["temperature"],
+                "num_predict": config["ollama"]["max_tokens"],
             }
-            resp = ollama.generate(model=config['ollama']['model'], prompt=prompt, options=options)['response']
+            resp = ollama.generate(
+                model=config["ollama"]["model"], prompt=prompt, options=options
+            )["response"]
             parsed = json.loads(resp)
 
             # Vérification contenu approprié (narrative + choices)
-            narrative = parsed.get('narrative', '')
-            choices_text = ' '.join(parsed.get('choices', []))
+            narrative = parsed.get("narrative", "")
+            choices_text = " ".join(parsed.get("choices", []))
 
             if not is_safe_content(narrative) or not is_safe_content(choices_text):
                 # RÉGÉNÉRATION au lieu de message d'erreur !
-                print(f"[SAFETY] Contenu inapproprié détecté, régénération (tentative {attempt+1})...")
-                if attempt < config['ollama']['max_retries'] - 1:
+                print(
+                    f"[SAFETY] Contenu inapproprié détecté, régénération (tentative {attempt+1})..."
+                )
+                if attempt < config["ollama"]["max_retries"] - 1:
                     await asyncio.sleep(1)  # Petit délai
                     continue  # Retry avec prompt renforcé
                 else:
@@ -202,7 +237,7 @@ Réponds EXACTEMENT en JSON valide:
                     parsed = fallback
 
             # Validation et nettoyage
-            parsed['choices'] = parsed.get('choices', fallback['choices'])[:3]
+            parsed["choices"] = parsed.get("choices", fallback["choices"])[:3]
 
             # Mise à jour historique et état
             state.history.append(f"Joueur: {choice}")
@@ -210,43 +245,45 @@ Réponds EXACTEMENT en JSON valide:
             if len(state.history) > 30:
                 state.history = state.history[-20:]
 
-            state.current_location = parsed.get('location', state.current_location)
+            state.current_location = parsed.get("location", state.current_location)
             save_state(player_id, state)
-            data['state'] = state
+            data["state"] = state
 
             # Enrichissement avec cache location
             loc_data = get_location_data(state.current_location)
             parsed.update(loc_data)
 
-            data['last_activity'] = time.time()
+            data["last_activity"] = time.time()
             return parsed
 
         except json.JSONDecodeError as e:
             print(f"[JSON] Tentative {attempt+1} échouée (JSON invalide): {e}")
-            if attempt == config['ollama']['max_retries'] - 1:
+            if attempt == config["ollama"]["max_retries"] - 1:
                 state.history.append("MJ: Erreur technique, fallback activé.")
                 save_state(player_id, state)
-                data['state'] = state
-                data['last_activity'] = time.time()
+                data["state"] = state
+                data["last_activity"] = time.time()
                 return fallback
-            await asyncio.sleep(2 ** attempt)  # Backoff exponentiel
+            await asyncio.sleep(2**attempt)  # Backoff exponentiel
 
         except Exception as e:
             print(f"[ERROR] Tentative {attempt+1} échouée: {e}")
-            if attempt == config['ollama']['max_retries'] - 1:
+            if attempt == config["ollama"]["max_retries"] - 1:
                 state.history.append("MJ: Erreur technique, fallback activé.")
                 save_state(player_id, state)
-                data['state'] = state
-                data['last_activity'] = time.time()
+                data["state"] = state
+                data["last_activity"] = time.time()
                 return fallback
-            await asyncio.sleep(2 ** attempt)  # Backoff
+            await asyncio.sleep(2**attempt)  # Backoff
 
     return fallback
+
 
 # Update activity
 def update_activity(player_id: str):
     if player_id in game_states:
-        game_states[player_id]['last_activity'] = time.time()
+        game_states[player_id]["last_activity"] = time.time()
+
 
 # Cleanup task
 async def cleanup_sessions():
@@ -255,11 +292,12 @@ async def cleanup_sessions():
         now = time.time()
         to_delete = []
         for pid, data in game_states.items():
-            if now - data['last_activity'] > config['server']['session_ttl']:
+            if now - data["last_activity"] > config["server"]["session_ttl"]:
                 to_delete.append(pid)
         for pid in to_delete:
             del game_states[pid]
         print(f"Nettoyé {len(to_delete)} sessions inactives.")
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -267,26 +305,32 @@ async def startup_event():
     asyncio.create_task(cleanup_sessions())
     asyncio.create_task(pregenerate_cache())
 
+
 @app.get("/")
 async def read_root():
     return FileResponse("index.html")
 
+
 @app.websocket("/ws/{player_id}")
 async def websocket_endpoint(websocket: WebSocket, player_id: str):
-    if len(game_states) >= config['server']['max_players']:
+    if len(game_states) >= config["server"]["max_players"]:
         await websocket.close(code=503, reason="Serveur plein")
         return
 
     await websocket.accept()
     state = load_state(player_id)
-    game_states[player_id] = {'state': state, 'last_activity': time.time(), 'ws': websocket}
+    game_states[player_id] = {
+        "state": state,
+        "last_activity": time.time(),
+        "ws": websocket,
+    }
     update_activity(player_id)
 
     loc_data = get_location_data(state.current_location)
     welcome = {
         "narrative": "Bienvenue en Terre du Milieu, aventurier ! Que fais-tu dans la Comté ?",
         "choices": ["Explorer la forêt", "Rencontrer un hobbit", "Chercher un trésor"],
-        **loc_data
+        **loc_data,
     }
     await websocket.send_json(welcome)
 
@@ -301,19 +345,23 @@ async def websocket_endpoint(websocket: WebSocket, player_id: str):
         if player_id in game_states:
             del game_states[player_id]
 
+
 @app.post("/reset/{player_id}")
 async def reset_game(player_id: str):
     state = GameState()
     save_state(player_id, state)
     if player_id in game_states:
-        game_states[player_id]['state'] = state
+        game_states[player_id]["state"] = state
         update_activity(player_id)
     return {"status": "Partie reset"}
+
 
 @app.get("/health")
 async def health():
     return {"status": "OK", "players": len(game_states)}
 
+
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

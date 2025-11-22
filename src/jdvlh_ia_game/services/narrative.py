@@ -1,6 +1,7 @@
 import asyncio
 import json
 from typing import Any, Dict, List
+from pathlib import Path
 
 import ollama
 import yaml
@@ -8,7 +9,9 @@ import yaml
 from .model_router import get_router
 from .narrative_memory import NarrativeMemory, SmartHistoryManager
 
-with open("../../config.yaml", "r", encoding="utf-8") as f:
+# Chemin absolu vers config.yaml
+CONFIG_PATH = Path(__file__).parent.parent / "config" / "config.yaml"
+with open(CONFIG_PATH, "r", encoding="utf-8") as f:
     config = yaml.safe_load(f)
 
 
@@ -30,26 +33,24 @@ class NarrativeService:
         self.memory.advance_turn()
         smart_context = self.history_mgr.get_smart_context(self.memory)
 
-        lines = [
-            context,
-            "",
-            self.memory.get_context_summary(),
-            "",
-            "Historique récent:",
-        ] + smart_context + [
-            "",
-            f"Joueur choisit: {choice}",
-            "",
-            "Réponds EXACTEMENT en JSON valide :",
-            "{",
-            '  "narrative": "2-4 phrases immersives",',
-            '  "choices": ["Choix1", "Choix2", "Choix3"],',
-            '  "location": "lieu actuel ou nouveau",',
-            '  "animation_trigger": "none|...",',
-            '  "sfx": "ambient|..."',
-            "}",
-        ]
-        prompt = "\n".join(lines)
+        smart_history = "\n".join(smart_context[-5:]) if smart_context else ""
+        prompt = f"""Tu es MJ Tolkien enfants 10 ans. Ton positif.
+
+Mémoire: {self.memory.get_context_summary()[:100]}
+
+Récemment: {smart_history}
+
+Choix: {choice}
+
+JSON SEULEMENT:
+{{
+  "narrative": "1-2 phrases courtes",
+  "choices": ["Continuer","Explorer","Autre"],
+  "location": "la Comté|Fondcombe|Moria|...",
+  "animation_trigger": "none",
+  "sfx": "ambient"
+}}"""
+
 
         fallback = {
             "narrative": "L'aventure continue de manière mystérieuse...",
@@ -61,10 +62,12 @@ class NarrativeService:
 
         for attempt in range(self.max_retries):
             try:
-                model, options = self.router.select_model(prompt=choice, context=context)
-                resp = ollama.generate(
-                    model=model, prompt=prompt, options=options
-                )["response"]
+                model, options = self.router.select_model(
+                    prompt=choice, context=context
+                )
+                resp = ollama.generate(model=model, prompt=prompt, options=options)[
+                    "response"
+                ]
                 parsed = json.loads(resp)
 
                 # APRÈS génération
@@ -77,7 +80,7 @@ class NarrativeService:
                         description=event.description,
                         location=parsed.get("location", ""),
                         entities=event.entities_involved,
-                        importance=event.importance
+                        importance=event.importance,
                     )
 
                 # Mettre à jour lieu
