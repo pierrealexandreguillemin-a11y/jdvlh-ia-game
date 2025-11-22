@@ -1,0 +1,21 @@
+echo "🔍 Running pre-commit checks..."
+
+# Format Python code with black
+echo "📝 Formatting Python code..."
+python -m black . --quiet
+
+# Check Python code quality (non-blocking for now)
+echo "🔎 Checking Python code quality..."
+python -m flake8 . --max-line-length=100 --extend-ignore=E203,W503 || echo "⚠️  Flake8 warnings (non-blocking)"
+
+# Run tests if they exist
+if [ -d "tests" ]; then
+  echo "🧪 Running tests..."
+  python -m pytest -q || exit 1
+fi
+
+# Lint staged files
+echo "✨ Linting staged files..."
+npx lint-staged
+
+echo "✅ Pre-commit checks passed!"

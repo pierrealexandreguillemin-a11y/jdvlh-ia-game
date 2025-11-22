@@ -1,0 +1,23 @@
+echo "📊 Generating Git graph..."
+
+# Generate git graph visualization
+git log --oneline --graph --all --decorate -30 > git-graph.txt
+
+# Update GIT_ANALYSIS.md with latest stats
+echo "📈 Updating Git analysis..."
+
+# Get stats
+COMMIT_COUNT=$(git rev-list --count HEAD)
+FILE_COUNT=$(git ls-files | wc -l)
+LAST_COMMIT=$(git log -1 --pretty=format:"%h - %s")
+
+# Simple append to git-graph.txt
+echo "" >> git-graph.txt
+echo "Last updated: $(date)" >> git-graph.txt
+echo "Total commits: $COMMIT_COUNT" >> git-graph.txt
+echo "Total files: $FILE_COUNT" >> git-graph.txt
+echo "Latest: $LAST_COMMIT" >> git-graph.txt
+
+echo "✅ Post-commit tasks completed!"
+echo "   - Git graph: git-graph.txt"
+echo "   - Stats updated"
