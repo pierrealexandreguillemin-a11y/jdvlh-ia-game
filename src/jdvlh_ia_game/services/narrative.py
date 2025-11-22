@@ -100,4 +100,7 @@ class NarrativeService:
 
     def _is_safe(self, text: str, blacklist_words: List[str]) -> bool:
         text_lower = text.lower()
-            except Exception as e:
+        for word in blacklist_words:
+            if word.lower() in text_lower:
+                return False
+        return True

@@ -5,14 +5,18 @@ server:
   session_ttl: 1800  # 30min in seconds
 
 ollama:
-  model: mistral
+  model: llama3.2
+  models:
+    - llama3.2
+    - mistral
+    - gemma2
   max_retries: 3
   temperature: 0.7
-  max_tokens: 500
+  max_tokens: 150
 
 cache:
   dir: cache
-  ttl: 3600  # 1h
+  ttl: 7200  # 2h
 
 locations:
   - la Comté

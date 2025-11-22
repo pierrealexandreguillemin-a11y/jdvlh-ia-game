@@ -30,15 +30,5 @@ class SecurityMiddleware(LimiterMiddleware):
         response = await call_next(request)
         return response
 
-            body = await request.body()
-            if body:
-                data = json.loads(body)
-                if "choice" in data:
-                    data["choice"] = re.sub(
-                        r'[<>;{}()\\\\"]', "", data["choice"].strip()
-                    )[:100]
-        except:
-            pass
-
 
 security_middleware = SecurityMiddleware

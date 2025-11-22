@@ -32,11 +32,11 @@ async def test_ollama_response_times():
 
             try:
                 response = ollama.generate(
-                    model='mistral',
+                    model='llama3.2',
                     prompt=prompt,
                     options={
                         'temperature': 0.7,
-                        'num_predict': 300
+                        'num_predict': 150
                     }
                 )
                 duration = time.time() - start
