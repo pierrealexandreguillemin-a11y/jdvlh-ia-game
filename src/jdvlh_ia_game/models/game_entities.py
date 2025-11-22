@@ -13,8 +13,10 @@ from enum import Enum
 # ENUMS
 # ============================================================================
 
+
 class Race(str, Enum):
     """Character races"""
+
     HOBBIT = "hobbit"
     ELFE = "elfe"
     NAIN = "nain"
@@ -23,6 +25,7 @@ class Race(str, Enum):
 
 class CharacterClass(str, Enum):
     """Character classes"""
+
     GUERRIER = "guerrier"
     MAGE = "mage"
     RANGER = "ranger"
@@ -31,6 +34,7 @@ class CharacterClass(str, Enum):
 
 class ItemType(str, Enum):
     """Item types"""
+
     WEAPON = "weapon"
     ARMOR = "armor"
     POTION = "potion"
@@ -41,6 +45,7 @@ class ItemType(str, Enum):
 
 class ItemRarity(str, Enum):
     """Item rarity levels"""
+
     COMMON = "common"
     UNCOMMON = "uncommon"
     RARE = "rare"
@@ -50,6 +55,7 @@ class ItemRarity(str, Enum):
 
 class SpellElement(str, Enum):
     """Spell elements"""
+
     FIRE = "fire"
     ICE = "ice"
     LIGHTNING = "lightning"
@@ -60,6 +66,7 @@ class SpellElement(str, Enum):
 
 class EnemyType(str, Enum):
     """Enemy types"""
+
     ORC = "orc"
     GOBELIN = "gobelin"
     TROLL = "troll"
@@ -71,6 +78,7 @@ class EnemyType(str, Enum):
 
 class AIStrategy(str, Enum):
     """AI combat strategies"""
+
     AGGRESSIVE = "aggressive"
     DEFENSIVE = "defensive"
     BALANCED = "balanced"
@@ -79,6 +87,7 @@ class AIStrategy(str, Enum):
 
 class QuestStatus(str, Enum):
     """Quest statuses"""
+
     ACTIVE = "active"
     COMPLETED = "completed"
     FAILED = "failed"
@@ -86,6 +95,7 @@ class QuestStatus(str, Enum):
 
 class ObjectiveType(str, Enum):
     """Quest objective types"""
+
     TRAVEL = "travel"
     COMBAT = "combat"
     COLLECT = "collect"
@@ -96,6 +106,7 @@ class ObjectiveType(str, Enum):
 # ============================================================================
 # PLAYER
 # ============================================================================
+
 
 @dataclass
 class Player:
@@ -130,15 +141,15 @@ class Player:
     learned_skills: List[str] = field(default_factory=list)
 
     # Inventory
-    inventory: List['Item'] = field(default_factory=list)
-    equipped: Dict[str, 'Item'] = field(default_factory=dict)
+    inventory: List["Item"] = field(default_factory=list)
+    equipped: Dict[str, "Item"] = field(default_factory=dict)
     gold: int = 100
 
     # Position
     current_location: str = "la Comté"
 
     # Quests
-    active_quests: List['Quest'] = field(default_factory=list)
+    active_quests: List["Quest"] = field(default_factory=list)
     completed_quests: List[str] = field(default_factory=list)
 
     # Relations
@@ -227,6 +238,7 @@ class Player:
 # ITEM
 # ============================================================================
 
+
 @dataclass
 class Item:
     """Game item (weapon, armor, potion, etc.)"""
@@ -286,6 +298,7 @@ class Item:
 # SPELL
 # ============================================================================
 
+
 @dataclass
 class Spell:
     """Magic spell"""
@@ -332,6 +345,7 @@ class Spell:
 # ============================================================================
 # ENEMY
 # ============================================================================
+
 
 @dataclass
 class Enemy:
@@ -393,6 +407,7 @@ class Enemy:
 # QUEST
 # ============================================================================
 
+
 @dataclass
 class Objective:
     """Quest objective"""
@@ -407,7 +422,9 @@ class Objective:
 
     def update_progress(self, amount: int = 1) -> bool:
         """Update progress, return True if completed"""
-        self.current_progress = min(self.target_quantity, self.current_progress + amount)
+        self.current_progress = min(
+            self.target_quantity, self.current_progress + amount
+        )
         self.completed = self.current_progress >= self.target_quantity
         return self.completed
 
@@ -478,6 +495,7 @@ class Quest:
 # ============================================================================
 # COMBAT STATE
 # ============================================================================
+
 
 @dataclass
 class CombatAction:
@@ -562,14 +580,24 @@ class CombatResult:
 
 __all__ = [
     # Enums
-    'Race', 'CharacterClass', 'ItemType', 'ItemRarity',
-    'SpellElement', 'EnemyType', 'AIStrategy',
-    'QuestStatus', 'ObjectiveType',
-
+    "Race",
+    "CharacterClass",
+    "ItemType",
+    "ItemRarity",
+    "SpellElement",
+    "EnemyType",
+    "AIStrategy",
+    "QuestStatus",
+    "ObjectiveType",
     # Entities
-    'Player', 'Item', 'Spell', 'Enemy',
-    'Quest', 'Objective',
-
+    "Player",
+    "Item",
+    "Spell",
+    "Enemy",
+    "Quest",
+    "Objective",
     # Combat
-    'CombatAction', 'CombatState', 'CombatResult',
+    "CombatAction",
+    "CombatState",
+    "CombatResult",
 ]

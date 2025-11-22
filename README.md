@@ -1,9 +1,15 @@
-# JDVLH IA Game v0.2.0 - Livre Dont Vous Êtes Le Héros (IA Locale)
+# 🗡️ JDVLH IA Game v0.6.0 - Livre Dont Vous Êtes Le Héros 🧙‍♂️
 
-**Jeu narratif interactif pour enfants 10-14 ans** (thème LOTR/DnD).  
-**Stack** : FastAPI (Python 3.12), Ollama/Mistral (IA locale), SQLite (persistance), WebSocket realtime. Multi-joueurs foyer (max 4), sécurité enfants renforcée.
+[![Version](https://img.shields.io/badge/version-0.6.0-blue.svg)](https://github.com/user/jdvlh-ia-game)
+[![Python](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Husky](https://img.shields.io/badge/husky-enabled-success.svg)](https://typicode.github.io/husky/)
 
-**Score MVP** : 8/10 (robuste, extensible, safe, fun). **Testable maintenant !**
+**Jeu narratif interactif IA pour enfants 10-14 ans** - Thème Terre du Milieu (LOTR/D&D)
+
+**Stack:** FastAPI + Ollama/Mistral (IA locale) + SQLite + WebSocket temps réel
+**Développement:** Solo dev + Claude Code + Grok (IA assistants)
+**Qualité:** Hooks Git (Husky), commits conventionnels, formatting auto
 
 ## 🚀 Installation (5 min)
 
@@ -94,18 +100,132 @@ Voir [ROADMAP.md](ROADMAP.md) (Godot, visuels, Docker, tests avancés).
 - **Tests** : `poetry run test` (Pytest)
 - **Ollama** : Auto-retry (3x) + fallback statique
 
-## 🤝 Contribution
-1. Fork & PR
-2. `poetry install --with dev`
-3. Tests : `poetry run test`
-4. Format : `poetry run black .`
+## 🔄 Git Workflow & Qualité du Code
 
-**Changelog v0.2.0** : README enrichi (architecture, stack, Poetry, diagramme, outils).
+### Hooks Git Automatiques (Husky)
 
-1. Fork & PR
-2. `poetry install --with dev`
-3. Tests : `poetry run test`
-4. Format : `poetry run black .`
+Le projet utilise **Husky** pour garantir la qualité du code à chaque commit :
 
-**Changelog v0.2.0** : README enrichi (arch/archi, Poetry, diagramme).
+#### ✅ Pre-commit Hook
+- Format automatique du code Python avec **Black**
+- Vérification qualité avec **Flake8** (warnings non-bloquants)
+- Linting fichiers staged avec **lint-staged**
+- Exécution tests si présents
+
+#### 📋 Commit-msg Hook
+- Validation des messages de commit (Conventional Commits)
+- Format requis: `type(scope): description`
+- Types autorisés: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `ci`, `build`
+
+**Exemples de commits valides:**
+```bash
+feat: add narrative memory system
+fix: correct unicode error in cache.py
+docs: update README with git workflow
+perf: optimize num_predict to 400 tokens
+refactor: improve routing logic
+```
+
+#### 📊 Post-commit Hook
+- Génération automatique du graphe Git (`git-graph.txt`)
+- Mise à jour des statistiques (commits, fichiers, dernière modif)
+
+### Commandes Git Utiles
+
+```bash
+# Voir le graphe des commits
+git log --oneline --graph --all --decorate
+
+# Créer une branche feature
+git checkout -b feat/nouvelle-fonctionnalite
+
+# Commit avec message conventionnel (validé auto par hook)
+git commit -m "feat: add new location system"
+
+# Voir les stats du projet
+git shortlog -sn --all
+
+# Historique d'un fichier
+git log --follow -- path/to/file.py
+
+# Générer le graphe manuellement
+npm run generate-graph
+```
+
+### Structure des Branches
+
+```
+master (production)
+  ├── feat/routing-integration (nouvelle feature)
+  ├── fix/unicode-errors (correction bug)
+  ├── docs/update-readme (documentation)
+  └── perf/optimize-generation (performance)
+```
+
+### Scripts NPM Disponibles
+
+```bash
+npm run lint          # Vérifier code Python
+npm run format        # Formatter code Python
+npm run test          # Lancer tests
+npm run generate-graph # Générer graphe Git
+```
+
+---
+
+## 🤝 Développement Solo + IA
+
+**Workflow:** Dev solo assisté par IA (Claude Code + Grok)
+
+- **Claude Code:** Analyse architecture, génération code, refactoring
+- **Grok:** Assistance contexte, debugging, suggestions
+- **Husky:** Garantie qualité automatique à chaque commit
+
+Pas besoin de CI/CD serveur (GitHub Actions/GitLab CI) pour un projet solo.
+Les hooks Git locaux suffisent pour maintenir la qualité.
+
+---
+
+## 📚 Documentation
+
+- **[INDEX_COMPLET.md](INDEX_COMPLET.md)** - Guide navigation master
+- **[DEMARRAGE_RAPIDE.md](DEMARRAGE_RAPIDE.md)** - Quick start 3 niveaux
+- **[GIT_ANALYSIS.md](GIT_ANALYSIS.md)** - Analyse Git complète avec diagrammes Mermaid
+- **[RAPPORT_FINAL.md](RAPPORT_FINAL.md)** - Synthèse session complète
+- **[RAPPORT_PERFORMANCE.md](RAPPORT_PERFORMANCE.md)** - Analyse performance détaillée
+- **[INTEGRATION_COMPLETE.md](INTEGRATION_COMPLETE.md)** - Guide routing multi-modèles
+- **[MEMOIRE_CONTEXTUELLE.md](MEMOIRE_CONTEXTUELLE.md)** - Guide mémoire narrative
+
+---
+
+## 📝 Changelog
+
+### v0.6.0 (2025-11-22)
+- ✅ **CI/CD:** Husky hooks (pre-commit, commit-msg, post-commit)
+- ✅ **Quality:** Conventional commits, auto-formatting, lint-staged
+- ✅ **Git:** Analyse complète avec diagrammes Mermaid
+- ✅ **Docs:** README mis à jour, 12 guides complets
+- ✅ **Perf:** Optimisations narrative (400 tokens, structure 8-12 phrases)
+- ✅ **UX:** Langue française forcée, textes riches, temps de lecture
+
+### v0.5.0
+- Dependencies tracking (requirements, poetry.lock, package.json)
+
+### v0.4.0
+- Documentation complète (4800+ lignes)
+
+### v0.3.0
+- Outils d'analyse et dashboards
+
+### v0.2.0
+- Services core (narrative, routing, memory)
+
+### v0.1.0
+- Initial commit - Base projet
+
+---
+
+## 📄 License
+
+MIT License - Voir [LICENSE](LICENSE) pour détails
 

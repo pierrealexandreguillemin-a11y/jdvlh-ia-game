@@ -1,5 +1,33 @@
 {
+  "name": "jdvlh-ia-game",
+  "version": "0.6.0",
+  "description": "Jeu narratif interactif IA pour enfants 10-14 ans (Terre du Milieu)",
+  "author": "Claude Code + Dev",
+  "license": "MIT",
   "dependencies": {
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.6.2"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "lint": "python -m black --check . && python -m flake8 .",
+    "format": "python -m black .",
+    "test": "python -m pytest",
+    "generate-graph": "git log --oneline --graph --all --decorate -20 > git-graph.txt"
+  },
+  "lint-staged": {
+    "*.py": [
+      "black",
+      "flake8"
+    ],
+    "*.{js,json,md,yaml,yml}": [
+      "prettier --write"
+    ]
   }
 }

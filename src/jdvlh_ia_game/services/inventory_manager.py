@@ -27,6 +27,7 @@ EQUIPMENT_SLOTS = {
 # INVENTORY MANAGER
 # ============================================================================
 
+
 class InventoryManager:
     """Manages player inventory and equipment"""
 
@@ -52,25 +53,24 @@ class InventoryManager:
                 existing_item.quantity += item.quantity
                 return {
                     "success": True,
-                    "message": f"{item.name} x{item.quantity} ajouté (total: {existing_item.quantity})"
+                    "message": f"{item.name} x{item.quantity} ajouté (total: {existing_item.quantity})",
                 }
 
         # Check inventory space
         if len(player.inventory) >= self.max_inventory_size:
             return {
                 "success": False,
-                "message": "Inventaire plein ! Vendez ou détruisez des objets."
+                "message": "Inventaire plein ! Vendez ou détruisez des objets.",
             }
 
         # Add item
         player.inventory.append(item)
 
-        return {
-            "success": True,
-            "message": f"{item.name} ajouté à l'inventaire !"
-        }
+        return {"success": True, "message": f"{item.name} ajouté à l'inventaire !"}
 
-    def remove_item(self, player: Player, item_id: str, quantity: int = 1) -> Dict[str, any]:
+    def remove_item(
+        self, player: Player, item_id: str, quantity: int = 1
+    ) -> Dict[str, any]:
         """
         Remove item from player inventory
 
@@ -86,16 +86,13 @@ class InventoryManager:
         item = self._find_item_by_id(player, item_id)
 
         if not item:
-            return {
-                "success": False,
-                "message": "Objet non trouvé dans l'inventaire"
-            }
+            return {"success": False, "message": "Objet non trouvé dans l'inventaire"}
 
         if item.stackable:
             if item.quantity < quantity:
                 return {
                     "success": False,
-                    "message": f"Pas assez d'exemplaires (vous avez {item.quantity})"
+                    "message": f"Pas assez d'exemplaires (vous avez {item.quantity})",
                 }
 
             item.quantity -= quantity
@@ -110,7 +107,7 @@ class InventoryManager:
         return {
             "success": True,
             "message": f"{item.name} x{quantity} retiré",
-            "item": item
+            "item": item,
         }
 
     def equip_item(self, player: Player, item_id: str, slot: str) -> Dict[str, any]:
@@ -128,25 +125,19 @@ class InventoryManager:
 
         # Validate slot
         if slot not in EQUIPMENT_SLOTS:
-            return {
-                "success": False,
-                "message": f"Emplacement invalide: {slot}"
-            }
+            return {"success": False, "message": f"Emplacement invalide: {slot}"}
 
         # Find item in inventory
         item = self._find_item_by_id(player, item_id)
 
         if not item:
-            return {
-                "success": False,
-                "message": "Objet non trouvé dans l'inventaire"
-            }
+            return {"success": False, "message": "Objet non trouvé dans l'inventaire"}
 
         # Check if item can be equipped in this slot
         if not self._can_equip_in_slot(item, slot):
             return {
                 "success": False,
-                "message": f"{item.name} ne peut pas être équipé dans cet emplacement"
+                "message": f"{item.name} ne peut pas être équipé dans cet emplacement",
             }
 
         # Unequip current item in slot if any
@@ -163,7 +154,7 @@ class InventoryManager:
         return {
             "success": True,
             "message": f"{item.name} équipé dans {EQUIPMENT_SLOTS[slot]} !",
-            "item": item
+            "item": item,
         }
 
     def unequip_item(self, player: Player, slot: str) -> Dict[str, any]:
@@ -181,7 +172,7 @@ class InventoryManager:
         if slot not in player.equipped:
             return {
                 "success": False,
-                "message": "Aucun objet équipé dans cet emplacement"
+                "message": "Aucun objet équipé dans cet emplacement",
             }
 
         item = player.equipped[slot]
@@ -190,7 +181,7 @@ class InventoryManager:
         if len(player.inventory) >= self.max_inventory_size:
             return {
                 "success": False,
-                "message": "Inventaire plein ! Impossible de déséquiper."
+                "message": "Inventaire plein ! Impossible de déséquiper.",
             }
 
         # Remove bonuses
@@ -200,11 +191,7 @@ class InventoryManager:
         del player.equipped[slot]
         player.inventory.append(item)
 
-        return {
-            "success": True,
-            "message": f"{item.name} déséquipé",
-            "item": item
-        }
+        return {"success": True, "message": f"{item.name} déséquipé", "item": item}
 
     def use_consumable(self, player: Player, item_id: str) -> Dict[str, any]:
         """
@@ -221,16 +208,10 @@ class InventoryManager:
         item = self._find_item_by_id(player, item_id)
 
         if not item:
-            return {
-                "success": False,
-                "message": "Objet non trouvé"
-            }
+            return {"success": False, "message": "Objet non trouvé"}
 
         if item.type not in [ItemType.POTION, ItemType.CONSUMABLE]:
-            return {
-                "success": False,
-                "message": "Cet objet n'est pas consommable"
-            }
+            return {"success": False, "message": "Cet objet n'est pas consommable"}
 
         # Apply effects (basic implementation)
         effects = []
@@ -251,10 +232,12 @@ class InventoryManager:
         return {
             "success": True,
             "message": f"Vous utilisez {item.name}",
-            "effects": effects
+            "effects": effects,
         }
 
-    def sell_item(self, player: Player, item_id: str, quantity: int = 1) -> Dict[str, any]:
+    def sell_item(
+        self, player: Player, item_id: str, quantity: int = 1
+    ) -> Dict[str, any]:
         """
         Sell an item for gold
 
@@ -270,16 +253,13 @@ class InventoryManager:
         item = self._find_item_by_id(player, item_id)
 
         if not item:
-            return {
-                "success": False,
-                "message": "Objet non trouvé"
-            }
+            return {"success": False, "message": "Objet non trouvé"}
 
         # Check quantity
         if item.stackable and item.quantity < quantity:
             return {
                 "success": False,
-                "message": f"Pas assez d'exemplaires (vous avez {item.quantity})"
+                "message": f"Pas assez d'exemplaires (vous avez {item.quantity})",
             }
 
         # Calculate sell price (50% of value)
@@ -297,7 +277,7 @@ class InventoryManager:
         return {
             "success": True,
             "message": f"{item.name} x{quantity} vendu pour {sell_price} or",
-            "gold_gained": sell_price
+            "gold_gained": sell_price,
         }
 
     def buy_item(self, player: Player, item: Item, price: int) -> Dict[str, any]:
@@ -317,15 +297,12 @@ class InventoryManager:
         if not player.can_afford(price):
             return {
                 "success": False,
-                "message": f"Pas assez d'or (besoin: {price}, vous avez: {player.gold})"
+                "message": f"Pas assez d'or (besoin: {price}, vous avez: {player.gold})",
             }
 
         # Check inventory space
         if not item.stackable and len(player.inventory) >= self.max_inventory_size:
-            return {
-                "success": False,
-                "message": "Inventaire plein !"
-            }
+            return {"success": False, "message": "Inventaire plein !"}
 
         # Deduct gold
         player.gold -= price
@@ -341,7 +318,7 @@ class InventoryManager:
         return {
             "success": True,
             "message": f"{item.name} acheté pour {price} or !",
-            "item": item
+            "item": item,
         }
 
     def get_total_stats(self, player: Player) -> Dict[str, int]:
@@ -403,7 +380,9 @@ class InventoryManager:
                 ItemRarity.EPIC: 3,
                 ItemRarity.LEGENDARY: 4,
             }
-            player.inventory.sort(key=lambda item: rarity_order.get(item.rarity, 0), reverse=True)
+            player.inventory.sort(
+                key=lambda item: rarity_order.get(item.rarity, 0), reverse=True
+            )
         elif sort_by == "value":
             player.inventory.sort(key=lambda item: item.value, reverse=True)
         elif sort_by == "name":
@@ -415,7 +394,9 @@ class InventoryManager:
 
     def _find_item_by_id(self, player: Player, item_id: str) -> Optional[Item]:
         """Find item in inventory by ID"""
-        return next((item for item in player.inventory if item.item_id == item_id), None)
+        return next(
+            (item for item in player.inventory if item.item_id == item_id), None
+        )
 
     def _can_equip_in_slot(self, item: Item, slot: str) -> bool:
         """Check if item can be equipped in the given slot"""
@@ -471,7 +452,6 @@ ITEM_DATABASE = {
         value=15,
         description="Une vieille épée rouillée. Mieux que rien.",
     ),
-
     "elven_sword": Item(
         item_id="elven_sword",
         name="Lame Elfique",
@@ -482,7 +462,6 @@ ITEM_DATABASE = {
         value=500,
         description="Une épée forgée par les elfes, légère et mortelle.",
     ),
-
     # Armor
     "leather_armor": Item(
         item_id="leather_armor_chest",
@@ -493,7 +472,6 @@ ITEM_DATABASE = {
         value=50,
         description="Une armure de cuir simple mais efficace.",
     ),
-
     # Potions
     "health_potion": Item(
         item_id="health_potion",
@@ -504,7 +482,6 @@ ITEM_DATABASE = {
         value=25,
         description="Restaure 50 HP",
     ),
-
     "mana_potion": Item(
         item_id="mana_potion",
         name="Potion de mana",
@@ -514,7 +491,6 @@ ITEM_DATABASE = {
         value=30,
         description="Restaure 30 Mana",
     ),
-
     # Quest items
     "ring_of_power": Item(
         item_id="ring_of_power",

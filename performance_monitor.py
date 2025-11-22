@@ -12,6 +12,7 @@ from collections import deque
 from typing import Dict, List, Deque
 import ollama
 
+
 class PerformanceMonitor:
     def __init__(self, max_samples: int = 100):
         self.max_samples = max_samples
@@ -40,12 +41,14 @@ class PerformanceMonitor:
         if not self.response_times:
             return {
                 "status": "No data yet",
-                "uptime_seconds": time.time() - self.start_time
+                "uptime_seconds": time.time() - self.start_time,
             }
 
         times = list(self.response_times)
         total_requests = self.cache_hits + self.cache_misses
-        cache_hit_rate = (self.cache_hits / total_requests * 100) if total_requests > 0 else 0
+        cache_hit_rate = (
+            (self.cache_hits / total_requests * 100) if total_requests > 0 else 0
+        )
 
         return {
             "timestamp": datetime.now().isoformat(),
@@ -67,12 +70,20 @@ class PerformanceMonitor:
             "ollama": {
                 "total_calls": self.ollama_calls,
                 "errors": self.errors,
-                "success_rate_percent": ((self.ollama_calls - self.errors) / self.ollama_calls * 100) if self.ollama_calls > 0 else 0,
+                "success_rate_percent": (
+                    ((self.ollama_calls - self.errors) / self.ollama_calls * 100)
+                    if self.ollama_calls > 0
+                    else 0
+                ),
             },
             "requests": {
                 "total": total_requests,
-                "rps": total_requests / (time.time() - self.start_time) if (time.time() - self.start_time) > 0 else 0,
-            }
+                "rps": (
+                    total_requests / (time.time() - self.start_time)
+                    if (time.time() - self.start_time) > 0
+                    else 0
+                ),
+            },
         }
 
     def _percentile(self, data: List[float], percentile: int) -> float:
@@ -87,9 +98,9 @@ class PerformanceMonitor:
         """Affiche les statistiques formatées"""
         stats = self.get_stats()
 
-        print("\n" + "="*70)
+        print("\n" + "=" * 70)
         print(f"📊 PERFORMANCE MONITORING - {stats['timestamp']}")
-        print("="*70)
+        print("=" * 70)
 
         if "status" in stats:
             print(f"\n⏱️  {stats['status']}")
@@ -99,7 +110,7 @@ class PerformanceMonitor:
         print(f"\n⏱️  UPTIME: {stats['uptime_seconds']:.1f}s")
 
         print("\n🚀 RESPONSE TIMES (IA)")
-        rt = stats['response_times']
+        rt = stats["response_times"]
         print(f"  Count:  {rt['count']} requêtes")
         print(f"  Min:    {rt['min_ms']:.0f} ms")
         print(f"  Mean:   {rt['mean_ms']:.0f} ms")
@@ -109,23 +120,23 @@ class PerformanceMonitor:
         print(f"  P99:    {rt['p99_ms']:.0f} ms")
 
         print("\n💾 CACHE PERFORMANCE")
-        cache = stats['cache']
+        cache = stats["cache"]
         print(f"  Hits:     {cache['hits']}")
         print(f"  Misses:   {cache['misses']}")
         print(f"  Hit Rate: {cache['hit_rate_percent']:.1f}%")
 
         print("\n🤖 OLLAMA API")
-        ollama_stats = stats['ollama']
+        ollama_stats = stats["ollama"]
         print(f"  Total Calls:   {ollama_stats['total_calls']}")
         print(f"  Errors:        {ollama_stats['errors']}")
         print(f"  Success Rate:  {ollama_stats['success_rate_percent']:.1f}%")
 
         print("\n📈 REQUESTS")
-        req = stats['requests']
+        req = stats["requests"]
         print(f"  Total:    {req['total']}")
         print(f"  RPS:      {req['rps']:.2f}")
 
-        print("="*70 + "\n")
+        print("=" * 70 + "\n")
 
 
 async def test_ollama_performance(monitor: PerformanceMonitor, num_tests: int = 10):
@@ -140,7 +151,7 @@ async def test_ollama_performance(monitor: PerformanceMonitor, num_tests: int = 
     ]
 
     print(f"\n🧪 TEST OLLAMA PERFORMANCE ({num_tests} requêtes)")
-    print("="*70)
+    print("=" * 70)
 
     for i in range(num_tests):
         prompt = test_prompts[i % len(test_prompts)]
@@ -149,17 +160,16 @@ async def test_ollama_performance(monitor: PerformanceMonitor, num_tests: int = 
         start = time.time()
         try:
             response = ollama.generate(
-                model='mistral',
+                model="mistral",
                 prompt=prompt,
-                options={
-                    'temperature': 0.7,
-                    'num_predict': 500
-                }
+                options={"temperature": 0.7, "num_predict": 500},
             )
             duration = time.time() - start
             monitor.record_response(duration, from_cache=False)
 
-            print(f"✅ Réponse en {duration*1000:.0f} ms ({len(response['response'])} caractères)")
+            print(
+                f"✅ Réponse en {duration*1000:.0f} ms ({len(response['response'])} caractères)"
+            )
 
         except Exception as e:
             duration = time.time() - start
@@ -179,7 +189,7 @@ async def live_monitoring(interval: int = 5, duration: int = 60):
 
     print(f"\n🔴 LIVE MONITORING - Durée: {duration}s, Intervalle: {interval}s")
     print("Lancez des requêtes au serveur pour voir les stats s'afficher...")
-    print("="*70)
+    print("=" * 70)
 
     start = time.time()
     while (time.time() - start) < duration:
@@ -194,7 +204,7 @@ def simulate_traffic(monitor: PerformanceMonitor):
     import random
 
     print("\n🎭 SIMULATION DE TRAFIC")
-    print("="*70)
+    print("=" * 70)
 
     # Simule 50 requêtes avec différents patterns
     for i in range(50):
@@ -231,7 +241,7 @@ async def benchmark_ollama_models():
     prompt = "Raconte une courte aventure dans la Comté pour un enfant de 10 ans."
 
     print("\n⚡ BENCHMARK CONFIGURATIONS OLLAMA")
-    print("="*70)
+    print("=" * 70)
 
     results = []
 
@@ -243,31 +253,35 @@ async def benchmark_ollama_models():
             start = time.time()
             try:
                 response = ollama.generate(
-                    model='mistral',
+                    model="mistral",
                     prompt=prompt,
                     options={
-                        'temperature': config['temp'],
-                        'num_predict': config['tokens']
-                    }
+                        "temperature": config["temp"],
+                        "num_predict": config["tokens"],
+                    },
                 )
                 duration = time.time() - start
                 times.append(duration)
-                print(f"  Tentative {i+1}: {duration*1000:.0f} ms ({len(response['response'])} chars)")
+                print(
+                    f"  Tentative {i+1}: {duration*1000:.0f} ms ({len(response['response'])} chars)"
+                )
 
             except Exception as e:
                 print(f"  ❌ Erreur: {str(e)[:100]}")
 
         if times:
             avg_time = statistics.mean(times)
-            results.append({
-                "config": config['name'],
-                "avg_ms": avg_time * 1000,
-                "min_ms": min(times) * 1000,
-                "max_ms": max(times) * 1000,
-            })
+            results.append(
+                {
+                    "config": config["name"],
+                    "avg_ms": avg_time * 1000,
+                    "min_ms": min(times) * 1000,
+                    "max_ms": max(times) * 1000,
+                }
+            )
 
     print("\n📊 RÉSULTATS COMPARATIFS")
-    print("="*70)
+    print("=" * 70)
     for r in results:
         print(f"\n{r['config']}")
         print(f"  Moyenne: {r['avg_ms']:.0f} ms")
@@ -277,7 +291,8 @@ async def benchmark_ollama_models():
 
 async def main():
     """Menu principal"""
-    print("""
+    print(
+        """
 ╔════════════════════════════════════════════════════════════════╗
 ║         MONITORING PERFORMANCE IA - JDVLH Game                 ║
 ╚════════════════════════════════════════════════════════════════╝
@@ -290,7 +305,8 @@ Options disponibles:
 4. Live Monitoring (60s)
 5. Tout Exécuter
 
-Votre choix (1-5): """)
+Votre choix (1-5): """
+    )
 
     choice = input().strip()
 
@@ -311,26 +327,26 @@ Votre choix (1-5): """)
     elif choice == "5":
         print("\n🚀 EXÉCUTION COMPLÈTE\n")
 
-        print("\n" + "="*70)
+        print("\n" + "=" * 70)
         print("ÉTAPE 1/4: Benchmark Configurations")
-        print("="*70)
+        print("=" * 70)
         await benchmark_ollama_models()
 
-        print("\n" + "="*70)
+        print("\n" + "=" * 70)
         print("ÉTAPE 2/4: Test Performance Ollama")
-        print("="*70)
+        print("=" * 70)
         monitor1 = PerformanceMonitor()
         await test_ollama_performance(monitor1, num_tests=5)
 
-        print("\n" + "="*70)
+        print("\n" + "=" * 70)
         print("ÉTAPE 3/4: Simulation de Trafic")
-        print("="*70)
+        print("=" * 70)
         monitor2 = PerformanceMonitor()
         simulate_traffic(monitor2)
 
-        print("\n" + "="*70)
+        print("\n" + "=" * 70)
         print("ÉTAPE 4/4: Résumé Final")
-        print("="*70)
+        print("=" * 70)
         print("\n✅ Analyse complète terminée!")
         print("\nRecommandations basées sur les tests:")
         print("  • Configuration optimale: temp=0.7, tokens=300-500")

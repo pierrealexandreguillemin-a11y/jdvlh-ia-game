@@ -8,8 +8,15 @@ from typing import List, Dict, Any, Tuple
 import ollama
 
 from ..models.game_entities import (
-    Player, Enemy, CombatState, CombatAction, CombatResult,
-    Item, AIStrategy, ItemType, ItemRarity
+    Player,
+    Enemy,
+    CombatState,
+    CombatAction,
+    CombatResult,
+    Item,
+    AIStrategy,
+    ItemType,
+    ItemRarity,
 )
 from .model_router import get_router, TaskType
 
@@ -22,10 +29,7 @@ class CombatEngine:
         self.active_combats: Dict[str, CombatState] = {}
 
     async def start_combat(
-        self,
-        player: Player,
-        enemies: List[Enemy],
-        location: str
+        self, player: Player, enemies: List[Enemy], location: str
     ) -> CombatState:
         """
         Initialize a new combat encounter
@@ -47,7 +51,7 @@ class CombatEngine:
         model, options = self.router.select_model(
             prompt=f"Un combat épique commence à {location}",
             context="",
-            task_type=TaskType.EPIC_ACTION
+            task_type=TaskType.EPIC_ACTION,
         )
 
         intro_prompt = f"""Décris en 2-3 phrases le début d'un combat épique à {location}.
@@ -55,9 +59,7 @@ Le joueur {player.name} (niveau {player.level}) fait face à : {enemy_names}.
 Adapté pour enfants 10-14 ans, ton excitant mais pas violent."""
 
         intro_narrative = await self._generate_narrative(
-            model=model,
-            prompt=intro_prompt,
-            options=options
+            model=model, prompt=intro_prompt, options=options
         )
 
         # Create combat state
@@ -65,7 +67,7 @@ Adapté pour enfants 10-14 ans, ton excitant mais pas violent."""
             combat_id=combat_id,
             player=player,
             enemies=enemies,
-            intro_text=intro_narrative
+            intro_text=intro_narrative,
         )
 
         self.active_combats[combat_id] = combat_state
@@ -73,9 +75,7 @@ Adapté pour enfants 10-14 ans, ton excitant mais pas violent."""
         return combat_state
 
     async def execute_turn(
-        self,
-        combat_state: CombatState,
-        action: CombatAction
+        self, combat_state: CombatState, action: CombatAction
     ) -> CombatResult:
         """
         Execute a combat turn (player action + enemy responses)
@@ -102,8 +102,7 @@ Adapté pour enfants 10-14 ans, ton excitant mais pas violent."""
         # Execute player action
         if action.action_type == "attack":
             damage, narrative = await self._execute_attack(
-                combat_state,
-                action.target_index
+                combat_state, action.target_index
             )
             result.player_damage = damage
             result.narrative = narrative
@@ -111,24 +110,21 @@ Adapté pour enfants 10-14 ans, ton excitant mais pas violent."""
 
         elif action.action_type == "cast_spell":
             damage, narrative = await self._execute_spell(
-                combat_state,
-                action.spell_id,
-                action.target_index
+                combat_state, action.spell_id, action.target_index
             )
             result.player_damage = damage
             result.narrative = narrative
             result.animations.append(f"cast_{action.spell_id}")
 
         elif action.action_type == "use_item":
-            narrative = await self._execute_item_use(
-                combat_state,
-                action.item_id
-            )
+            narrative = await self._execute_item_use(combat_state, action.item_id)
             result.narrative = narrative
             result.animations.append("use_item")
 
         elif action.action_type == "defend":
-            result.narrative = f"{combat_state.player.name} se met en position défensive !"
+            result.narrative = (
+                f"{combat_state.player.name} se met en position défensive !"
+            )
             # Bonus armor for this turn (implement in future)
 
         # Check if enemy defeated
@@ -147,7 +143,9 @@ Adapté pour enfants 10-14 ans, ton excitant mais pas violent."""
             combat_state.player.gold += gold
             combat_state.player.gain_xp(xp)
 
-            result.narrative += f"\n\n🏆 Victoire ! Vous gagnez {xp} XP et {gold} pièces d'or !"
+            result.narrative += (
+                f"\n\n🏆 Victoire ! Vous gagnez {xp} XP et {gold} pièces d'or !"
+            )
 
             # Remove from active combats
             if combat_state.combat_id in self.active_combats:
@@ -174,9 +172,7 @@ Adapté pour enfants 10-14 ans, ton excitant mais pas violent."""
         return result
 
     async def _execute_attack(
-        self,
-        combat_state: CombatState,
-        target_index: int
+        self, combat_state: CombatState, target_index: int
     ) -> Tuple[int, str]:
         """Execute basic attack"""
 
@@ -187,7 +183,7 @@ Adapté pour enfants 10-14 ans, ton excitant mais pas violent."""
         damage = self._calculate_damage(
             attacker_strength=player.strength,
             weapon_damage=self._get_equipped_weapon_damage(player),
-            defender_armor=enemy.armor
+            defender_armor=enemy.armor,
         )
 
         # Apply damage
@@ -195,9 +191,7 @@ Adapté pour enfants 10-14 ans, ton excitant mais pas violent."""
 
         # Generate narrative
         model, options = self.router.select_model(
-            prompt="action combat rapide",
-            context="",
-            task_type=TaskType.QUICK_RESPONSE
+            prompt="action combat rapide", context="", task_type=TaskType.QUICK_RESPONSE
         )
 
         narrative_prompt = f"""En 1 phrase courte: {player.name} attaque {enemy.name} et inflige {damage} dégâts.
@@ -208,10 +202,7 @@ Ton excitant adapté enfants. HP restant ennemi: {enemy.hp}/{enemy.max_hp}."""
         return damage, narrative
 
     async def _execute_spell(
-        self,
-        combat_state: CombatState,
-        spell_id: str,
-        target_index: int
+        self, combat_state: CombatState, spell_id: str, target_index: int
     ) -> Tuple[int, str]:
         """Execute spell cast"""
 
@@ -234,9 +225,7 @@ Ton excitant adapté enfants. HP restant ennemi: {enemy.hp}/{enemy.max_hp}."""
 
         # Generate narrative
         model, options = self.router.select_model(
-            prompt="sort magique épique",
-            context="",
-            task_type=TaskType.EPIC_ACTION
+            prompt="sort magique épique", context="", task_type=TaskType.EPIC_ACTION
         )
 
         narrative_prompt = f"""En 2 phrases: {player.name} lance un sort de feu puissant sur {enemy.name} !
@@ -246,11 +235,7 @@ Ton excitant adapté enfants. HP restant ennemi: {enemy.hp}/{enemy.max_hp}."""
 
         return damage, narrative
 
-    async def _execute_item_use(
-        self,
-        combat_state: CombatState,
-        item_id: str
-    ) -> str:
+    async def _execute_item_use(self, combat_state: CombatState, item_id: str) -> str:
         """Execute item use (potion, etc.)"""
 
         player = combat_state.player
@@ -289,7 +274,7 @@ Ton excitant adapté enfants. HP restant ennemi: {enemy.hp}/{enemy.max_hp}."""
                 damage = self._calculate_damage(
                     attacker_strength=enemy.strength,
                     weapon_damage=enemy.damage,
-                    defender_armor=self._get_player_total_armor(combat_state.player)
+                    defender_armor=self._get_player_total_armor(combat_state.player),
                 )
 
                 combat_state.player.take_damage(damage)
@@ -312,10 +297,7 @@ Ton excitant adapté enfants. HP restant ennemi: {enemy.hp}/{enemy.max_hp}."""
             return "attack"
 
     def _calculate_damage(
-        self,
-        attacker_strength: int,
-        weapon_damage: int,
-        defender_armor: int
+        self, attacker_strength: int, weapon_damage: int, defender_armor: int
     ) -> int:
         """Calculate damage with armor reduction and critical hits"""
 
@@ -378,27 +360,20 @@ Ton excitant adapté enfants. HP restant ennemi: {enemy.hp}/{enemy.max_hp}."""
                         item_id=item_id,
                         name=item_id.replace("_", " ").title(),
                         type=ItemType.MATERIAL,
-                        rarity=ItemRarity.COMMON
+                        rarity=ItemRarity.COMMON,
                     )
                     items.append(item)
 
         return items, total_gold, total_xp
 
     async def _generate_narrative(
-        self,
-        model: str,
-        prompt: str,
-        options: Dict[str, Any]
+        self, model: str, prompt: str, options: Dict[str, Any]
     ) -> str:
         """Generate narrative text using Ollama"""
 
         try:
-            response = ollama.generate(
-                model=model,
-                prompt=prompt,
-                options=options
-            )
-            return response['response'].strip()
+            response = ollama.generate(model=model, prompt=prompt, options=options)
+            return response["response"].strip()
 
         except Exception as e:
             print(f"Narrative generation failed: {e}")
@@ -424,9 +399,8 @@ ENEMY_TEMPLATES = {
         ai_strategy=AIStrategy.AGGRESSIVE,
         gold_drop_min=5,
         gold_drop_max=15,
-        xp_reward=50
+        xp_reward=50,
     ),
-
     "gobelin_sournois": Enemy(
         enemy_id="gobelin_01",
         name="Gobelin des cavernes",
@@ -441,9 +415,8 @@ ENEMY_TEMPLATES = {
         ai_strategy=AIStrategy.TACTICAL,
         gold_drop_min=3,
         gold_drop_max=10,
-        xp_reward=40
+        xp_reward=40,
     ),
-
     "troll_montagne": Enemy(
         enemy_id="troll_01",
         name="Troll des montagnes",
@@ -458,6 +431,6 @@ ENEMY_TEMPLATES = {
         ai_strategy=AIStrategy.BALANCED,
         gold_drop_min=50,
         gold_drop_max=100,
-        xp_reward=250
+        xp_reward=250,
     ),
 }

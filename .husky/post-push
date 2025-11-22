@@ -1,0 +1,7 @@
+echo "📊 Generating project dashboard..."
+
+# Generate comprehensive HTML dashboard
+python generate_reports.py
+
+echo "✅ Dashboard generated: project_dashboard.html"
+echo "🌐 Open: file:///$(pwd)/project_dashboard.html"

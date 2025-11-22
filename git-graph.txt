@@ -1,0 +1,15 @@
+* 205c533 (HEAD -> master) chore: Fix husky hooks for v10 compatibility
+* ccf1a92 (origin/master) test: Add complete unit tests + optimize model_router
+* 0f7f8ed fix: Corriger chemins config.yaml et imports
+* 32da776 feat: Phase 1 JDR Core - Complete game systems implementation
+* 28ff7ae Add complete git analysis with Mermaid diagrams
+* 0045fda Add dependency files
+* d670752 Add comprehensive documentation (2000+ lines)
+* 6fc94d8 Add analysis tools and visualizations
+* 3f8c8fd Add core services and game server
+* 2493d26 Initial commit: JDVLH IA Game - Base du projet
+
+Last updated: Sat, Nov 22, 2025 10:38:39 PM
+Total commits: 10
+Total files: 60
+Latest: 205c533 - chore: Fix husky hooks for v10 compatibility

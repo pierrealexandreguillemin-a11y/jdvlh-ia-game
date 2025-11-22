@@ -17,6 +17,7 @@ from collections import defaultdict
 @dataclass
 class Entity:
     """Represents a narrative entity (character, item, location)"""
+
     name: str
     type: str  # 'character', 'item', 'location'
     first_mentioned: int  # Turn number
@@ -29,6 +30,7 @@ class Entity:
 @dataclass
 class NarrativeEvent:
     """Represents an important event in the story"""
+
     turn: int
     description: str
     entities_involved: List[str]
@@ -56,7 +58,9 @@ class NarrativeMemory:
         self.important_facts: List[str] = []
 
         # Relationships
-        self.relationships: Dict[str, List[str]] = defaultdict(list)  # entity -> related entities
+        self.relationships: Dict[str, List[str]] = defaultdict(
+            list
+        )  # entity -> related entities
 
         # Quest/Goal tracking
         self.active_quests: List[str] = []
@@ -64,31 +68,40 @@ class NarrativeMemory:
 
         # Named entities patterns (LOTR/DnD themed)
         self.character_patterns = [
-            r'\b(hobbit|elfe|nain|orc|gobelin|troll|magicien|guerrier|ranger)\b',
-            r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\b',  # Proper names
+            r"\b(hobbit|elfe|nain|orc|gobelin|troll|magicien|guerrier|ranger)\b",
+            r"\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\b",  # Proper names
         ]
 
         self.item_patterns = [
-            r'\b(épée|bouclier|anneau|dague|arc|potion|grimoire|trésor|coffre|armure)\b',
-            r'\b(objet|artefact|relique)\b',
+            r"\b(épée|bouclier|anneau|dague|arc|potion|grimoire|trésor|coffre|armure)\b",
+            r"\b(objet|artefact|relique)\b",
         ]
 
         self.location_keywords = {
-            "la Comté", "Fondcombe", "les Mines de la Moria",
-            "la forêt de Fangorn", "Minas Tirith", "le Mont Destin",
-            "les plaines du Rohan", "Isengard", "Helm's Deep",
-            "la forêt de Lothlórien", "la rivière Anduin", "la montagne solitaire",
-            "taverne", "forêt", "montagne", "rivière", "grotte", "château"
+            "la Comté",
+            "Fondcombe",
+            "les Mines de la Moria",
+            "la forêt de Fangorn",
+            "Minas Tirith",
+            "le Mont Destin",
+            "les plaines du Rohan",
+            "Isengard",
+            "Helm's Deep",
+            "la forêt de Lothlórien",
+            "la rivière Anduin",
+            "la montagne solitaire",
+            "taverne",
+            "forêt",
+            "montagne",
+            "rivière",
+            "grotte",
+            "château",
         }
 
     def extract_entities(self, text: str) -> Dict[str, List[str]]:
         """Extract entities (characters, items, locations) from text"""
         text_lower = text.lower()
-        extracted = {
-            "characters": [],
-            "items": [],
-            "locations": []
-        }
+        extracted = {"characters": [], "items": [], "locations": []}
 
         # Extract characters
         for pattern in self.character_patterns:
@@ -124,7 +137,7 @@ class NarrativeMemory:
                     type="character",
                     first_mentioned=self.current_turn,
                     last_mentioned=self.current_turn,
-                    mentions_count=1
+                    mentions_count=1,
                 )
             else:
                 self.entities[char].last_mentioned = self.current_turn
@@ -137,7 +150,7 @@ class NarrativeMemory:
                     type="item",
                     first_mentioned=self.current_turn,
                     last_mentioned=self.current_turn,
-                    mentions_count=1
+                    mentions_count=1,
                 )
             else:
                 self.entities[item].last_mentioned = self.current_turn
@@ -151,31 +164,42 @@ class NarrativeMemory:
                     type="location",
                     first_mentioned=self.current_turn,
                     last_mentioned=self.current_turn,
-                    mentions_count=1
+                    mentions_count=1,
                 )
             else:
                 self.entities[location].last_mentioned = self.current_turn
                 self.entities[location].mentions_count += 1
 
-    def add_event(self, description: str, location: str, entities: List[str], importance: int = 3):
+    def add_event(
+        self, description: str, location: str, entities: List[str], importance: int = 3
+    ):
         """Add an important event to memory"""
         event = NarrativeEvent(
             turn=self.current_turn,
             description=description,
             entities_involved=entities,
             location=location,
-            importance=importance
+            importance=importance,
         )
         self.events.append(event)
 
         # Keep only important events if list gets too long
         if len(self.events) > 20:
-            self.events = sorted(self.events, key=lambda e: e.importance, reverse=True)[:15]
+            self.events = sorted(self.events, key=lambda e: e.importance, reverse=True)[
+                :15
+            ]
 
     def detect_important_events(self, narrative: str) -> Optional[NarrativeEvent]:
         """Detect if narrative contains an important event"""
         importance_keywords = {
-            5: ["dragon", "bataille", "mort", "victoire", "défaite", "découvre le trésor"],
+            5: [
+                "dragon",
+                "bataille",
+                "mort",
+                "victoire",
+                "défaite",
+                "découvre le trésor",
+            ],
             4: ["combat", "rencontre", "trouve", "perd", "gagne"],
             3: ["explore", "voyage", "parle", "décide"],
         }
@@ -191,7 +215,7 @@ class NarrativeMemory:
                     description=narrative[:100],  # First 100 chars
                     entities_involved=all_entities[:5],
                     location=self.current_location,
-                    importance=importance
+                    importance=importance,
                 )
 
         return None
@@ -201,7 +225,9 @@ class NarrativeMemory:
         if not self.events:
             return ""
 
-        recent_events = sorted(self.events, key=lambda e: e.turn, reverse=True)[:num_events]
+        recent_events = sorted(self.events, key=lambda e: e.turn, reverse=True)[
+            :num_events
+        ]
         context_lines = ["Événements récents importants:"]
 
         for event in recent_events:
@@ -278,12 +304,14 @@ class NarrativeMemory:
         return {
             "current_turn": self.current_turn,
             "total_entities": len(self.entities),
-            "characters": sum(1 for e in self.entities.values() if e.type == "character"),
+            "characters": sum(
+                1 for e in self.entities.values() if e.type == "character"
+            ),
             "items": sum(1 for e in self.entities.values() if e.type == "item"),
             "locations_visited": len(self.locations_visited),
             "total_events": len(self.events),
             "active_quests": len(self.active_quests),
-            "completed_quests": len(self.completed_quests)
+            "completed_quests": len(self.completed_quests),
         }
 
     def advance_turn(self):
@@ -304,7 +332,7 @@ class NarrativeMemory:
                     "last_mentioned": e.last_mentioned,
                     "mentions_count": e.mentions_count,
                     "attributes": e.attributes,
-                    "relations": e.relations
+                    "relations": e.relations,
                 }
                 for name, e in self.entities.items()
             },
@@ -315,16 +343,16 @@ class NarrativeMemory:
                     "entities_involved": ev.entities_involved,
                     "location": ev.location,
                     "importance": ev.importance,
-                    "timestamp": ev.timestamp
+                    "timestamp": ev.timestamp,
                 }
                 for ev in self.events
             ],
             "active_quests": self.active_quests,
-            "completed_quests": self.completed_quests
+            "completed_quests": self.completed_quests,
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'NarrativeMemory':
+    def from_dict(cls, data: Dict[str, Any]) -> "NarrativeMemory":
         """Deserialize memory from dict"""
         memory = cls()
         memory.current_turn = data.get("current_turn", 0)
@@ -340,19 +368,21 @@ class NarrativeMemory:
                 last_mentioned=entity_data["last_mentioned"],
                 mentions_count=entity_data.get("mentions_count", 1),
                 attributes=entity_data.get("attributes", {}),
-                relations=entity_data.get("relations", [])
+                relations=entity_data.get("relations", []),
             )
 
         # Restore events
         for event_data in data.get("events", []):
-            memory.events.append(NarrativeEvent(
-                turn=event_data["turn"],
-                description=event_data["description"],
-                entities_involved=event_data["entities_involved"],
-                location=event_data["location"],
-                importance=event_data["importance"],
-                timestamp=event_data.get("timestamp", "")
-            ))
+            memory.events.append(
+                NarrativeEvent(
+                    turn=event_data["turn"],
+                    description=event_data["description"],
+                    entities_involved=event_data["entities_involved"],
+                    location=event_data["location"],
+                    importance=event_data["importance"],
+                    timestamp=event_data.get("timestamp", ""),
+                )
+            )
 
         memory.active_quests = data.get("active_quests", [])
         memory.completed_quests = data.get("completed_quests", [])
@@ -377,11 +407,11 @@ class SmartHistoryManager:
 
         # Truncate if too long
         if len(self.raw_history) > self.max_raw_history:
-            self.raw_history = self.raw_history[-self.max_raw_history:]
+            self.raw_history = self.raw_history[-self.max_raw_history :]
 
     def get_recent_history(self, num_interactions: int = 10) -> List[str]:
         """Get recent history entries"""
-        return self.raw_history[-num_interactions * 2:]
+        return self.raw_history[-num_interactions * 2 :]
 
     def estimate_tokens(self, text: str) -> int:
         """Rough token estimation (1 token ≈ 4 characters)"""

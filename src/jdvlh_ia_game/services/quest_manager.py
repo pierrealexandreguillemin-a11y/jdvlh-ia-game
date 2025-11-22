@@ -7,9 +7,7 @@ from typing import List, Dict, Optional
 from datetime import datetime
 import ollama
 
-from ..models.game_entities import (
-    Player, Quest, Objective, ObjectiveType, QuestStatus
-)
+from ..models.game_entities import Player, Quest, Objective, ObjectiveType, QuestStatus
 from .model_router import get_router, TaskType
 from .inventory_manager import InventoryManager, ITEM_DATABASE
 
@@ -35,17 +33,11 @@ class QuestManager:
 
         # Check if quest already active
         if any(q.quest_id == quest.quest_id for q in player.active_quests):
-            return {
-                "success": False,
-                "message": "Cette quête est déjà active"
-            }
+            return {"success": False, "message": "Cette quête est déjà active"}
 
         # Check if quest already completed
         if quest.quest_id in player.completed_quests:
-            return {
-                "success": False,
-                "message": "Cette quête a déjà été accomplie"
-            }
+            return {"success": False, "message": "Cette quête a déjà été accomplie"}
 
         # Add quest to active quests
         player.active_quests.append(quest)
@@ -53,15 +45,11 @@ class QuestManager:
         return {
             "success": True,
             "message": f"Nouvelle quête: {quest.title}",
-            "quest": quest.to_dict()
+            "quest": quest.to_dict(),
         }
 
     def update_objective(
-        self,
-        player: Player,
-        quest_id: str,
-        objective_id: str,
-        progress: int = 1
+        self, player: Player, quest_id: str, objective_id: str, progress: int = 1
     ) -> Dict[str, any]:
         """
         Update progress on a quest objective
@@ -80,22 +68,15 @@ class QuestManager:
         quest = self._find_active_quest(player, quest_id)
 
         if not quest:
-            return {
-                "success": False,
-                "message": "Quête non trouvée"
-            }
+            return {"success": False, "message": "Quête non trouvée"}
 
         # Find objective
         objective = next(
-            (obj for obj in quest.objectives if obj.objective_id == objective_id),
-            None
+            (obj for obj in quest.objectives if obj.objective_id == objective_id), None
         )
 
         if not objective:
-            return {
-                "success": False,
-                "message": "Objectif non trouvé"
-            }
+            return {"success": False, "message": "Objectif non trouvé"}
 
         # Update progress
         was_completed = objective.completed
@@ -104,7 +85,7 @@ class QuestManager:
         result = {
             "success": True,
             "objective_completed": objective.completed and not was_completed,
-            "quest_completed": quest.is_completed()
+            "quest_completed": quest.is_completed(),
         }
 
         # Check if quest completed
@@ -130,15 +111,12 @@ class QuestManager:
         quest = self._find_active_quest(player, quest_id)
 
         if not quest:
-            return {
-                "success": False,
-                "message": "Quête non trouvée"
-            }
+            return {"success": False, "message": "Quête non trouvée"}
 
         if not quest.is_completed():
             return {
                 "success": False,
-                "message": "Tous les objectifs ne sont pas accomplis"
+                "message": "Tous les objectifs ne sont pas accomplis",
             }
 
         # Mark as completed
@@ -154,7 +132,7 @@ class QuestManager:
         return {
             "success": True,
             "message": f"Quête accomplie: {quest.title} !",
-            "rewards": rewards
+            "rewards": rewards,
         }
 
     def fail_quest(self, player: Player, quest_id: str) -> Dict[str, any]:
@@ -172,10 +150,7 @@ class QuestManager:
         quest = self._find_active_quest(player, quest_id)
 
         if not quest:
-            return {
-                "success": False,
-                "message": "Quête non trouvée"
-            }
+            return {"success": False, "message": "Quête non trouvée"}
 
         # Mark as failed
         quest.fail()
@@ -183,10 +158,7 @@ class QuestManager:
         # Remove from active quests
         player.active_quests.remove(quest)
 
-        return {
-            "success": True,
-            "message": f"Quête échouée: {quest.title}"
-        }
+        return {"success": True, "message": f"Quête échouée: {quest.title}"}
 
     def get_quest_progress(self, player: Player, quest_id: str) -> Dict[str, any]:
         """
@@ -203,10 +175,7 @@ class QuestManager:
         quest = self._find_active_quest(player, quest_id)
 
         if not quest:
-            return {
-                "success": False,
-                "message": "Quête non trouvée"
-            }
+            return {"success": False, "message": "Quête non trouvée"}
 
         total_objectives = len(quest.objectives)
         completed_objectives = sum(1 for obj in quest.objectives if obj.completed)
@@ -217,14 +186,10 @@ class QuestManager:
             "quest": quest.to_dict(),
             "progress_percent": progress_percent,
             "completed_objectives": completed_objectives,
-            "total_objectives": total_objectives
+            "total_objectives": total_objectives,
         }
 
-    async def generate_dynamic_quest(
-        self,
-        player: Player,
-        location: str
-    ) -> Quest:
+    async def generate_dynamic_quest(self, player: Player, location: str) -> Quest:
         """
         Generate a dynamic quest using AI based on player level and location
 
@@ -239,7 +204,7 @@ class QuestManager:
         model, options = self.router.select_model(
             prompt=f"Générer une quête pour niveau {player.level} à {location}",
             context="",
-            task_type=TaskType.CREATIVE_STORY
+            task_type=TaskType.CREATIVE_STORY,
         )
 
         prompt = f"""Génère UNE quête courte pour un enfant de 10-14 ans.
@@ -260,7 +225,8 @@ Réponds en JSON:
         try:
             response = ollama.generate(model=model, prompt=prompt, options=options)
             import json
-            quest_data = json.loads(response['response'])
+
+            quest_data = json.loads(response["response"])
 
             # Create quest from AI response
             objectives = [
@@ -268,7 +234,7 @@ Réponds en JSON:
                     objective_id=f"obj_{i}",
                     type=ObjectiveType(obj["type"]),
                     description=obj["description"],
-                    target=obj["target"]
+                    target=obj["target"],
                 )
                 for i, obj in enumerate(quest_data["objectives"])
             ]
@@ -279,7 +245,7 @@ Réponds en JSON:
                 description=quest_data["description"],
                 objectives=objectives,
                 xp_reward=quest_data["xp_reward"],
-                gold_reward=quest_data["gold_reward"]
+                gold_reward=quest_data["gold_reward"],
             )
 
             return quest
@@ -294,17 +260,13 @@ Réponds en JSON:
         """Find an active quest by ID"""
         return next(
             (quest for quest in player.active_quests if quest.quest_id == quest_id),
-            None
+            None,
         )
 
     def _distribute_rewards(self, player: Player, quest: Quest) -> Dict[str, any]:
         """Distribute quest rewards to player"""
 
-        rewards = {
-            "xp": 0,
-            "gold": 0,
-            "items": []
-        }
+        rewards = {"xp": 0, "gold": 0, "items": []}
 
         # XP
         if quest.xp_reward > 0:
@@ -341,26 +303,25 @@ QUEST_TEMPLATES = {
                 objective_id="obj_1",
                 type=ObjectiveType.TRAVEL,
                 description="Voyager jusqu'au Mont Destin",
-                target="le Mont Destin"
+                target="le Mont Destin",
             ),
             Objective(
                 objective_id="obj_2",
                 type=ObjectiveType.COMBAT,
                 description="Vaincre Gollum",
-                target="gollum"
+                target="gollum",
             ),
             Objective(
                 objective_id="obj_3",
                 type=ObjectiveType.USE_ITEM,
                 description="Détruire l'Anneau dans les flammes",
-                target="ring_of_power"
+                target="ring_of_power",
             ),
         ],
         xp_reward=1000,
         gold_reward=0,
-        is_main_quest=True
+        is_main_quest=True,
     ),
-
     "help_gandalf": Quest(
         quest_id="quest_gandalf_1",
         title="Aider Gandalf",
@@ -371,21 +332,20 @@ QUEST_TEMPLATES = {
                 type=ObjectiveType.COLLECT,
                 description="Collecter 3 herbes médicinales",
                 target="medical_herb",
-                target_quantity=3
+                target_quantity=3,
             ),
             Objective(
                 objective_id="obj_return",
                 type=ObjectiveType.TALK_TO_NPC,
                 description="Rapporter les herbes à Gandalf",
-                target="gandalf"
+                target="gandalf",
             ),
         ],
         xp_reward=100,
         gold_reward=50,
         item_rewards=["health_potion", "health_potion"],
-        is_main_quest=False
+        is_main_quest=False,
     ),
-
     "defend_village": Quest(
         quest_id="quest_defend_shire",
         title="Défendre la Comté",
@@ -396,15 +356,14 @@ QUEST_TEMPLATES = {
                 type=ObjectiveType.COMBAT,
                 description="Vaincre 5 orcs",
                 target="orc",
-                target_quantity=5
+                target_quantity=5,
             ),
         ],
         xp_reward=200,
         gold_reward=100,
         item_rewards=["rusty_sword"],
-        is_main_quest=False
+        is_main_quest=False,
     ),
-
     "simple_delivery": Quest(
         quest_id="quest_delivery_1",
         title="Livraison urgente",
@@ -414,17 +373,17 @@ QUEST_TEMPLATES = {
                 objective_id="obj_travel_rivendell",
                 type=ObjectiveType.TRAVEL,
                 description="Voyager à Fondcombe",
-                target="Fondcombe"
+                target="Fondcombe",
             ),
             Objective(
                 objective_id="obj_deliver",
                 type=ObjectiveType.TALK_TO_NPC,
                 description="Livrer le colis à Elrond",
-                target="elrond"
+                target="elrond",
             ),
         ],
         xp_reward=75,
         gold_reward=30,
-        is_main_quest=False
+        is_main_quest=False,
     ),
 }

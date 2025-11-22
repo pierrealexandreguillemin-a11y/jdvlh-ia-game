@@ -7,6 +7,7 @@ from slowapi.util import get_remote_address
 
 limiter = Limiter(key_func=get_remote_address)
 
+
 class SecurityMiddleware(LimiterMiddleware):
     def __init__(self, app):
         super().__init__(
@@ -23,7 +24,9 @@ class SecurityMiddleware(LimiterMiddleware):
             if body:
                 data = json.loads(body)
                 if "choice" in data:
-                    data["choice"] = re.sub(r'[<>;{}()\\"]', "", data["choice"].strip())[:100]
+                    data["choice"] = re.sub(
+                        r'[<>;{}()\\"]', "", data["choice"].strip()
+                    )[:100]
         except:
             pass
 
