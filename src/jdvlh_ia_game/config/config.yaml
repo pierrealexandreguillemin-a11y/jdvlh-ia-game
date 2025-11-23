@@ -1,7 +1,7 @@
 server:
   host: 0.0.0.0
   port: 8000
-  max_players: 4
+  max_players: 50  # Increased for testing concurrent connections
   session_ttl: 1800  # 30min in seconds
 
 ollama:

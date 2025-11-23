@@ -6,7 +6,6 @@ import yaml
 import sqlite3
 import re
 from typing import Dict, Any, List
-from datetime import datetime
 from pathlib import Path
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,11 +13,10 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from slowapi import Limiter
 from slowapi.util import get_remote_address
-from slowapi.errors import RateLimitExceeded
 import ollama
-
 # Load config (chemin absolu)
-CONFIG_PATH = Path(__file__).parent / "src" / "jdvlh_ia_game" / "config" / "config.yaml"
+BASE_DIR = Path(__file__).parent
+CONFIG_PATH = BASE_DIR / "src" / "jdvlh_ia_game" / "config" / "config.yaml"
 with open(CONFIG_PATH, "r", encoding="utf-8") as f:
     config = yaml.safe_load(f)
 
@@ -100,7 +98,8 @@ def save_state(player_id: str, state: GameState):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute(
-        "INSERT OR REPLACE INTO game_states (player_id, state_json, last_activity) VALUES (?, ?, ?)",
+        "INSERT OR REPLACE INTO game_states "
+        "(player_id, state_json, last_activity) VALUES (?, ?, ?)",
         (player_id, state.model_dump_json(), time.time()),
     )
     conn.commit()
@@ -135,7 +134,7 @@ async def pregenerate_cache():
                 resp = ollama.generate(model=config["ollama"]["model"], prompt=prompt)[
                     "response"
                 ]
-            except:
+            except Exception:
                 resp = f"Lieu mystérieux: {loc}."
             data = {
                 "description": resp,
@@ -190,12 +189,24 @@ Historique récent:
 
 Le joueur choisit: {choice}
 
-Raconte maintenant la suite en FRANÇAIS avec une narrative RICHE et STRUCTURÉE (8-12 phrases minimum).
 
-Réponds EXACTEMENT en JSON valide:
+Raconte maintenant la suite en FRANÇAIS avec une narrative
+RICHE et STRUCTURÉE (8-12 phrases minimum).
+
+Réponds EXACTEM(
+    ENT en JSON valide:"
+    "
+  )
 {{
-  "narrative": "Récit structuré en français de 8-12 phrases: contexte détaillé, action immersive, conséquence claire, suspense final. TOUJOURS en français.",
-  "choices": ["Action concrète en français", "Exploration détaillée en français", "Dialogue ou interaction en français"],
+  "narrative": (
+    "Récit structuré en français de 8-12 phrases: contexte détaillé, "
+    "action immersive, conséquence claire, suspense final. TOUJOURS en français."
+  ),
+  "choices": [
+    "Action concrète en français",
+    "Exploration détaillée en français",
+    "Dialogue ou interaction en français"
+  ],
   "location": "nom du lieu actuel ou nouveau",
   "animation_trigger": "none|fade_in|shake|glow",
   "sfx": "ambient|wind|echo|magic"
@@ -227,7 +238,7 @@ Réponds EXACTEMENT en JSON valide:
             if not is_safe_content(narrative) or not is_safe_content(choices_text):
                 # RÉGÉNÉRATION au lieu de message d'erreur !
                 print(
-                    f"[SAFETY] Contenu inapproprié détecté, régénération (tentative {attempt+1})..."
+                    f"[SAFETY] Contenu inapproprié, régénération (tentative {attempt + 1})"
                 )
                 if attempt < config["ollama"]["max_retries"] - 1:
                     await asyncio.sleep(1)  # Petit délai
@@ -257,24 +268,24 @@ Réponds EXACTEMENT en JSON valide:
             return parsed
 
         except json.JSONDecodeError as e:
-            print(f"[JSON] Tentative {attempt+1} échouée (JSON invalide): {e}")
+            print(f"[JSON] Tentative {attempt + 1} échouée (JSON invalide): {e}")
             if attempt == config["ollama"]["max_retries"] - 1:
                 state.history.append("MJ: Erreur technique, fallback activé.")
                 save_state(player_id, state)
                 data["state"] = state
                 data["last_activity"] = time.time()
                 return fallback
-            await asyncio.sleep(2**attempt)  # Backoff exponentiel
+            await asyncio.sleep(2 ** attempt)  # Backoff exponentiel
 
         except Exception as e:
-            print(f"[ERROR] Tentative {attempt+1} échouée: {e}")
+            print(f"[ERROR] Tentative {attempt + 1} échouée: {e}")
             if attempt == config["ollama"]["max_retries"] - 1:
                 state.history.append("MJ: Erreur technique, fallback activé.")
                 save_state(player_id, state)
                 data["state"] = state
                 data["last_activity"] = time.time()
                 return fallback
-            await asyncio.sleep(2**attempt)  # Backoff
+            await asyncio.sleep(2 ** attempt)  # Backoff
 
     return fallback
 

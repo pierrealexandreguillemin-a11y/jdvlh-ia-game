@@ -28,22 +28,26 @@ class CacheService:
             safe_loc = loc.replace(" ", "_").replace("é", "e").replace("'", "")
             cache_file = os.path.join(CACHE_DIR, f"{safe_loc}.json")
             if not os.path.exists(cache_file):
-                prompt = f"Décris brièvement {loc} en 1-2 phrases immersives pour enfants de 10 ans dans l'univers du Seigneur des Anneaux."
+                prompt = (
+                    f"Décris brièvement {loc} en 1-2 phrases immersives "
+                    f"pour enfants de 10 ans dans l'univers "
+                    f"du Seigneur des Anneaux."
+                )
                 try:
                     resp = ollama.generate(
                         model=config["ollama"]["model"],
                         prompt=prompt,
-                        options={
-                            "temperature": 0.3,
-                            "num_predict": 80
-                        }
+                        options={"temperature": 0.3, "num_predict": 80},
                     )["response"].strip()
                 except Exception as e:
                     print(f"⚠️ Erreur génération cache {loc}: {e}")
                     resp = f"Un lieu épique et mystérieux dans {loc} !"
                 data = {
                     "description": resp,
-                    "background": loc.lower().replace(" ", "_").replace("'", "").replace("é", "e"),
+                    "background": loc.lower()
+                    .replace(" ", "_")
+                    .replace("'", "")
+                    .replace("é", "e"),
                     "animation_trigger": "ambient_start",
                     "sfx": "wind" if "forêt" in loc.lower() else "echo",
                 }

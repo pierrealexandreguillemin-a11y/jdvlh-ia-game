@@ -3,7 +3,7 @@ Inventory Manager - Manages player inventory and equipment
 Handles adding/removing items, equipping/unequipping, and crafting
 """
 
-from typing import List, Dict, Optional, Tuple
+from typing import Dict, Optional
 from ..models.game_entities import Player, Item, ItemType, ItemRarity
 
 
@@ -53,7 +53,10 @@ class InventoryManager:
                 existing_item.quantity += item.quantity
                 return {
                     "success": True,
-                    "message": f"{item.name} x{item.quantity} ajouté (total: {existing_item.quantity})",
+                    "message": (
+                        f"{item.name} x{item.quantity} "
+                        f"ajouté (total: {existing_item.quantity})"
+                    ),
                 }
 
         # Check inventory space

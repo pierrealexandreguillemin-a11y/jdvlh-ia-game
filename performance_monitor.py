@@ -5,7 +5,6 @@ Analyse les temps de réponse, cache hit rate, et métriques système
 
 import asyncio
 import time
-import json
 import statistics
 from datetime import datetime
 from collections import deque
@@ -155,7 +154,7 @@ async def test_ollama_performance(monitor: PerformanceMonitor, num_tests: int = 
 
     for i in range(num_tests):
         prompt = test_prompts[i % len(test_prompts)]
-        print(f"\n[{i+1}/{num_tests}] Test: {prompt[:50]}...")
+        print(f"\n[{i + 1}/{num_tests}] Test: {prompt[:50]}...")
 
         start = time.time()
         try:
@@ -168,13 +167,13 @@ async def test_ollama_performance(monitor: PerformanceMonitor, num_tests: int = 
             monitor.record_response(duration, from_cache=False)
 
             print(
-                f"✅ Réponse en {duration*1000:.0f} ms ({len(response['response'])} caractères)"
+                f"✅ Réponse en {duration * 1000:.0f} ms ({len(response['response'])} caractères)"
             )
 
         except Exception as e:
             duration = time.time() - start
             monitor.record_error()
-            print(f"❌ Erreur après {duration*1000:.0f} ms: {str(e)[:100]}")
+            print(f"❌ Erreur après {duration * 1000:.0f} ms: {str(e)[:100]}")
 
         # Pause entre requêtes
         if i < num_tests - 1:
@@ -225,7 +224,7 @@ def simulate_traffic(monitor: PerformanceMonitor):
         monitor.record_response(duration, from_cache)
 
         if (i + 1) % 10 == 0:
-            print(f"\n--- Après {i+1} requêtes ---")
+            print(f"\n--- Après {i + 1} requêtes ---")
             monitor.print_stats()
 
 
@@ -263,7 +262,8 @@ async def benchmark_ollama_models():
                 duration = time.time() - start
                 times.append(duration)
                 print(
-                    f"  Tentative {i+1}: {duration*1000:.0f} ms ({len(response['response'])} chars)"
+                    f"  Tentative {i + 1}: {duration * 1000:.0f} ms "
+                    f"({len(response['response'])} chars)"
                 )
 
             except Exception as e:

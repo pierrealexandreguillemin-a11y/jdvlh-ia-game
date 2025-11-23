@@ -1,16 +1,26 @@
 import pytest
-from datetime import datetime
 import sys
 from pathlib import Path
 
 # Ajouter src au path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from jdvlh_ia_game.models.game_entities import (
-    Player, Item, Spell, Enemy, Quest, Objective,
-    Race, CharacterClass, ItemType, ItemRarity,
-    SpellElement, EnemyType, AIStrategy,
-    QuestStatus, ObjectiveType
+from jdvlh_ia_game.models.game_entities import (  # noqa: E402
+    Player,
+    Item,
+    Spell,
+    Enemy,
+    Quest,
+    Objective,
+    Race,
+    CharacterClass,
+    ItemType,
+    ItemRarity,
+    SpellElement,
+    EnemyType,
+    AIStrategy,
+    QuestStatus,
+    ObjectiveType,
 )
 
 
@@ -44,7 +54,7 @@ def sample_player():
         current_location="la Comté",
         active_quests=[],
         completed_quests=[],
-        npc_reputation={}
+        npc_reputation={},
     )
 
 
@@ -67,7 +77,7 @@ def sample_item():
         stackable=False,
         quantity=1,
         value=50,
-        description="Une épée basique."
+        description="Une épée basique.",
     )
 
 
@@ -90,7 +100,7 @@ def sample_enemy():
         loot_table={"i1": 0.3},
         gold_drop_min=10,
         gold_drop_max=20,
-        xp_reward=50
+        xp_reward=50,
     )
 
 
@@ -104,7 +114,7 @@ def sample_objective():
         target="orc",
         target_quantity=3,
         current_progress=0,
-        completed=False
+        completed=False,
     )
 
 
@@ -120,7 +130,7 @@ def sample_quest(sample_objective):
         gold_reward=100,
         item_rewards=["i1"],
         status=QuestStatus.ACTIVE,
-        is_main_quest=False
+        is_main_quest=False,
     )
 
 
@@ -195,7 +205,7 @@ def sample_spell():
         name="Boule de Feu",
         element=SpellElement.FIRE,
         mana_cost=20,
-        damage=30
+        damage=30,
     )
 
 

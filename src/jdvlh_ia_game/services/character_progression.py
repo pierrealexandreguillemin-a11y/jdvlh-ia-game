@@ -3,7 +3,7 @@ Character Progression - Manages player leveling, skills, and stats
 Handles XP, level-ups, skill trees, and stat allocation
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, List
 from ..models.game_entities import Player, CharacterClass
 
 

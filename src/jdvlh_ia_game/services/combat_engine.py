@@ -194,8 +194,11 @@ Adapté pour enfants 10-14 ans, ton excitant mais pas violent."""
             prompt="action combat rapide", context="", task_type=TaskType.QUICK_RESPONSE
         )
 
-        narrative_prompt = f"""En 1 phrase courte: {player.name} attaque {enemy.name} et inflige {damage} dégâts.
-Ton excitant adapté enfants. HP restant ennemi: {enemy.hp}/{enemy.max_hp}."""
+        narrative_prompt = (
+            f"""En 1 phrase courte: {player.name} attaque {enemy.name} et "
+            f"inflige {damage} dégâts.\nTon excitant adapté enfants. "
+            f"HP restant ennemi: {enemy.hp}/{enemy.max_hp}."""
+        )
 
         narrative = await self._generate_narrative(model, narrative_prompt, options)
 
@@ -228,10 +231,15 @@ Ton excitant adapté enfants. HP restant ennemi: {enemy.hp}/{enemy.max_hp}."""
             prompt="sort magique épique", context="", task_type=TaskType.EPIC_ACTION
         )
 
-        narrative_prompt = f"""En 2 phrases: {player.name} lance un sort de feu puissant sur {enemy.name} !
-{damage} dégâts infligés. Ton épique adapté enfants."""
+        narrative_prompt = (
+            f"""En 2 phrases: {player.name} lance un sort de feu puissant """
+            f"""sur {enemy.name} !\n{damage} dégâts infligés. Ton épique """
+            f"""adapté enfants."""
+        )
 
-        narrative = await self._generate_narrative(model, narrative_prompt, options)
+        narrative = await self._generate_narrative(
+            model, narrative_prompt, options
+        )
 
         return damage, narrative
 

@@ -8,7 +8,6 @@ Automatically selects the best Ollama model based on:
 - Model availability and performance
 """
 
-import re
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum

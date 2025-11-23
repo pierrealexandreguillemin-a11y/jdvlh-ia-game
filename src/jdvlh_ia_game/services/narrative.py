@@ -51,7 +51,6 @@ JSON SEULEMENT:
   "sfx": "ambient"
 }}"""
 
-
         fallback = {
             "narrative": "L'aventure continue de manière mystérieuse...",
             "choices": ["Continuer", "Explorer", "Retourner"],
@@ -94,10 +93,10 @@ JSON SEULEMENT:
                 parsed["choices"] = parsed.get("choices", fallback["choices"])[:3]
                 return parsed
             except Exception as e:
-                print(f"Tentative {attempt+1} échouée: {e}")
+                print(f"Tentative {attempt + 1} échouée: {e}")
                 if attempt == self.max_retries - 1:
                     return fallback
-                await asyncio.sleep(2**attempt)
+                await asyncio.sleep(2 ** attempt)
 
         return fallback
 

@@ -8,7 +8,8 @@ from pathlib import Path
 import yaml
 
 # Chemin absolu vers config.yaml
-CONFIG_PATH = Path(__file__).parent.parent / "config" / "config.yaml"
+BASE_DIR = Path(__file__).parent.parent
+CONFIG_PATH = BASE_DIR / "config" / "config.yaml"
 with open(CONFIG_PATH, "r", encoding="utf-8") as f:
     config = yaml.safe_load(f)
 
@@ -57,7 +58,8 @@ class StateManager:
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
         cursor.execute(
-            "INSERT OR REPLACE INTO game_states (player_id, state_json, last_activity) VALUES (?, ?, ?)",
+            "INSERT OR REPLACE INTO game_states (player_id, state_json, last_activity) "
+            "VALUES (?, ?, ?)",
             (player_id, json.dumps(state), time.time()),
         )
         conn.commit()

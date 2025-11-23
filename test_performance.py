@@ -34,7 +34,7 @@ async def test_ollama_response_times():
         times = []
 
         for i in range(3):
-            print(f"  Tentative {i+1}/3...", end=" ")
+            print(f"  Tentative {i + 1}/3...", end=" ")
             start = time.time()
 
             try:
@@ -48,7 +48,7 @@ async def test_ollama_response_times():
                 all_times.append(duration)
 
                 print(
-                    f"OK - {duration*1000:.0f} ms ({len(response['response'])} chars)"
+                    f"OK - {duration * 1000:.0f} ms ({len(response['response'])} chars)"
                 )
 
             except Exception as e:
@@ -57,7 +57,9 @@ async def test_ollama_response_times():
         if times:
             avg = statistics.mean(times)
             print(
-                f"  => Moyenne: {avg*1000:.0f} ms, Min: {min(times)*1000:.0f} ms, Max: {max(times)*1000:.0f} ms"
+                f"  => Moyenne: {avg * 1000:.0f} ms, "
+                f"Min: {min(times) * 1000:.0f} ms, "
+                f"Max: {max(times) * 1000:.0f} ms"
             )
 
     # Statistiques globales
@@ -66,17 +68,17 @@ async def test_ollama_response_times():
         print("STATISTIQUES GLOBALES")
         print("=" * 70)
         print(f"Total tests:        {len(all_times)}")
-        print(f"Temps moyen:        {statistics.mean(all_times)*1000:.0f} ms")
-        print(f"Temps median:       {statistics.median(all_times)*1000:.0f} ms")
-        print(f"Temps min:          {min(all_times)*1000:.0f} ms")
-        print(f"Temps max:          {max(all_times)*1000:.0f} ms")
+        print(f"Temps moyen:        {statistics.mean(all_times) * 1000:.0f} ms")
+        print(f"Temps median:       {statistics.median(all_times) * 1000:.0f} ms")
+        print(f"Temps min:          {min(all_times) * 1000:.0f} ms")
+        print(f"Temps max:          {max(all_times) * 1000:.0f} ms")
 
         sorted_times = sorted(all_times)
         p95 = sorted_times[int(len(sorted_times) * 0.95)]
         p99 = sorted_times[int(len(sorted_times) * 0.99)]
 
-        print(f"P95:                {p95*1000:.0f} ms")
-        print(f"P99:                {p99*1000:.0f} ms")
+        print(f"P95:                {p95 * 1000:.0f} ms")
+        print(f"P99:                {p99 * 1000:.0f} ms")
 
         print("\n" + "=" * 70)
         print("RECOMMANDATIONS")

@@ -27,7 +27,7 @@ class SecurityMiddleware(LimiterMiddleware):
                     data["choice"] = re.sub(
                         r'[<>;{}()\\"]', "", data["choice"].strip()
                     )[:100]
-        except:
+        except Exception:
             pass
 
         response = await call_next(request)

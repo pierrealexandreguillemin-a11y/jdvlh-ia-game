@@ -1,12 +1,12 @@
 import pytest
 from datetime import datetime
-import sys
-from pathlib import Path
 
-# Ajouter src au path
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-
-from jdvlh_ia_game.services.character_progression import CharacterProgression, SKILL_TREES, apply_racial_bonuses, apply_class_bonuses
+from jdvlh_ia_game.services.character_progression import (
+    CharacterProgression,
+    SKILL_TREES,
+    apply_racial_bonuses,
+    apply_class_bonuses,
+)
 from jdvlh_ia_game.models.game_entities import Player, CharacterClass, Race
 
 
@@ -42,7 +42,7 @@ def sample_player():
         completed_quests=[],
         npc_reputation={},
         created_at=datetime.now(),
-        last_played=datetime.now()
+        last_played=datetime.now(),
     )
 
 
@@ -54,7 +54,7 @@ def progression():
 
 class TestCharacterProgression:
     """Tests for CharacterProgression"""
-    
+
     def test_gain_xp_no_level_up(self, progression, sample_player):
         result = progression.gain_xp(sample_player, 50)
         assert result["leveled_up"] is False
@@ -135,6 +135,7 @@ class TestCharacterProgression:
     def test_racial_bonuses(self, sample_player):
         # Copy player to avoid modifying fixture
         import copy
+
         player_copy = copy.deepcopy(sample_player)
         player_copy.race = Race.NAIN
         apply_racial_bonuses(player_copy)
@@ -144,6 +145,7 @@ class TestCharacterProgression:
 
     def test_class_bonuses(self, sample_player):
         import copy
+
         player_copy = copy.deepcopy(sample_player)
         player_copy.class_type = CharacterClass.MAGE
         apply_class_bonuses(player_copy)

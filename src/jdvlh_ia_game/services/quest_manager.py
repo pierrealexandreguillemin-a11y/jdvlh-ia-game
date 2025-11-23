@@ -3,7 +3,7 @@ Quest Manager - Manages quests and objectives
 Handles quest progression, rewards, and narrative integration
 """
 
-from typing import List, Dict, Optional
+from typing import Dict, Optional
 from datetime import datetime
 import ollama
 
@@ -207,20 +207,23 @@ class QuestManager:
             task_type=TaskType.CREATIVE_STORY,
         )
 
-        prompt = f"""Génère UNE quête courte pour un enfant de 10-14 ans.
-Contexte: Joueur niveau {player.level}, classe {player.class_type.value}, à {location}.
+        prompt = (
+            f"""Génère UNE quête courte pour un enfant de 10-14 ans.
+Contexte: Joueur niveau {player.level}, classe {player.class_type.value}, "
+            f"à {location}.
 
 Réponds en JSON:
 {{
-  "title": "Titre court",
-  "description": "1-2 phrases",
-  "objectives": [
-    {{"type": "travel", "description": "Aller à X", "target": "lieu"}},
-    {{"type": "collect", "description": "Trouver Y", "target": "item_id"}}
+  \"title\": \"Titre court\",
+  \"description\": \"1-2 phrases\",
+  \"objectives\": [
+    {{\"type\": \"travel\", \"description\": \"Aller à X\", \"target\": \"lieu\"}},
+    {{\"type\": \"collect\", \"description\": \"Trouver Y\", \"target\": \"item_id\"}}
   ],
-  "xp_reward": {player.level * 50},
-  "gold_reward": {player.level * 20}
+  \"xp_reward\": {player.level * 50},
+  \"gold_reward\": {player.level * 20}
 }}"""
+        )
 
         try:
             response = ollama.generate(model=model, prompt=prompt, options=options)
@@ -297,7 +300,10 @@ QUEST_TEMPLATES = {
     "destroy_ring": Quest(
         quest_id="main_quest_ring",
         title="Détruire l'Anneau Unique",
-        description="Apportez l'Anneau Unique au Mont Destin et détruisez-le pour sauver la Terre du Milieu.",
+        description=(
+            "Apportez l'Anneau Unique au Mont Destin et "
+            "détruisez-le pour sauver la Terre du Milieu."
+        ),
         objectives=[
             Objective(
                 objective_id="obj_1",

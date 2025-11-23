@@ -6,25 +6,28 @@ Executed automatically on git push via husky hook
 """
 
 import subprocess
-import json
 from pathlib import Path
 from datetime import datetime
-import os
 import sys
 
 # Force UTF-8 encoding for Windows
-if sys.platform == 'win32':
+if sys.platform == "win32":
     import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
+
 
 def run_command(cmd):
     """Run shell command and return output"""
     try:
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=10)
+        result = subprocess.run(
+            cmd, shell=True, capture_output=True, text=True, timeout=10
+        )
         return result.stdout.strip()
     except Exception as e:
         return f"Error: {e}"
+
 
 def generate_git_stats():
     """Generate git statistics"""
@@ -34,9 +37,12 @@ def generate_git_stats():
         "contributors": run_command("git shortlog -sn --all"),
         "last_commit": run_command("git log -1 --pretty=format:'%h - %s (%an, %ar)'"),
         "branch": run_command("git branch --show-current"),
-        "total_lines": run_command("git ls-files | xargs wc -l 2>/dev/null | tail -1 || echo '0'"),
+        "total_lines": run_command(
+            "git ls-files | xargs wc -l 2>/dev/null | tail -1 || echo '0'"
+        ),
     }
     return stats
+
 
 def count_code_stats():
     """Count lines of code by language"""
@@ -44,20 +50,34 @@ def count_code_stats():
 
     # Python files
     py_files = list(Path("src").rglob("*.py")) if Path("src").exists() else []
-    py_lines = sum(len(open(f, 'r', encoding='utf-8', errors='ignore').readlines()) for f in py_files)
-    stats['python'] = {"files": len(py_files), "lines": py_lines}
+    py_lines = sum(
+        len(open(f, "r", encoding="utf-8", errors="ignore").readlines())
+        for f in py_files
+    )
+    stats["python"] = {"files": len(py_files), "lines": py_lines}
 
     # Tests
     test_files = list(Path("tests").rglob("*.py")) if Path("tests").exists() else []
-    test_lines = sum(len(open(f, 'r', encoding='utf-8', errors='ignore').readlines()) for f in test_files)
-    stats['tests'] = {"files": len(test_files), "lines": test_lines}
+    test_lines = sum(
+        len(open(f, "r", encoding="utf-8", errors="ignore").readlines())
+        for f in test_files
+    )
+    stats["tests"] = {"files": len(test_files), "lines": test_lines}
 
     # JavaScript/HTML
     js_files = list(Path(".").rglob("*.js")) + list(Path(".").rglob("*.html"))
-    js_lines = sum(len(open(f, 'r', encoding='utf-8', errors='ignore').readlines()) for f in js_files if 'node_modules' not in str(f))
-    stats['web'] = {"files": len([f for f in js_files if 'node_modules' not in str(f)]), "lines": js_lines}
+    js_lines = sum(
+        len(open(f, "r", encoding="utf-8", errors="ignore").readlines())
+        for f in js_files
+        if "node_modules" not in str(f)
+    )
+    stats["web"] = {
+        "files": len([f for f in js_files if "node_modules" not in str(f)]),
+        "lines": js_lines,
+    }
 
     return stats
+
 
 def generate_html_report():
     """Generate HTML visualization report"""
@@ -316,8 +336,10 @@ def generate_html_report():
     print(f"✅ Dashboard generated: {output_file.absolute()}")
     return str(output_file.absolute())
 
+
 if __name__ == "__main__":
     print("📊 Generating project reports...")
     html_path = generate_html_report()
-    print(f"🎉 Reports generated successfully!")
+    print("🎉 Reports generated successfully!")
+    html_path = generate_html_report()
     print(f"📂 Open in browser: file:///{html_path}")
