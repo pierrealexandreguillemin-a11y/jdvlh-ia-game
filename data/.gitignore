@@ -1,0 +1,5 @@
+# Ignorer raw data PF2e (150+ MB)
+pf2e/raw/*
+
+# Garder traductions générées
+!pf2e/translated/
