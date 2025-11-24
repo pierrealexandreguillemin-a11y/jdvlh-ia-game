@@ -16,6 +16,7 @@ from ..services.combat_engine import CombatEngine
 from ..services.inventory_manager import InventoryManager
 from ..services.quest_manager import QuestManager
 from ..services.character_progression import CharacterProgression
+from ..services.i18n import get_i18n
 from ..models.game_entities import (
     Player,
     Enemy,
@@ -108,11 +109,16 @@ async def websocket_endpoint(
 
     await websocket.accept()
     state = state_manager.load_state(player_id)
+    i18n = get_i18n("fr")  # TODO: Get from user preferences
 
     loc_data = cache_service.get_location_data(state["current_location"])
     welcome = {
-        "narrative": "Bienvenue en Terre du Milieu ! Que fais-tu dans la Comté ?",
-        "choices": ["Explorer la forêt", "Rencontrer un hobbit", "Chercher un trésor"],
+        "narrative": f"{i18n.get('welcome.title')} {i18n.get('welcome.message')}",
+        "choices": [
+            i18n.get("welcome.choice.explore"),
+            i18n.get("welcome.choice.meet"),
+            i18n.get("welcome.choice.treasure"),
+        ],
         **loc_data,
     }
     await websocket.send_json(welcome)
@@ -142,13 +148,14 @@ async def websocket_endpoint(
 async def reset_game(
     player_id: str, state_manager: StateManager = Depends(get_state_manager)
 ):
+    i18n = get_i18n("fr")
     state = {
         "context": config["prompts"]["system"],
         "history": [],
-        "current_location": "la Comté",
+        "current_location": i18n.get("location.shire"),
     }
     state_manager.save_state(player_id, state)
-    return {"status": "Partie réinitialisée"}
+    return {"status": i18n.get("game.reset")}
 
 
 # ===== COMBAT WEBSOCKET =====
@@ -176,6 +183,7 @@ async def combat_websocket(
     """
     await websocket.accept()
     active_combat = None
+    i18n = get_i18n("fr")
 
     # Load or create player
     player = _load_or_create_player(player_id, state_manager)
@@ -214,7 +222,7 @@ async def combat_websocket(
             elif action in ["attack", "cast_spell", "use_item", "defend"]:
                 if not active_combat:
                     await websocket.send_json(
-                        {"type": "error", "message": "Aucun combat actif"}
+                        {"type": "error", "message": i18n.get("combat.no_active")}
                     )
                     continue
 
@@ -463,6 +471,7 @@ async def character_websocket(
     """
     await websocket.accept()
     player = _load_or_create_player(player_id, state_manager)
+    i18n = get_i18n("fr")
 
     try:
         while True:
@@ -505,13 +514,18 @@ async def character_websocket(
                         )
                     else:
                         await websocket.send_json(
-                            {"type": "error", "message": f"Stat invalide: {stat}"}
+                            {
+                                "type": "error",
+                                "message": i18n.get(
+                                    "character.invalid_stat", stat=stat
+                                ),
+                            }
                         )
                 else:
                     await websocket.send_json(
                         {
                             "type": "error",
-                            "message": "Pas assez de points de compétence",
+                            "message": i18n.get("character.not_enough_points"),
                         }
                     )
 
@@ -548,8 +562,11 @@ async def character_websocket(
                         }
                     )
                 else:
+                    not_enough_gold = i18n.get("inventory.not_enough_gold")
+                    reset_cost = i18n.get("character.reset_cost", cost=cost)
+                    error_message = f"{not_enough_gold} ({reset_cost})"
                     await websocket.send_json(
-                        {"type": "error", "message": f"Pas assez d'or (coût: {cost})"}
+                        {"type": "error", "message": error_message}
                     )
 
     except WebSocketDisconnect:
@@ -624,11 +641,7 @@ def _enemy_to_dict(enemy: Enemy) -> Dict[str, Any]:
     return {
         "enemy_id": enemy.enemy_id,
         "name": enemy.name,
-        "type": (
-            enemy.type.value
-            if hasattr(enemy.type, "value")
-            else str(enemy.type)
-        ),
+        "type": (enemy.type.value if hasattr(enemy.type, "value") else str(enemy.type)),
         "level": enemy.level,
         "hp": enemy.hp,
         "max_hp": enemy.max_hp,
