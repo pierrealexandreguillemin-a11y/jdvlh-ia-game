@@ -1,0 +1,372 @@
+{
+  "blinded": {
+    "name_en": "blinded",
+    "name_fr": "Aveuglé",
+    "description_en": "",
+    "description_fr": "Vous ne pouvez pas voir.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920459"
+  },
+  "broken": {
+    "name_en": "broken",
+    "name_fr": "Brisé",
+    "description_en": "",
+    "description_fr": "L'objet est endommagé et moins efficace.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920469"
+  },
+  "clumsy": {
+    "name_en": "clumsy",
+    "name_fr": "Maladroit",
+    "description_en": "",
+    "description_fr": "Vos mouvements sont moins précis.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920475"
+  },
+  "concealed": {
+    "name_en": "concealed",
+    "name_fr": "Masqué",
+    "description_en": "",
+    "description_fr": "Vous êtes partiellement obscurci.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920479"
+  },
+  "confused": {
+    "name_en": "confused",
+    "name_fr": "Confus",
+    "description_en": "",
+    "description_fr": "Vous n'êtes pas maître de vos actions.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920483"
+  },
+  "controlled": {
+    "name_en": "controlled",
+    "name_fr": "Contrôlé",
+    "description_en": "",
+    "description_fr": "Quelqu'un d'autre décide de vos actions.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920487"
+  },
+  "dazzled": {
+    "name_en": "dazzled",
+    "name_fr": "Ébloui",
+    "description_en": "",
+    "description_fr": "Tout est masqué pour vous.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920490"
+  },
+  "deafened": {
+    "name_en": "deafened",
+    "name_fr": "Assourdi",
+    "description_en": "",
+    "description_fr": "Vous ne pouvez pas entendre.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920493"
+  },
+  "doomed": {
+    "name_en": "doomed",
+    "name_fr": "Condamné",
+    "description_en": "",
+    "description_fr": "Votre âme est en péril.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920497"
+  },
+  "drained": {
+    "name_en": "drained",
+    "name_fr": "Drainé",
+    "description_en": "",
+    "description_fr": "Votre force vitale est diminuée.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920500"
+  },
+  "dying": {
+    "name_en": "dying",
+    "name_fr": "Mourant",
+    "description_en": "",
+    "description_fr": "Vous êtes inconscient et proche de la mort.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920503"
+  },
+  "encumbered": {
+    "name_en": "encumbered",
+    "name_fr": "Encombré",
+    "description_en": "",
+    "description_fr": "Vous portez trop de poids.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920507"
+  },
+  "enfeebled": {
+    "name_en": "enfeebled",
+    "name_fr": "Affaibli",
+    "description_en": "",
+    "description_fr": "Votre force physique est diminuée.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920510"
+  },
+  "fascinated": {
+    "name_en": "fascinated",
+    "name_fr": "Fasciné",
+    "description_en": "",
+    "description_fr": "Vous êtes captivé par quelque chose.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920514"
+  },
+  "fatigued": {
+    "name_en": "fatigued",
+    "name_fr": "Fatigué",
+    "description_en": "",
+    "description_fr": "Vous êtes épuisé.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920517"
+  },
+  "flat-footed": {
+    "name_en": "flat-footed",
+    "name_fr": "Pris au dépourvu",
+    "description_en": "",
+    "description_fr": "Vous êtes vulnérable aux attaques.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920521"
+  },
+  "fleeing": {
+    "name_en": "fleeing",
+    "name_fr": "En fuite",
+    "description_en": "",
+    "description_fr": "Vous devez fuir.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920524"
+  },
+  "frightened": {
+    "name_en": "frightened",
+    "name_fr": "Effrayé",
+    "description_en": "",
+    "description_fr": "La peur vous submerge.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920528"
+  },
+  "grabbed": {
+    "name_en": "grabbed",
+    "name_fr": "Agrippé",
+    "description_en": "",
+    "description_fr": "Quelqu'un vous tient.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920531"
+  },
+  "hidden": {
+    "name_en": "hidden",
+    "name_fr": "Caché",
+    "description_en": "",
+    "description_fr": "Vos ennemis ne savent pas où vous êtes.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920534"
+  },
+  "immobilized": {
+    "name_en": "immobilized",
+    "name_fr": "Immobilisé",
+    "description_en": "",
+    "description_fr": "Vous ne pouvez pas bouger.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920538"
+  },
+  "invisible": {
+    "name_en": "invisible",
+    "name_fr": "Invisible",
+    "description_en": "",
+    "description_fr": "On ne peut pas vous voir.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920541"
+  },
+  "observed": {
+    "name_en": "observed",
+    "name_fr": "Observé",
+    "description_en": "",
+    "description_fr": "Vous êtes repéré et visible.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920546"
+  },
+  "paralyzed": {
+    "name_en": "paralyzed",
+    "name_fr": "Paralysé",
+    "description_en": "",
+    "description_fr": "Votre corps est figé.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920549"
+  },
+  "persistent-damage": {
+    "name_en": "persistent damage",
+    "name_fr": "Dégâts persistants",
+    "description_en": "",
+    "description_fr": "Vous subissez des dégâts continus.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920553"
+  },
+  "petrified": {
+    "name_en": "petrified",
+    "name_fr": "Pétrifié",
+    "description_en": "",
+    "description_fr": "Vous êtes transformé en pierre.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920556"
+  },
+  "prone": {
+    "name_en": "prone",
+    "name_fr": "À terre",
+    "description_en": "",
+    "description_fr": "Vous êtes allongé au sol.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920559"
+  },
+  "quickened": {
+    "name_en": "quickened",
+    "name_fr": "Accéléré",
+    "description_en": "",
+    "description_fr": "Vous agissez plus rapidement.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920562"
+  },
+  "restrained": {
+    "name_en": "restrained",
+    "name_fr": "Entravé",
+    "description_en": "",
+    "description_fr": "Vous êtes tenu fermement.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920566"
+  },
+  "sickened": {
+    "name_en": "sickened",
+    "name_fr": "Malade",
+    "description_en": "",
+    "description_fr": "Vous vous sentez nauséeux.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920569"
+  },
+  "slowed": {
+    "name_en": "slowed",
+    "name_fr": "Ralenti",
+    "description_en": "",
+    "description_fr": "Vous agissez plus lentement.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920572"
+  },
+  "stunned": {
+    "name_en": "stunned",
+    "name_fr": "Étourdi",
+    "description_en": "",
+    "description_fr": "Vous ne pouvez pas agir.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920575"
+  },
+  "stupefied": {
+    "name_en": "stupefied",
+    "name_fr": "Hébété",
+    "description_en": "",
+    "description_fr": "Votre esprit est embrumé.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920578"
+  },
+  "unconscious": {
+    "name_en": "unconscious",
+    "name_fr": "Inconscient",
+    "description_en": "",
+    "description_fr": "Vous êtes évanoui.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920581"
+  },
+  "undetected": {
+    "name_en": "undetected",
+    "name_fr": "Non détecté",
+    "description_en": "",
+    "description_fr": "Vos ennemis ignorent votre présence.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920584"
+  },
+  "unnoticed": {
+    "name_en": "unnoticed",
+    "name_fr": "Inaperçu",
+    "description_en": "",
+    "description_fr": "Personne ne fait attention à vous.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920587"
+  },
+  "wounded": {
+    "name_en": "wounded",
+    "name_fr": "Blessé",
+    "description_en": "",
+    "description_fr": "Vous avez été gravement touché.",
+    "traits_fr": [],
+    "source": "manual",
+    "verified": true,
+    "updated_at": "2025-11-24T17:57:46.920590"
+  }
+}

@@ -23,8 +23,8 @@
   },
   "lint-staged": {
     "*.py": [
-      "black",
-      "flake8"
+      "python -m black",
+      "python -m flake8"
     ],
     "*.{js,json,md,yaml,yml}": [
       "prettier --write"

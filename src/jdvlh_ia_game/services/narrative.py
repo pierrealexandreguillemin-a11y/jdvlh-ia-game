@@ -1,6 +1,6 @@
 import asyncio
 import json
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 from pathlib import Path
 
 import ollama
@@ -8,6 +8,7 @@ import yaml
 
 from .model_router import get_router
 from .narrative_memory import NarrativeMemory, SmartHistoryManager
+from .pf2e_content import get_pf2e_content
 
 # Chemin absolu vers config.yaml
 CONFIG_PATH = Path(__file__).parent.parent / "config" / "config.yaml"
@@ -25,6 +26,14 @@ class NarrativeService:
         self.memory = NarrativeMemory()
         self.history_mgr = SmartHistoryManager()
 
+        # Intégration PF2e (optionnel)
+        try:
+            self.pf2e = get_pf2e_content(language="fr")
+            print("[+] PF2e content intégré au NarrativeService")
+        except Exception as e:
+            print(f"[!] PF2e content non disponible: {e}")
+            self.pf2e = None
+
     async def generate(
         self, context: str, history: List[str], choice: str, blacklist_words: List[str]
     ) -> Dict[str, Any]:
@@ -33,14 +42,27 @@ class NarrativeService:
         self.memory.advance_turn()
         smart_context = self.history_mgr.get_smart_context(self.memory)
 
+        # Enrichissement PF2e si sort détecté
+        spell_info = self._extract_spell_info(choice)
+
         smart_history = "\n".join(smart_context[-5:]) if smart_context else ""
+
+        # Ajouter info sort au prompt si disponible
+        spell_context = ""
+        if spell_info:
+            spell_desc = spell_info["description"][:100]
+            spell_context = (
+                f"\n\nSort utilisé: {spell_info['name']} "
+                f"(niveau {spell_info['level']}) - {spell_desc}"
+            )
+
         prompt = f"""Tu es MJ Tolkien enfants 10 ans. Ton positif.
 
 Mémoire: {self.memory.get_context_summary()[:100]}
 
 Récemment: {smart_history}
 
-Choix: {choice}
+Choix: {choice}{spell_context}
 
 JSON SEULEMENT:
 {{
@@ -96,9 +118,47 @@ JSON SEULEMENT:
                 print(f"Tentative {attempt + 1} échouée: {e}")
                 if attempt == self.max_retries - 1:
                     return fallback
-                await asyncio.sleep(2 ** attempt)
+                await asyncio.sleep(2**attempt)
 
         return fallback
+
+    def _extract_spell_info(self, choice: str) -> Optional[Dict]:
+        """
+        Extraire informations d'un sort si détecté dans le choix
+
+        Args:
+            choice: Le choix du joueur
+
+        Returns:
+            Dict avec info sort ou None
+        """
+        if not self.pf2e or "spell:" not in choice.lower():
+            return None
+
+        try:
+            # Extraire nom sort après "spell:"
+            parts = choice.lower().split("spell:")
+            if len(parts) < 2:
+                return None
+
+            spell_name = parts[1].strip().split()[0]  # Premier mot après "spell:"
+
+            # Chercher sort par nom
+            spell = self.pf2e.get_spell_by_name(spell_name)
+            if not spell:
+                spell = self.pf2e.get_spell(spell_name)  # Essayer par ID
+
+            if spell:
+                return {
+                    "name": spell.name,
+                    "level": spell.level,
+                    "description": spell.description,
+                    "damage": spell.damage,
+                }
+        except Exception as e:
+            print(f"[!] Erreur extraction sort: {e}")
+
+        return None
 
     def _is_safe(self, text: str, blacklist_words: List[str]) -> bool:
         text_lower = text.lower()

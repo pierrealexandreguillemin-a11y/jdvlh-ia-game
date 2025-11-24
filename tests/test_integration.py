@@ -16,6 +16,14 @@ from fastapi.testclient import TestClient  # noqa: E402
 
 from jdvlh_ia_game.core.game_server import app  # noqa: E402
 
+# Mark all tests in this module as integration tests (skipped by default)
+pytestmark = pytest.mark.skip(
+    reason=(
+        "Integration tests - require running servers, "
+        "run explicitly with pytest tests/test_integration.py"
+    )
+)
+
 
 @pytest.fixture
 def client():

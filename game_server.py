@@ -5,15 +5,19 @@ import time
 import yaml
 import sqlite3
 import re
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from pathlib import Path
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 import ollama
+
+# Import PF2e content service
+from src.jdvlh_ia_game.services.pf2e_content import get_pf2e_content
+
 # Load config (chemin absolu)
 BASE_DIR = Path(__file__).parent
 CONFIG_PATH = BASE_DIR / "src" / "jdvlh_ia_game" / "config" / "config.yaml"
@@ -275,7 +279,7 @@ Réponds EXACTEM(
                 data["state"] = state
                 data["last_activity"] = time.time()
                 return fallback
-            await asyncio.sleep(2 ** attempt)  # Backoff exponentiel
+            await asyncio.sleep(2**attempt)  # Backoff exponentiel
 
         except Exception as e:
             print(f"[ERROR] Tentative {attempt + 1} échouée: {e}")
@@ -285,7 +289,7 @@ Réponds EXACTEM(
                 data["state"] = state
                 data["last_activity"] = time.time()
                 return fallback
-            await asyncio.sleep(2 ** attempt)  # Backoff
+            await asyncio.sleep(2**attempt)  # Backoff
 
     return fallback
 
@@ -365,6 +369,96 @@ async def reset_game(player_id: str):
         game_states[player_id]["state"] = state
         update_activity(player_id)
     return {"status": "Partie reset"}
+
+
+# ==================== PF2e API Endpoints ====================
+
+
+@app.get("/api/pf2e/spells")
+async def list_spells(level: Optional[int] = None, available_only: bool = False):
+    """
+    Liste sorts PF2e
+
+    Query params:
+    - level: Filtrer par niveau max (ex: 3 pour MVP)
+    - available_only: Respecter feature flags
+    """
+    try:
+        content = get_pf2e_content()
+        spells = content.get_all_spells(
+            filter_by_level=level, available_only=available_only
+        )
+
+        return {
+            "spells": [
+                {
+                    "id": s.id,
+                    "name": s.name,
+                    "level": s.level,
+                    "description": s.description[:200] + "...",
+                    "actions": s.actions,
+                    "traditions": s.traditions,
+                }
+                for s in spells
+            ],
+            "total": len(spells),
+        }
+    except Exception as e:
+        raise HTTPException(500, f"Error loading spells: {str(e)}")
+
+
+@app.get("/api/pf2e/spells/{spell_id}")
+async def get_spell(spell_id: str):
+    """Détails d'un sort"""
+    try:
+        content = get_pf2e_content()
+        spell = content.get_spell(spell_id)
+
+        if not spell:
+            raise HTTPException(404, f"Spell '{spell_id}' not found")
+
+        return {
+            "id": spell.id,
+            "name": spell.name,
+            "level": spell.level,
+            "description": spell.description,
+            "actions": spell.actions,
+            "traditions": spell.traditions,
+            "traits": spell.traits,
+            "damage": spell.damage,
+            "source": spell.source,
+            "rarity": spell.rarity,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(500, f"Error loading spell: {str(e)}")
+
+
+@app.get("/api/pf2e/spells/search")
+async def search_spells(q: str, limit: int = 10):
+    """Recherche sorts"""
+    try:
+        content = get_pf2e_content()
+        results = content.search_spells(q, limit=limit)
+
+        return {
+            "query": q,
+            "results": [
+                {
+                    "id": s.id,
+                    "name": s.name,
+                    "level": s.level,
+                    "description": s.description[:150] + "...",
+                }
+                for s in results
+            ],
+        }
+    except Exception as e:
+        raise HTTPException(500, f"Error searching spells: {str(e)}")
+
+
+# ==================== Health Check ====================
 
 
 @app.get("/health")

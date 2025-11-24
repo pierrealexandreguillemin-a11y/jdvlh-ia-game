@@ -14,28 +14,33 @@
 ## 🚀 Installation (5 min)
 
 ### Prérequis
+
 - Python 3.12+
 - Ollama : `ollama pull mistral`
 - Poetry (recommandé) : `pip install poetry`
 
 ### Poetry (Recommandé)
+
 ```
 poetry install
 poetry run python main.py
 ```
 
 ### Pip Alternatif
+
 1. `python -m venv venv`
 2. `venv\Scripts\activate && pip install -r requirements.txt`
 3. `ollama serve` (nouveau terminal)
 4. `python main.py`
 
 ### Vérif
+
 - Serveur : http://localhost:8000/docs (FastAPI Swagger)
 - Health : http://localhost:8000/health
 - WS Test : Ouvrir `index.html`
 
 ## 🎮 Utilisation
+
 1. Ouvrir `index.html` (double-clic/live server)
 2. Jouer (choix IA 3-8s, WebSocket realtime)
 3. PIN parents (1234) : Save/Load/Reset/Logs
@@ -43,13 +48,59 @@ poetry run python main.py
 **Multi** : Jusqu'à 4 onglets/joueurs (IDs uniques, limite serveur).
 
 ## 🛡️ Sécurité Enfants
+
 - Blacklist mots sensibles (config.yaml)
 - Rate-limit (SlowAPI)
 - Sanitize inputs (Pydantic)
 - Sessions TTL 30min + max 4 joueurs
 - PIN parents : 1234 (Save/Reset/Logs)
 
+## 🎲 Pathfinder 2e Integration
+
+Le jeu intègre le **SRD Pathfinder 2e complet** avec traduction française prioritaire:
+
+### Contenu Disponible
+
+- ✅ **1584 sorts** (860 sorts MVP niveau ≤3)
+- ✅ **Traduction FR** (6 sorts prioritaires + fallback EN automatique)
+- ✅ **Feature flags** (MVP/Intermediate/Full)
+- ✅ **API REST** pour accès sorts
+- ✅ **Intégration NarrativeService** (détection automatique sorts)
+
+### Configuration
+
+```yaml
+# config.yaml
+pf2e:
+  active_level: mvp # mvp (10-12 ans) | intermediate (12-14 ans) | full (14+)
+```
+
+### API Endpoints
+
+```bash
+# Liste sorts MVP (niveau ≤3)
+GET /api/pf2e/spells?level=3
+
+# Détails sort avec traduction FR
+GET /api/pf2e/spells/fireball  # → "Boule de feu"
+
+# Recherche full-text
+GET /api/pf2e/spells/search?q=feu&limit=5
+```
+
+### Usage en Jeu
+
+Les joueurs peuvent utiliser des sorts dans leurs actions:
+
+```
+Joueur: "Je lance spell:fireball sur les orques"
+→ IA reçoit: "Sort utilisé: Boule de feu (niveau 3) - Vous créez une explosion de flammes"
+```
+
+**Documentation complète**: [data/pf2e/README.md](data/pf2e/README.md)
+
 ## 📊 Perf (Ryzen 5 / 16Go)
+
 - RAM : Ollama 6-8Go + serveur ~0.5Go
 - Réponse : 3-8s (cache pré-généré 12 lieux)
 - Max 4 joueurs simultanés
@@ -70,6 +121,7 @@ Services ────────────────┼── CacheService 
 **Flux** : Choice → Prompt enrichi (mémoire + history) → Ollama JSON → Update state/cache → Response realtime.
 
 ## 🗂️ Structure Projet
+
 ```
 jdvlh-ia-game/
 ├── main.py (launcher uvicorn)
@@ -91,9 +143,11 @@ jdvlh-ia-game/
 ```
 
 ## 📈 Roadmap
+
 Voir [ROADMAP.md](ROADMAP.md) (Godot, visuels, Docker, tests avancés).
 
 ## 🔧 Debug & Outils
+
 - **Logs** : Loguru (console)
 - **Reset** : POST /reset/{player_id}
 - **Migrations** : `poetry run migrate` (Alembic)
@@ -107,17 +161,20 @@ Voir [ROADMAP.md](ROADMAP.md) (Godot, visuels, Docker, tests avancés).
 Le projet utilise **Husky** pour garantir la qualité du code à chaque commit :
 
 #### ✅ Pre-commit Hook
+
 - Format automatique du code Python avec **Black**
 - Vérification qualité avec **Flake8** (warnings non-bloquants)
 - Linting fichiers staged avec **lint-staged**
 - Exécution tests si présents
 
 #### 📋 Commit-msg Hook
+
 - Validation des messages de commit (Conventional Commits)
 - Format requis: `type(scope): description`
 - Types autorisés: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `ci`, `build`
 
 **Exemples de commits valides:**
+
 ```bash
 feat: add narrative memory system
 fix: correct unicode error in cache.py
@@ -127,6 +184,7 @@ refactor: improve routing logic
 ```
 
 #### 📊 Post-commit Hook
+
 - Génération automatique du graphe Git (`git-graph.txt`)
 - Mise à jour des statistiques (commits, fichiers, dernière modif)
 
@@ -201,6 +259,7 @@ Les hooks Git locaux suffisent pour maintenir la qualité.
 ## 📝 Changelog
 
 ### v0.6.0 (2025-11-22)
+
 - ✅ **CI/CD:** Husky hooks (pre-commit, commit-msg, post-commit)
 - ✅ **Quality:** Conventional commits, auto-formatting, lint-staged
 - ✅ **Git:** Analyse complète avec diagrammes Mermaid
@@ -209,18 +268,23 @@ Les hooks Git locaux suffisent pour maintenir la qualité.
 - ✅ **UX:** Langue française forcée, textes riches, temps de lecture
 
 ### v0.5.0
+
 - Dependencies tracking (requirements, poetry.lock, package.json)
 
 ### v0.4.0
+
 - Documentation complète (4800+ lignes)
 
 ### v0.3.0
+
 - Outils d'analyse et dashboards
 
 ### v0.2.0
+
 - Services core (narrative, routing, memory)
 
 ### v0.1.0
+
 - Initial commit - Base projet
 
 ---
@@ -228,4 +292,3 @@ Les hooks Git locaux suffisent pour maintenir la qualité.
 ## 📄 License
 
 MIT License - Voir [LICENSE](LICENSE) pour détails
-

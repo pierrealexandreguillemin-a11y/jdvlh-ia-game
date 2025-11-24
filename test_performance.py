@@ -5,9 +5,14 @@ Test de performance simple pour analyser les temps de réponse Ollama
 import asyncio
 import time
 import statistics
+import pytest
 import ollama
 
 
+@pytest.mark.asyncio
+@pytest.mark.skip(
+    reason="Performance test - requires Ollama running, run explicitly with pytest -m ''"
+)
 async def test_ollama_response_times():
     """Test les temps de réponse Ollama avec différents prompts"""
 

@@ -1,8 +1,8 @@
 server:
   host: 0.0.0.0
   port: 8000
-  max_players: 50  # Increased for testing concurrent connections
-  session_ttl: 1800  # 30min in seconds
+  max_players: 50 # Increased for testing concurrent connections
+  session_ttl: 1800 # 30min in seconds
 
 ollama:
   model: llama3.2
@@ -16,7 +16,7 @@ ollama:
 
 cache:
   dir: cache
-  ttl: 7200  # 2h
+  ttl: 7200 # 2h
 
 locations:
   - la Comté
@@ -46,4 +46,42 @@ blacklist_words:
 prompts:
   system: "Tu es un maître du jeu D&D/Tolkien pour enfants 10-14 ans. Raconte une histoire épique, immersive, avec des choix simples et excitants. Garde toujours un ton positif et adapté."
 
-family_pin: "1234"  # PIN simple pour auth parents
+# Configuration Pathfinder 2e
+pf2e:
+  # Niveau actif : mvp, intermediate, full
+  active_level: mvp
+
+  # Configuration des niveaux
+  levels:
+    mvp:
+      description: "MVP pour enfants 10-12 ans"
+      max_character_level: 5
+      max_spell_level: 3
+      enabled_classes:
+        - fighter
+        - wizard
+        - ranger
+      enabled_ancestries:
+        - human
+        - elf
+        - dwarf
+      complex_conditions: false
+      archetypes: false
+
+    intermediate:
+      description: "Intermédiaire 12-14 ans"
+      max_character_level: 10
+      max_spell_level: 5
+      enabled_classes: all
+      complex_conditions: true
+      archetypes: false
+
+    full:
+      description: "Complet 14+ ans / adultes"
+      max_character_level: 20
+      max_spell_level: 10
+      enabled_classes: all
+      complex_conditions: true
+      archetypes: true
+
+family_pin: "1234" # PIN simple pour auth parents
