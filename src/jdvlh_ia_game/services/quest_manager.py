@@ -207,8 +207,7 @@ class QuestManager:
             task_type=TaskType.CREATIVE_STORY,
         )
 
-        prompt = (
-            f"""Génère UNE quête courte pour un enfant de 10-14 ans.
+        prompt = f"""Génère UNE quête courte pour un enfant de 10-14 ans.
 Contexte: Joueur niveau {player.level}, classe {player.class_type.value}, "
             f"à {location}.
 
@@ -223,7 +222,6 @@ Réponds en JSON:
   \"xp_reward\": {player.level * 50},
   \"gold_reward\": {player.level * 20}
 }}"""
-        )
 
         try:
             response = ollama.generate(model=model, prompt=prompt, options=options)

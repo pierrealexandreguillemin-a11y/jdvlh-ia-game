@@ -1,0 +1,41 @@
+echo "🚀 Running pre-push checks..."
+
+# 1. Verify docs structure
+echo "📚 Checking documentation structure..."
+DOCS_OK=true
+for doc in "ARCHITECTURE.md" "DEVELOPMENT.md" "API.md" "CHANGELOG.md"; do
+  if [ ! -f "docs/$doc" ]; then
+    echo "❌ Missing: docs/$doc"
+    DOCS_OK=false
+  fi
+done
+if [ "$DOCS_OK" = false ]; then
+  echo "⚠️  Documentation incomplete! Run: mkdir -p docs && touch docs/{ARCHITECTURE,DEVELOPMENT,API,CHANGELOG}.md"
+fi
+
+# 2. Lint check (non-blocking)
+echo "🔎 Running lint checks..."
+python -m flake8 src/ --max-line-length=100 --extend-ignore=E203,W503 || echo "⚠️  Flake8 warnings detected"
+
+# 3. TypeScript check for frontend
+if [ -d "jdvlh-frontend" ]; then
+  echo "📦 Checking frontend build..."
+  cd jdvlh-frontend
+  npm run build --silent 2>/dev/null || echo "⚠️  Frontend build warnings"
+  cd ..
+fi
+
+# 4. Cleanup temp files
+echo "🧹 Cleaning up temporary files..."
+find . -type f -name "*.pyc" -delete 2>/dev/null
+find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null
+find . -type d -name ".pytest_cache" -exec rm -rf {} + 2>/dev/null
+find . -type f -name "*.log" -not -path "./.git/*" -delete 2>/dev/null
+find . -type f -name ".DS_Store" -delete 2>/dev/null
+
+# 5. Update CHANGELOG date if unreleased section exists
+if grep -q "\[Unreleased\]" docs/CHANGELOG.md 2>/dev/null; then
+  echo "📝 CHANGELOG.md has unreleased changes - remember to update version before release"
+fi
+
+echo "✅ Pre-push checks completed!"
