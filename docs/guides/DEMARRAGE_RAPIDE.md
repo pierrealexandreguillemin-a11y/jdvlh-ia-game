@@ -16,6 +16,7 @@ code config.yaml
 ```
 
 **Changer cette ligne:**
+
 ```yaml
 # AVANT
 num_predict: 500
@@ -65,12 +66,12 @@ start performance_dashboard.html          # Dashboard temps réel
 
 ### 📊 Rapports (Lire avec Markdown)
 
-| Fichier | Contenu | Quand Le Lire |
-|---------|---------|---------------|
-| **RAPPORT_FINAL.md** | 📋 Synthèse complète | **MAINTENANT** |
-| **RAPPORT_PERFORMANCE.md** | ⚡ Diagnostics perf | Optimiser vitesse |
-| **INTEGRATION_COMPLETE.md** | 🤖 Routing multi-modèles | Améliorer qualité |
-| **MEMOIRE_CONTEXTUELLE.md** | 🧠 Cohérence narrative | Améliorer immersion |
+| Fichier                     | Contenu                  | Quand Le Lire       |
+| --------------------------- | ------------------------ | ------------------- |
+| **RAPPORT_FINAL.md**        | 📋 Synthèse complète     | **MAINTENANT**      |
+| **RAPPORT_PERFORMANCE.md**  | ⚡ Diagnostics perf      | Optimiser vitesse   |
+| **INTEGRATION_COMPLETE.md** | 🤖 Routing multi-modèles | Améliorer qualité   |
+| **MEMOIRE_CONTEXTUELLE.md** | 🧠 Cohérence narrative   | Améliorer immersion |
 
 ### 🔧 Code (Services Python)
 
@@ -127,16 +128,19 @@ ollama pull gemma2      # Créatif (5.4 GB)
 **Ouvrir:** `src/jdvlh_ia_game/services/narrative.py`
 
 **Ajouter en haut:**
+
 ```python
 from .model_router import get_router
 ```
 
 **Dans `__init__`:**
+
 ```python
 self.router = get_router()
 ```
 
 **Dans `generate()`, avant ollama.generate:**
+
 ```python
 # Sélection automatique du modèle
 model, options = self.router.select_model(
@@ -270,11 +274,11 @@ python main.py
 
 ## 📊 Tableau des Gains Cumulés
 
-| Niveau | Temps Moyen | Cohérence | Effort |
-|--------|-------------|-----------|--------|
-| **Actuel** | 26.6s | ⭐⭐ | - |
-| **Niveau 1** | **3.5s** (-87%) | ⭐⭐ | 30min |
-| **Niveau 2** | **2.5s** (-91%) | ⭐⭐⭐⭐ | +1h |
+| Niveau       | Temps Moyen     | Cohérence  | Effort |
+| ------------ | --------------- | ---------- | ------ |
+| **Actuel**   | 26.6s           | ⭐⭐       | -      |
+| **Niveau 1** | **3.5s** (-87%) | ⭐⭐       | 30min  |
+| **Niveau 2** | **2.5s** (-91%) | ⭐⭐⭐⭐   | +1h    |
 | **Niveau 3** | **2.0s** (-92%) | ⭐⭐⭐⭐⭐ | +30min |
 
 ---
@@ -288,6 +292,7 @@ start visualisations_architecture.html
 ```
 
 **Contient:**
+
 - 10+ diagrammes Mermaid interactifs
 - Architecture globale
 - Flux de données
@@ -302,6 +307,7 @@ start performance_dashboard.html
 ```
 
 **Fonctionnalités:**
+
 - Graphiques temps réel (Chart.js)
 - Métriques (avg, median, P95)
 - Distribution temps réponse
@@ -319,6 +325,7 @@ python test_performance.py
 ```
 
 **Output:**
+
 ```
 TEST PERFORMANCE OLLAMA - JDVLH IA Game
 ========================================
@@ -370,18 +377,21 @@ python performance_monitor.py
 ## ✅ Checklist Rapide
 
 ### Quick Wins (Niveau 1)
+
 - [ ] Modifier `config.yaml` → `num_predict: 150`
 - [ ] Relancer serveur
 - [ ] Tester performance
 - [ ] **Vérifier gain: 26s → 3.5s** ✅
 
 ### Routing (Niveau 2)
+
 - [ ] Installer `llama3.2` et `gemma2`
 - [ ] Intégrer `ModelRouter` dans `narrative.py`
 - [ ] Tester routing multi-modèles
 - [ ] **Vérifier sélection automatique** ✅
 
 ### Mémoire (Niveau 3)
+
 - [ ] Intégrer `NarrativeMemory`
 - [ ] Ajouter persistance
 - [ ] Jouer 20+ tours
@@ -417,6 +427,7 @@ start http://localhost:8000/docs
 ## 🆘 Troubleshooting
 
 ### Le serveur ne démarre pas
+
 ```bash
 # Vérifier Ollama
 ollama list
@@ -429,6 +440,7 @@ pip install -r requirements.txt
 ```
 
 ### Temps toujours lent après Quick Win
+
 ```bash
 # Vérifier config
 cat config.yaml | grep num_predict
@@ -440,6 +452,7 @@ cat config.yaml | grep num_predict
 ```
 
 ### Router ne sélectionne pas de modèles
+
 ```bash
 # Vérifier modèles installés
 ollama list
@@ -457,21 +470,25 @@ python main.py
 ## 🏆 Objectifs Atteints
 
 ### ✅ Analyse Complète
+
 - Architecture visualisée (10+ graphiques)
 - Performance mesurée (tests réels)
 - Bottlenecks identifiés
 
 ### ✅ Solutions Créées
+
 - **Routing intelligent** (model_router.py)
 - **Mémoire contextuelle** (narrative_memory.py)
 - **Monitoring** (test_performance.py, dashboard)
 
 ### ✅ Documentation
+
 - 5 guides complets
 - 2 dashboards HTML
 - Exemples de code
 
 ### ✅ Gains Projetés
+
 - **-92%** temps réponse
 - **+300%** cohérence
 - **+150%** immersion

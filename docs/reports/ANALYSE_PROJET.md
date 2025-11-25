@@ -19,6 +19,7 @@ Le projet est **littéralement vide** : pas de code source, pas de backend, pas 
 ## 📂 ÉTAT ACTUEL DU PROJET
 
 ### Fichiers Présents
+
 ```
 c:\Dev\jdvlh-ia-game/
 ├── .gitignore          (✅ Bien configuré : node_modules, venv, .env, etc.)
@@ -30,6 +31,7 @@ c:\Dev\jdvlh-ia-game/
 ```
 
 ### Observations Clés
+
 - **Aucun code source** : Pas de `src/`, `app/`, `backend/`, `frontend/`, etc.
 - **Stack indécise** : package.json suggère Node.js/TypeScript, mais analyse précédente parle Python/FastAPI/Ollama.
 - **Pas de node_modules** (.gitignore ok).
@@ -37,6 +39,7 @@ c:\Dev\jdvlh-ia-game/
 - **Outils détectés** : npm, node, git, etc. → Prêt pour dev web/TS.
 
 ### Comparaison avec Analyse Précédente (Claude)
+
 - **Irréaliste** : Décrit un backend FastAPI complet, WebSocket, Ollama, cache JSON → **N'existe PAS**.
 - **Valeur** : Identifie bons risques futurs (sécurité enfants, mémoire, erreurs IA), mais prématuré.
 
@@ -45,12 +48,14 @@ c:\Dev\jdvlh-ia-game/
 ## 🎯 BESOINS ET VISION (Inférés du README + Analyse Précédente)
 
 ✅ **Points Forts Identifiés** :
+
 - Jeu narratif IA pour enfants (LOTR/DnD like).
 - IA locale (Ollama/Mistral).
 - Multi-joueurs foyer.
 - Hardware modeste (Ryzen 5 / 16Go).
 
 ⚠️ **À Clarifier** :
+
 - Stack finale : Node/TS ou Python ? (Incohérent actuellement).
 - Persistance, sécurité enfants, UX.
 
@@ -59,11 +64,13 @@ c:\Dev\jdvlh-ia-game/
 ## 🏗️ ÉVALUATION ARCHITECTURALE (ÉTAT VIDE)
 
 ### Points Positifs ✅
+
 1. **gitignore complet** : Protège venv, node_modules, secrets (.env).
 2. **package.json minimal** : Prêt pour TS/Node.
 3. **README basique** : Vision claire (jeu IA interactif).
 
 ### Défauts Critiques 🚨 (PHASE ZÉRO)
+
 1. **Aucune implémentation** : Projet = squelette vide.
 2. **Incohérence stack** : TS vs Python assumé.
 3. **Pas de structure dirs** : Manque `src/`, `docs/`, `tests/`.
@@ -76,6 +83,7 @@ c:\Dev\jdvlh-ia-game/
 ## 🔧 ÉVALUATION TECHNIQUE
 
 ### Stack Proposée (À Définir)
+
 ```
 Option 1: Node/TS + WebSocket + Ollama (REST/WS)
 Option 2: Python/FastAPI + Ollama (comme Claude)
@@ -83,10 +91,12 @@ Option 3: Godot/Unity pour client jeu natif
 ```
 
 #### Points Positifs
+
 - TS moderne pour frontend/backend.
 - npm pour deps faciles.
 
 #### Risques Immédiats
+
 - **Ollama non installé** : 5Go+ download, config Ryzen.
 - **Sécurité enfants** : Crucial pour IA générative.
 - **Persistance** : SQLite/JSON pour saves.
@@ -98,6 +108,7 @@ Option 3: Godot/Unity pour client jeu natif
 **État Actuel** : N/A (rien à tester).
 
 **Prévisions Basées sur Vision** :
+
 - RAM : Ollama 7B ~6-8Go → OK sur 16Go.
 - Temps réponse : 4-8s/génération → UX spinner obligatoire.
 - Multi-joueurs : Limite 4 max initialement.
@@ -107,12 +118,14 @@ Option 3: Godot/Unity pour client jeu natif
 ## 🛡️ RISQUES IDENTIFIÉS
 
 ### Critiques (À Adresser Dès Départ)
+
 1. **Contenu IA Inapproprié** : Filtre obligatoire (liste noire, LlamaGuard).
 2. **Perte Progrès** : Auto-save dès MVP.
 3. **Complexité Install** : Script one-click (Docker ?).
 4. **Choix Stack** : Décider NOW pour éviter refactor.
 
 ### Moyens
+
 - Dépendances futures non testées.
 - Timeline : MVP en jours/semaines, pas 20min.
 
@@ -121,28 +134,33 @@ Option 3: Godot/Unity pour client jeu natif
 ## 📈 ROADMAP PROPOSÉE (RÉALISTE)
 
 ### Phase 0: Initialisation (1h)
+
 - [x] Structure dirs : `mkdir src/backend frontend tests docs`
 - [ ] Choisir stack : Node/TS ou Python.
 - [ ] `npm init` complet ou `pipenv`.
 
 ### Phase 1: MVP Backend (2-3 jours)
+
 - [ ] Serveur WS simple (Express/FastAPI).
 - [ ] Intégrer Ollama/Mistral.
 - [ ] GameState basique + JSON responses.
 - [ ] Cache lieux + prompting sécurisé.
 
 ### Phase 2: Frontend (2 jours)
+
 - [ ] Client HTML/TS ou React : UI narrative, boutons choix.
 - [ ] WebSocket client.
 - [ ] Spinner loading + retry erreurs.
 
 ### Phase 3: Features Clés (3-5 jours)
+
 - [ ] Sauvegarde SQLite.
 - [ ] Multi-sessions (TTL).
 - [ ] Filtre contenu.
 - [ ] Tests unitaires.
 
 ### Phase 4: Polish (1 semaine)
+
 - [ ] UX enfants (sons, backgrounds).
 - [ ] Docs install screenshots.
 - [ ] Godot migration prep.
@@ -157,6 +175,7 @@ Option 3: Godot/Unity pour client jeu natif
    OU Python → `rm package.json*`, `pipenv install fastapi uvicorn`.
 
 2. **STRUCTURE PROJET** :
+
    ```
    src/
    ├── backend/    (serveur)
@@ -194,6 +213,7 @@ Option 3: Godot/Unity pour client jeu natif
 
 **Avantages** : Base propre, vision excitante.
 **Prochaines Étapes Immédiates** :
+
 1. **Choisir/décider stack aujourd'hui**.
 2. **Implémenter PoC backend en 48h**.
 3. **Re-analyser après MVP**.
@@ -205,37 +225,44 @@ Option 3: Godot/Unity pour client jeu natif
 ---
 
 **Signature**: Cline, Ingénieur Logiciel Senior  
-**Note finale** : 3/10 (État vide, mais fondations solides possibles)  
+**Note finale** : 3/10 (État vide, mais fondations solides possibles)
 
 #### Temps de Génération
+
 ```
 ANNONCÉ: 2-4 secondes
 RÉALITÉ: 4-8 secondes (Mistral 7B sur CPU Ryzen 5)
 ```
+
 **Facteurs aggravants**:
+
 - Premier appel à froid: 10-15s (chargement modèle)
 - Historique long (30 entrées): +2-3s
 - JSON parsing raté → retry: +4-8s
 
 #### RAM
+
 ```
 ANNONCÉ: "Tourne nickel sur 16 Go"
-RÉALITÉ: 
+RÉALITÉ:
 - Ollama Mistral 7B: ~6-8 Go
 - FastAPI + 4 joueurs: ~1 Go
 - Système Windows: ~4 Go
 TOTAL: ~12 Go minimum → Seulement 4 Go de marge
 ```
+
 **Risque**: Swap disk après 2-3h de jeu = ralentissements majeurs.
 
 #### Cache Pré-génération
+
 ```
 ANNONCÉ: "2-5 min première fois"
 RÉALITÉ: 12 lieux × 6s/génération = ~1.5 min (optimiste)
 RÉEL avec modèle à froid: ~3-4 min
 ```
 
-**Recommandation**: 
+**Recommandation**:
+
 - Lazy loading (génère à la demande)
 - Barre de progression explicite
 - Option "jouer maintenant" (cache en background)
@@ -247,6 +274,7 @@ RÉEL avec modèle à froid: ~3-4 min
 ### Risques Critiques Non Adressés
 
 #### 1. **Sécurité Enfants** 🚨 **BLOCAGE LÉGAL**
+
 - **Aucun filtre de contenu** sur génération IA
 - **Risque de contenu violent/sexuel/inapproprié** (LLM sont imprévisibles)
 - **Responsabilité légale** du développeur si incident
@@ -254,16 +282,19 @@ RÉEL avec modèle à froid: ~3-4 min
 **Obligation**: Implémenter modération IA + liste noire de mots + review parentale.
 
 #### 2. **Perte de Données**
+
 - Pas de persistance → enfant perd 2h de jeu si plantage
 - Pas de sauvegarde → impossible de reprendre le lendemain
 - **Frustration garantie** = abandon du jeu
 
 #### 3. **Échec Technique Ollama**
+
 - Si Ollama crash → jeu inutilisable
 - Pas de mode dégradé
 - Pas de diagnostics pour utilisateur débutant
 
 #### 4. **Scalabilité Familiale**
+
 ```
 Annoncé: "Multi-joueurs dès le début"
 Réalité: 2 enfants = OK, 4 enfants = lag, 6+ enfants = crash
@@ -274,6 +305,7 @@ Réalité: 2 enfants = OK, 4 enfants = lag, 6+ enfants = crash
 ## 📝 ANALYSE PLAN DE DÉVELOPPEMENT
 
 ### Timeline Proposée
+
 ```
 Jour 1: MVP texte-only (20 min install + config)
 Jour 2: Client Godot
@@ -283,10 +315,12 @@ Semaine 2: Visuels low-poly
 ### Évaluation Réaliste
 
 #### Jour 1 - MVP
+
 **ANNONCÉ**: 20 min
 **RÉALITÉ**: 2-4 heures pour utilisateur débutant
 
 **Étapes réelles**:
+
 1. Install Python 3.13: 15 min
 2. Créer venv + activer: 5 min
 3. `pip install`: 10 min
@@ -299,7 +333,9 @@ Semaine 2: Visuels low-poly
 **Verdict**: Timeline irréaliste pour profil débutant.
 
 #### Jour 2 - Client Godot
+
 **Problèmes**:
+
 - Aucun code Godot fourni
 - Migration HTML→Godot = réécriture complète UI
 - WebSocket Godot ≠ WebSocket JS (debugging requis)
@@ -308,7 +344,9 @@ Semaine 2: Visuels low-poly
 **Verdict**: Impossible en 1 jour.
 
 #### Semaine 2 - Visuels
+
 **Problèmes**:
+
 - Aucun asset fourni
 - Génération/achat assets: budget + temps
 - Intégration visuels ≠ "code ready" (animation_trigger non implémenté côté client)
@@ -388,6 +426,7 @@ Semaine 2: Visuels low-poly
 ### Coûts Réels du Projet
 
 #### Temps de Développement (Estimation Réaliste)
+
 ```
 MVP fonctionnel avec corrections:     40-60h
 Client Godot basique:                  20-30h
@@ -398,18 +437,21 @@ TOTAL:                                 120-185h (3-5 semaines full-time)
 ```
 
 #### Coûts Humains/Matériels
+
 - Hardware existant: ✅ OK
 - Logiciels: ✅ Gratuits (open-source)
 - Assets visuels: **500-2000€** (ou 50-100h création)
 - Modération contenu: Service externe ou 10-20h dev filtre
 
 ### Bénéfices
+
 ✅ **Projet pédagogique excellent** (apprentissage IA, gamedev, backend)
 ✅ **Valeur affective forte** (jeu pour ses enfants)
 ✅ **Pas de coûts récurrents** (IA locale)
 ✅ **Potentiel évolutif** (portfolio, open-source communauté)
 
 ### ROI
+
 Pour un projet familial/éducatif: **Excellent**
 Pour un produit commercial: **Risqué** (concurrence forte, marché de niche)
 
@@ -420,6 +462,7 @@ Pour un produit commercial: **Risqué** (concurrence forte, marché de niche)
 ### ❌ **REFUS EN L'ÉTAT**
 
 **Raisons du refus**:
+
 1. **Risques légaux non maîtrisés** (contenu généré pour enfants)
 2. **Architecture client inadaptée** (HTML pur = impasse technique)
 3. **Timeline irréaliste** (frustration garantie)
@@ -431,6 +474,7 @@ Pour un produit commercial: **Risqué** (concurrence forte, marché de niche)
 Le projet sera approuvé si les corrections suivantes sont effectuées:
 
 #### Phase 1 (Pré-requis absolu - 1 semaine)
+
 - [ ] Implémenter filtre de contenu IA
 - [ ] Système de sauvegarde SQLite
 - [ ] Refonte architecture client (React OU Godot)
@@ -439,6 +483,7 @@ Le projet sera approuvé si les corrections suivantes sont effectuées:
 - [ ] Limite joueurs simultanés (3 max)
 
 #### Phase 2 (Avant release alpha - 2 semaines)
+
 - [ ] Tests unitaires (coverage >60%)
 - [ ] Documentation installation avec screenshots
 - [ ] Rate limiting + session management
@@ -446,6 +491,7 @@ Le projet sera approuvé si les corrections suivantes sont effectuées:
 - [ ] Mode dégradé si Ollama échec
 
 #### Phase 3 (Avant release beta - 1 mois)
+
 - [ ] Tests utilisateurs réels (3-5 familles)
 - [ ] Corrections bugs critiques
 - [ ] Interface parents (logs, contrôles)
@@ -456,6 +502,7 @@ Le projet sera approuvé si les corrections suivantes sont effectuées:
 Si timeline serrée, je propose:
 
 **MVP Simplifié (2 semaines)**:
+
 ```
 Stack: FastAPI + React (Vite) + Ollama
 Features:
@@ -468,6 +515,7 @@ Features:
 ```
 
 **Bénéfices**:
+
 - Livrable fonctionnel garanti
 - Base technique saine pour évolution
 - Risques maîtrisés
@@ -481,7 +529,8 @@ Features:
 
 **À l'utilisateur (débutant)**: Ce projet **nécessite un accompagnement sérieux**. Les 20 minutes promises sont un **mensonge marketing**. Attendez-vous à plusieurs jours d'apprentissage.
 
-**Recommandation personnelle**: 
+**Recommandation personnelle**:
+
 1. Commencer par un **tutoriel FastAPI + React basique** (2-3 jours)
 2. Intégrer Ollama dans un second temps (1-2 jours)
 3. Ajouter features progressivement (1 feature/semaine)
@@ -499,4 +548,4 @@ Features:
 
 ---
 
-*Ce document est confidentiel et destiné uniquement à la revue interne du projet.*
+_Ce document est confidentiel et destiné uniquement à la revue interne du projet._

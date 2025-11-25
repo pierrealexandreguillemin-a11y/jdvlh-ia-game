@@ -13,11 +13,13 @@
 ### 1. ✅ Analyse Projets Source
 
 #### Ollama Gateway (Python/FastAPI)
+
 - **Analysé:** Architecture OpenAI-compatible
 - **Extracté:** Logique routing intelligent
 - **Adapté:** Pour contexte narratif JDVLH
 
 #### Ollama Orchestrator (Node.js/Express)
+
 - **Analysé:** Détection automatique modèles
 - **Extracté:** Règles catégorisation
 - **Adapté:** Pour types de tâches narratives
@@ -27,6 +29,7 @@
 **Fichier créé:** `src/jdvlh_ia_game/services/model_router.py`
 
 **Fonctionnalités:**
+
 - ✅ Détection automatique modèles locaux Ollama
 - ✅ 5 types de tâches narratives
 - ✅ Scoring intelligent pour sélection modèle
@@ -39,49 +42,59 @@
 ## 🧠 Types de Tâches Détectées
 
 ### 1. **LOCATION_DESCRIPTION** (Description de Lieu)
+
 **Keywords:** décris, lieu, paysage, atmosphère, endroit, région
 **Modèles préférés:** Gemma2 (créatif) > Mistral (narratif)
 **Config:**
+
 - Tokens: 250
 - Temperature: 0.75 (plus créatif)
-**Exemple:** "Décris la forêt de Fangorn"
+  **Exemple:** "Décris la forêt de Fangorn"
 
 ---
 
 ### 2. **QUICK_CHOICE** (Choix Rapide)
+
 **Keywords:** choisit, options, que fais-tu, choix, décide
 **Modèles préférés:** Llama3.2 (rapide) > Phi (léger)
 **Config:**
+
 - Tokens: 100
 - Temperature: 0.7
-**Exemple:** "Que fais-tu ?"
+  **Exemple:** "Que fais-tu ?"
 
 ---
 
 ### 3. **DIALOGUE** (Dialogue NPC)
+
 **Keywords:** dit, parle, dialogue, répond, demande, conversation
 **Modèles préférés:** Mistral (général) > Qwen (multilingual)
 **Config:**
+
 - Tokens: 150
 - Temperature: 0.7
-**Exemple:** "Le hobbit te dit bonjour"
+  **Exemple:** "Le hobbit te dit bonjour"
 
 ---
 
 ### 4. **EPIC_ACTION** (Action Épique)
+
 **Keywords:** combat, attaque, danger, bataille, aventure, action
 **Modèles préférés:** Gemma2 (dramatique) >> Autres
 **Config:**
+
 - Tokens: 200
 - Temperature: 0.8 (très créatif)
-**Exemple:** "Tu combats un orc"
+  **Exemple:** "Tu combats un orc"
 
 ---
 
 ### 5. **GENERAL** (Général)
+
 **Fallback** pour tout le reste
 **Modèles préférés:** Mistral > Llama
 **Config:**
+
 - Tokens: 250
 - Temperature: 0.7
 
@@ -90,6 +103,7 @@
 ## 📈 Système de Scoring
 
 ### Calcul du Score
+
 ```python
 score = 0
 
@@ -111,11 +125,11 @@ if quick_task:
 
 ### Exemple: "Décris la Comté"
 
-| Modèle | Base | Spécialité | Boost | Total |
-|--------|------|------------|-------|-------|
-| Gemma2 | 20 | 20 | 15 | **55** ✅ |
-| Mistral | 30 | 20 | 0 | 50 |
-| Llama3.2 | 10 | 0 | 0 | 10 |
+| Modèle   | Base | Spécialité | Boost | Total     |
+| -------- | ---- | ---------- | ----- | --------- |
+| Gemma2   | 20   | 20         | 15    | **55** ✅ |
+| Mistral  | 30   | 20         | 0     | 50        |
+| Llama3.2 | 10   | 0          | 0     | 10        |
 
 **Sélectionné:** Gemma2 (score le plus élevé)
 
@@ -128,6 +142,7 @@ if quick_task:
 Le router détecte automatiquement vos modèles et configure:
 
 #### deepseek-coder-v2
+
 ```python
 specialties: ["code", "programming", "debug"]
 priority: 1
@@ -137,6 +152,7 @@ speed_rating: 2
 ```
 
 #### llama3.2
+
 ```python
 specialties: ["quick", "fast", "short"]
 priority: 3
@@ -146,6 +162,7 @@ speed_rating: 5  # Le plus rapide!
 ```
 
 #### gemma2
+
 ```python
 specialties: ["creative", "story", "epic", "dramatic"]
 priority: 2
@@ -155,6 +172,7 @@ speed_rating: 3
 ```
 
 #### mistral (fallback)
+
 ```python
 specialties: ["general", "narrative", "conversation"]
 priority: 1
@@ -168,6 +186,7 @@ speed_rating: 3
 ## 🚀 Utilisation
 
 ### Méthode 1: Détection Automatique
+
 ```python
 from services.model_router import get_router
 
@@ -186,6 +205,7 @@ model, options = router.select_model(
 ---
 
 ### Méthode 2: Type de Tâche Explicite
+
 ```python
 from services.model_router import get_router, TaskType
 
@@ -204,6 +224,7 @@ model, options = router.select_model(
 ---
 
 ### Méthode 3: Test de Routing
+
 ```python
 router = get_router()
 
@@ -223,6 +244,7 @@ result = router.test_routing("Combat contre un dragon!")
 ## 📊 Statistiques
 
 ### Accès aux Stats
+
 ```python
 router = get_router()
 stats = router.get_stats()
@@ -251,6 +273,7 @@ stats = router.get_stats()
 ## 🎯 Prochaines Étapes
 
 ### Phase 1: Intégration dans NarrativeService ⏳
+
 ```python
 # src/jdvlh_ia_game/services/narrative.py
 
@@ -337,14 +360,15 @@ async def routing_stats():
 
 ### Scénario: Partie Type (20 tours)
 
-| Type Action | % Tours | Avant | Après (Router) |
-|-------------|---------|-------|----------------|
-| Description lieu | 20% | 36.7s | **8s** (Gemma2) |
-| Choix rapide | 50% | 26.6s | **3s** (Llama3.2) |
-| Dialogue | 20% | 26.6s | **6s** (Mistral) |
-| Action épique | 10% | 36.7s | **10s** (Gemma2) |
+| Type Action      | % Tours | Avant | Après (Router)    |
+| ---------------- | ------- | ----- | ----------------- |
+| Description lieu | 20%     | 36.7s | **8s** (Gemma2)   |
+| Choix rapide     | 50%     | 26.6s | **3s** (Llama3.2) |
+| Dialogue         | 20%     | 26.6s | **6s** (Mistral)  |
+| Action épique    | 10%     | 36.7s | **10s** (Gemma2)  |
 
 **Temps moyen partie:**
+
 - **Avant:** 26.6s × 20 = **532 secondes** (8min 52s)
 - **Après:** ~5s × 20 = **100 secondes** (1min 40s)
 
@@ -355,12 +379,14 @@ async def routing_stats():
 ## 📦 Fichiers Créés
 
 ### Core
+
 1. ✅ `src/jdvlh_ia_game/services/model_router.py`
    - 400+ lignes
    - Routing intelligent complet
    - Stats et debugging
 
 ### Documentation
+
 2. ✅ `INTEGRATION_PLAN.md`
    - Analyse des projets source
    - Décisions architecture
@@ -372,6 +398,7 @@ async def routing_stats():
    - Statistiques et gains
 
 ### Existant (Analyse)
+
 4. ✅ `visualisations_architecture.html`
    - Dashboard architecture complète
 
@@ -387,6 +414,7 @@ async def routing_stats():
 ## 🔍 Tests Recommandés
 
 ### 1. Test Détection Modèles
+
 ```bash
 python -c "
 from src.jdvlh_ia_game.services.model_router import get_router
@@ -396,6 +424,7 @@ print('Modèles détectés:', router.available_models.keys())
 ```
 
 ### 2. Test Routing
+
 ```bash
 python -c "
 from src.jdvlh_ia_game.services.model_router import get_router
@@ -415,6 +444,7 @@ for p in prompts:
 ```
 
 ### 3. Test Complet avec Ollama
+
 ```bash
 cd C:\Dev\jdvlh-ia-game
 python test_performance.py
@@ -446,6 +476,7 @@ ollama pull gemma2
 ## ✅ Checklist Intégration Finale
 
 ### Core Features
+
 - [x] ModelRouter créé et testé
 - [x] Détection automatique modèles
 - [x] 5 types de tâches narratives
@@ -454,14 +485,16 @@ ollama pull gemma2
 - [x] Fallback robuste
 
 ### Documentation
+
 - [x] INTEGRATION_PLAN.md
 - [x] INTEGRATION_COMPLETE.md
 - [x] Exemples de code
 - [x] Guide utilisation
 
 ### À Faire (Optionnel)
+
 - [ ] Intégrer dans NarrativeService
-- [ ] Ajouter endpoints /gateway/*
+- [ ] Ajouter endpoints /gateway/\*
 - [ ] Tests unitaires complets
 - [ ] Dashboard monitoring routing
 
@@ -470,12 +503,14 @@ ollama pull gemma2
 ## 🚀 Démarrage Rapide
 
 ### Installer Modèles
+
 ```bash
 ollama pull llama3.2
 ollama pull gemma2
 ```
 
 ### Tester Router
+
 ```bash
 python -c "
 from src.jdvlh_ia_game.services.model_router import get_router
@@ -488,6 +523,7 @@ print(f'Options: {opts}')
 ```
 
 ### Lancer Application
+
 ```bash
 python main.py
 # Router sera actif et choisira automatiquement les modèles
@@ -498,13 +534,16 @@ python main.py
 ## 📞 Support
 
 ### Logs
+
 Le router affiche ses décisions:
+
 ```
 [ModelRouter] Detected 3 local models: ['mistral', 'gemma2', 'llama3.2']
 [ModelRouter] Task: location_description, Selected: gemma2:latest, Options: {...}
 ```
 
 ### Debugging
+
 ```python
 # Voir stats détaillées
 router.get_stats()
@@ -518,6 +557,7 @@ router.test_routing("votre prompt ici")
 ## 🎉 Conclusion
 
 ### Réalisations
+
 - ✅ **Routing intelligent** inspiré de 2 projets professionnels
 - ✅ **100% Python** natif dans votre stack
 - ✅ **Détection automatique** des modèles locaux
@@ -525,6 +565,7 @@ router.test_routing("votre prompt ici")
 - ✅ **Optimisation temps réponse** attendue: **-81%**
 
 ### Prochaines Étapes Immédiates
+
 1. Installer Llama3.2 et Gemma2
 2. Tester le router
 3. Intégrer dans NarrativeService (10 lignes de code)
@@ -535,4 +576,4 @@ router.test_routing("votre prompt ici")
 ---
 
 **Document généré le 21/11/2025 - Intégration Ollama Gateway & Orchestrator**
-*Tous les fichiers sont dans: `C:\Dev\jdvlh-ia-game`*
+_Tous les fichiers sont dans: `C:\Dev\jdvlh-ia-game`_

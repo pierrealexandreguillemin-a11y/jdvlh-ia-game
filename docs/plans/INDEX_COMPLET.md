@@ -11,37 +11,49 @@
 ### Vous voulez...
 
 #### 🚀 **Implémenter MAINTENANT** (30 minutes)
+
 → Lisez: **[DEMARRAGE_RAPIDE.md](DEMARRAGE_RAPIDE.md)**
+
 - Quick Win Niveau 1: -87% temps en 30min
 - Guide pas-à-pas complet
 - Checklist de vérification
 
 #### 📊 **Comprendre l'Architecture**
+
 → Ouvrez: **[visualisations_architecture.html](visualisations_architecture.html)**
+
 - 10+ diagrammes interactifs Mermaid
 - Architecture complète visualisée
 - Flux de données et sécurité
 
 #### ⚡ **Voir les Problèmes de Performance**
+
 → Lisez: **[RAPPORT_PERFORMANCE.md](RAPPORT_PERFORMANCE.md)**
+
 - Tests réels: 26.6s moyenne
 - Causes identifiées
 - Solutions détaillées
 
 #### 🤖 **Comprendre le Routing Multi-Modèles**
+
 → Lisez: **[INTEGRATION_COMPLETE.md](INTEGRATION_COMPLETE.md)**
+
 - 5 types de tâches narratives
 - Sélection intelligente de modèle
 - Exemples d'utilisation
 
 #### 🧠 **Améliorer la Cohérence Narrative**
+
 → Lisez: **[MEMOIRE_CONTEXTUELLE.md](MEMOIRE_CONTEXTUELLE.md)**
+
 - Système de mémoire avancée
 - Tracking entités/événements
 - Gains: +300% cohérence
 
 #### 📋 **Vue d'Ensemble Complète**
+
 → Lisez: **[RAPPORT_FINAL.md](RAPPORT_FINAL.md)**
+
 - Synthèse de tout le travail
 - Tous les fichiers créés
 - Plan d'implémentation complet
@@ -52,12 +64,13 @@
 
 ### 🎨 Visualisations & Dashboards (Ouvrir dans Navigateur)
 
-| Fichier | Contenu | Taille |
-|---------|---------|--------|
-| **[visualisations_architecture.html](visualisations_architecture.html)** | 10+ diagrammes Mermaid architecture complète | ~40KB |
-| **[performance_dashboard.html](performance_dashboard.html)** | Dashboard temps réel Chart.js avec métriques live | ~15KB |
+| Fichier                                                                  | Contenu                                           | Taille |
+| ------------------------------------------------------------------------ | ------------------------------------------------- | ------ |
+| **[visualisations_architecture.html](visualisations_architecture.html)** | 10+ diagrammes Mermaid architecture complète      | ~40KB  |
+| **[performance_dashboard.html](performance_dashboard.html)**             | Dashboard temps réel Chart.js avec métriques live | ~15KB  |
 
 **Comment utiliser:**
+
 ```bash
 # Windows
 start visualisations_architecture.html
@@ -72,18 +85,18 @@ start performance_dashboard.html
 
 #### Documentation Principale
 
-| Fichier | Objectif | Contenu Clé | Taille |
-|---------|----------|-------------|--------|
-| **[DEMARRAGE_RAPIDE.md](DEMARRAGE_RAPIDE.md)** | Guide démarrage immédiat | 3 niveaux implémentation (30min → 2h) | ~10KB |
-| **[RAPPORT_FINAL.md](RAPPORT_FINAL.md)** | Synthèse session complète | Tous fichiers, gains, roadmap | ~20KB |
-| **[RAPPORT_PERFORMANCE.md](RAPPORT_PERFORMANCE.md)** | Analyse performance détaillée | Benchmarks, bottlenecks, solutions | ~10KB |
-| **[INTEGRATION_COMPLETE.md](INTEGRATION_COMPLETE.md)** | Guide routing multi-modèles | TaskTypes, scoring, utilisation | ~12KB |
-| **[MEMOIRE_CONTEXTUELLE.md](MEMOIRE_CONTEXTUELLE.md)** | Guide mémoire contextuelle | Entités, événements, cohérence | ~15KB |
+| Fichier                                                | Objectif                      | Contenu Clé                           | Taille |
+| ------------------------------------------------------ | ----------------------------- | ------------------------------------- | ------ |
+| **[DEMARRAGE_RAPIDE.md](DEMARRAGE_RAPIDE.md)**         | Guide démarrage immédiat      | 3 niveaux implémentation (30min → 2h) | ~10KB  |
+| **[RAPPORT_FINAL.md](RAPPORT_FINAL.md)**               | Synthèse session complète     | Tous fichiers, gains, roadmap         | ~20KB  |
+| **[RAPPORT_PERFORMANCE.md](RAPPORT_PERFORMANCE.md)**   | Analyse performance détaillée | Benchmarks, bottlenecks, solutions    | ~10KB  |
+| **[INTEGRATION_COMPLETE.md](INTEGRATION_COMPLETE.md)** | Guide routing multi-modèles   | TaskTypes, scoring, utilisation       | ~12KB  |
+| **[MEMOIRE_CONTEXTUELLE.md](MEMOIRE_CONTEXTUELLE.md)** | Guide mémoire contextuelle    | Entités, événements, cohérence        | ~15KB  |
 
 #### Documentation Technique
 
-| Fichier | Objectif |
-|---------|----------|
+| Fichier                                        | Objectif                                               |
+| ---------------------------------------------- | ------------------------------------------------------ |
 | **[INTEGRATION_PLAN.md](INTEGRATION_PLAN.md)** | Analyse ollama-gateway & orchestrator, décisions archi |
 
 ---
@@ -92,12 +105,13 @@ start performance_dashboard.html
 
 #### Services Narratifs
 
-| Fichier | Lignes | Fonctionnalité | Status |
-|---------|--------|----------------|--------|
-| **[src/jdvlh_ia_game/services/model_router.py](src/jdvlh_ia_game/services/model_router.py)** | ~400 | Routing intelligent multi-modèles | ✅ Prêt |
-| **[src/jdvlh_ia_game/services/narrative_memory.py](src/jdvlh_ia_game/services/narrative_memory.py)** | ~600 | Mémoire contextuelle avancée | ✅ Prêt |
+| Fichier                                                                                              | Lignes | Fonctionnalité                    | Status  |
+| ---------------------------------------------------------------------------------------------------- | ------ | --------------------------------- | ------- |
+| **[src/jdvlh_ia_game/services/model_router.py](src/jdvlh_ia_game/services/model_router.py)**         | ~400   | Routing intelligent multi-modèles | ✅ Prêt |
+| **[src/jdvlh_ia_game/services/narrative_memory.py](src/jdvlh_ia_game/services/narrative_memory.py)** | ~600   | Mémoire contextuelle avancée      | ✅ Prêt |
 
 **Caractéristiques:**
+
 - **model_router.py:**
   - 5 TaskTypes (location, quick_choice, dialogue, epic_action, general)
   - Auto-détection modèles Ollama locaux
@@ -114,12 +128,13 @@ start performance_dashboard.html
 
 ### 🧪 Tests & Monitoring (Scripts Exécutables)
 
-| Fichier | Objectif | Utilisation |
-|---------|----------|-------------|
-| **[test_performance.py](test_performance.py)** | Tests automatisés Ollama | `python test_performance.py` |
-| **[performance_monitor.py](performance_monitor.py)** | Classes monitoring avancé | Import dans code |
+| Fichier                                              | Objectif                  | Utilisation                  |
+| ---------------------------------------------------- | ------------------------- | ---------------------------- |
+| **[test_performance.py](test_performance.py)**       | Tests automatisés Ollama  | `python test_performance.py` |
+| **[performance_monitor.py](performance_monitor.py)** | Classes monitoring avancé | Import dans code             |
 
 **Résultats tests réels:**
+
 ```
 Temps moyen: 26.6 secondes
 Médian:      20.2 secondes
@@ -141,6 +156,7 @@ Cibles après optimisation:
 **Gain:** -87% temps réponse (26s → 3.5s)
 
 **Actions:**
+
 1. Modifier `config.yaml` → `num_predict: 150`
 2. Modifier `config.yaml` → `cache_ttl: 7200`
 3. Relancer serveur: `python main.py`
@@ -157,6 +173,7 @@ Cibles après optimisation:
 **Gain:** -91% temps + Qualité narrative +100%
 
 **Actions:**
+
 1. Installer modèles: `ollama pull llama3.2 && ollama pull gemma2`
 2. Intégrer ModelRouter dans `narrative.py` (20 lignes)
 3. Tester routing automatique
@@ -166,6 +183,7 @@ Cibles après optimisation:
 **Documentation:** [INTEGRATION_COMPLETE.md](INTEGRATION_COMPLETE.md)
 
 **Code à ajouter dans narrative.py:**
+
 ```python
 from .model_router import get_router
 
@@ -195,6 +213,7 @@ class NarrativeService:
 **Gain:** Cohérence +300%, Incohérences -85%
 
 **Actions:**
+
 1. Intégrer NarrativeMemory dans `narrative.py` (30 lignes)
 2. Ajouter persistance dans `state_manager.py` (20 lignes)
 3. Tester sur partie 20+ tours
@@ -204,6 +223,7 @@ class NarrativeService:
 **Documentation:** [MEMOIRE_CONTEXTUELLE.md](MEMOIRE_CONTEXTUELLE.md)
 
 **Code à ajouter dans narrative.py:**
+
 ```python
 from .narrative_memory import NarrativeMemory, SmartHistoryManager
 
@@ -237,12 +257,12 @@ class NarrativeService:
 
 ## 📈 Tableau des Gains Cumulés
 
-| Phase | Temps Moyen | Cohérence | Qualité Narrative | Effort Total |
-|-------|-------------|-----------|-------------------|--------------|
-| **Actuel** | 26.6s | ⭐⭐ (2/5) | ⭐⭐ (2/5) | - |
-| **Phase 1** | **3.5s** (-87%) | ⭐⭐ | ⭐⭐ | 30min |
-| **Phase 2** | **2.5s** (-91%) | ⭐⭐⭐⭐ (4/5) | ⭐⭐⭐⭐ (4/5) | +1-2h |
-| **Phase 3** | **2.0s** (-92%) | ⭐⭐⭐⭐⭐ (5/5) | ⭐⭐⭐⭐⭐ (5/5) | +30min-1h |
+| Phase       | Temps Moyen     | Cohérence        | Qualité Narrative | Effort Total |
+| ----------- | --------------- | ---------------- | ----------------- | ------------ |
+| **Actuel**  | 26.6s           | ⭐⭐ (2/5)       | ⭐⭐ (2/5)        | -            |
+| **Phase 1** | **3.5s** (-87%) | ⭐⭐             | ⭐⭐              | 30min        |
+| **Phase 2** | **2.5s** (-91%) | ⭐⭐⭐⭐ (4/5)   | ⭐⭐⭐⭐ (4/5)    | +1-2h        |
+| **Phase 3** | **2.0s** (-92%) | ⭐⭐⭐⭐⭐ (5/5) | ⭐⭐⭐⭐⭐ (5/5)  | +30min-1h    |
 
 **Total effort:** 2-3.5 heures
 **Gain global:** -92% temps, +300% cohérence, +200% qualité
@@ -252,11 +272,13 @@ class NarrativeService:
 ## 🧪 Tests Disponibles
 
 ### Test 1: Performance Ollama
+
 ```bash
 python test_performance.py
 ```
 
 **Output attendu:**
+
 ```
 TEST PERFORMANCE OLLAMA - JDVLH IA Game
 ========================================
@@ -276,6 +298,7 @@ P95:               75800 ms
 ---
 
 ### Test 2: Routing Multi-Modèles
+
 ```bash
 python -c "
 from src.jdvlh_ia_game.services.model_router import get_router
@@ -300,6 +323,7 @@ for p in prompts:
 ```
 
 **Output attendu:**
+
 ```
 Décris la Comté en détail
   → Modèle: gemma2:latest
@@ -325,6 +349,7 @@ Combat contre un dragon!
 ---
 
 ### Test 3: Mémoire Contextuelle
+
 ```python
 from src.jdvlh_ia_game.services.narrative_memory import NarrativeMemory
 
@@ -350,6 +375,7 @@ print(summary)
 ```
 
 **Output attendu:**
+
 ```
 Lieu actuel: la Comté
 Personnages présents: hobbit, Bilbo
@@ -364,6 +390,7 @@ Objets importants: épée
 ## 💡 Commandes Utiles
 
 ### Serveur
+
 ```bash
 # Lancer serveur de jeu
 python main.py
@@ -381,6 +408,7 @@ start http://localhost:8000/docs
 ---
 
 ### Tests
+
 ```bash
 # Tests performance
 python test_performance.py
@@ -395,6 +423,7 @@ python -c "from src.jdvlh_ia_game.services.narrative_memory import NarrativeMemo
 ---
 
 ### Dashboards
+
 ```bash
 # Ouvrir visualisations architecture
 start visualisations_architecture.html
@@ -409,6 +438,7 @@ start visualisations_architecture.html && start performance_dashboard.html
 ---
 
 ### Ollama
+
 ```bash
 # Lister modèles installés
 ollama list
@@ -427,6 +457,7 @@ ollama run mistral "Décris la Comté"
 ## 🔍 Dépendances Système
 
 ### Python (Déjà installé)
+
 ```bash
 # Vérifier version
 python --version
@@ -436,6 +467,7 @@ pip list | grep -E "fastapi|ollama|pydantic|uvicorn"
 ```
 
 **Packages requis:**
+
 - fastapi >= 0.100.0
 - uvicorn >= 0.23.0
 - ollama >= 0.1.0
@@ -444,6 +476,7 @@ pip list | grep -E "fastapi|ollama|pydantic|uvicorn"
 ---
 
 ### Ollama (Déjà installé)
+
 ```bash
 # Vérifier Ollama
 ollama --version
@@ -453,6 +486,7 @@ ollama list
 ```
 
 **Modèles recommandés:**
+
 - ✅ mistral (4.4 GB) - Déjà installé
 - ⏳ llama3.2 (2 GB) - À installer pour Phase 2
 - ⏳ gemma2 (5.4 GB) - À installer pour Phase 2
@@ -462,6 +496,7 @@ ollama list
 ## 🆘 Troubleshooting
 
 ### Le serveur ne démarre pas
+
 ```bash
 # Vérifier Ollama
 ollama list
@@ -479,6 +514,7 @@ python main.py
 ---
 
 ### Performance toujours lente
+
 ```bash
 # Vérifier config appliquée
 cat config.yaml | grep num_predict
@@ -492,6 +528,7 @@ python main.py
 ---
 
 ### Router ne détecte pas les modèles
+
 ```bash
 # Vérifier modèles Ollama
 ollama list
@@ -507,6 +544,7 @@ python -c "from src.jdvlh_ia_game.services.model_router import get_router; route
 ---
 
 ### Mémoire ne persiste pas entre sessions
+
 ```bash
 # Vérifier state_manager.py modifié
 grep -A 5 "narrative_memory" src/jdvlh_ia_game/services/state_manager.py
@@ -519,6 +557,7 @@ grep -A 5 "narrative_memory" src/jdvlh_ia_game/services/state_manager.py
 ## 📊 Statistiques Session
 
 ### Fichiers Créés
+
 - **Documentation:** 6 fichiers markdown (~77KB)
 - **Visualisations:** 2 dashboards HTML (~55KB)
 - **Code Python:** 2 services (~1000 lignes)
@@ -529,6 +568,7 @@ grep -A 5 "narrative_memory" src/jdvlh_ia_game/services/state_manager.py
 ---
 
 ### Temps Investi
+
 - Analyse architecture: 1h
 - Performance testing: 1h
 - Intégration routing: 2h
@@ -540,6 +580,7 @@ grep -A 5 "narrative_memory" src/jdvlh_ia_game/services/state_manager.py
 ---
 
 ### Gains Projetés
+
 - **Performance:** -92% temps réponse (26.6s → 2.0s)
 - **Cohérence:** +300% (incohérences -85%)
 - **Qualité:** +200% (narratif enrichi)
@@ -550,6 +591,7 @@ grep -A 5 "narrative_memory" src/jdvlh_ia_game/services/state_manager.py
 ## 🏆 Objectifs Atteints
 
 ### ✅ Analyse Complète
+
 - [x] Architecture visualisée (10+ graphiques)
 - [x] Performance mesurée (tests réels Ollama)
 - [x] Bottlenecks identifiés et documentés
@@ -558,6 +600,7 @@ grep -A 5 "narrative_memory" src/jdvlh_ia_game/services/state_manager.py
 ---
 
 ### ✅ Solutions Implémentées
+
 - [x] **ModelRouter** - Routing intelligent multi-modèles
 - [x] **NarrativeMemory** - Mémoire contextuelle avancée
 - [x] **Performance Monitoring** - Tests et dashboards
@@ -566,6 +609,7 @@ grep -A 5 "narrative_memory" src/jdvlh_ia_game/services/state_manager.py
 ---
 
 ### ✅ Documentation Complète
+
 - [x] 6 guides détaillés (77KB)
 - [x] 2 dashboards interactifs (55KB)
 - [x] Exemples de code complets
@@ -574,6 +618,7 @@ grep -A 5 "narrative_memory" src/jdvlh_ia_game/services/state_manager.py
 ---
 
 ### ✅ Gains Mesurables
+
 - [x] -92% temps réponse projeté
 - [x] +300% cohérence narrative
 - [x] +150% immersion joueur
@@ -603,28 +648,30 @@ python test_performance.py
 
 ## 📞 Navigation Rapide
 
-| Question | Fichier à Consulter |
-|----------|---------------------|
-| Comment démarrer rapidement ? | [DEMARRAGE_RAPIDE.md](DEMARRAGE_RAPIDE.md) |
-| Quelle est l'architecture ? | [visualisations_architecture.html](visualisations_architecture.html) |
-| Pourquoi c'est lent ? | [RAPPORT_PERFORMANCE.md](RAPPORT_PERFORMANCE.md) |
-| Comment fonctionne le routing ? | [INTEGRATION_COMPLETE.md](INTEGRATION_COMPLETE.md) |
-| Comment améliorer la cohérence ? | [MEMOIRE_CONTEXTUELLE.md](MEMOIRE_CONTEXTUELLE.md) |
-| Vue d'ensemble complète ? | [RAPPORT_FINAL.md](RAPPORT_FINAL.md) |
-| Tests disponibles ? | [test_performance.py](test_performance.py) |
-| Dashboard temps réel ? | [performance_dashboard.html](performance_dashboard.html) |
+| Question                         | Fichier à Consulter                                                  |
+| -------------------------------- | -------------------------------------------------------------------- |
+| Comment démarrer rapidement ?    | [DEMARRAGE_RAPIDE.md](DEMARRAGE_RAPIDE.md)                           |
+| Quelle est l'architecture ?      | [visualisations_architecture.html](visualisations_architecture.html) |
+| Pourquoi c'est lent ?            | [RAPPORT_PERFORMANCE.md](RAPPORT_PERFORMANCE.md)                     |
+| Comment fonctionne le routing ?  | [INTEGRATION_COMPLETE.md](INTEGRATION_COMPLETE.md)                   |
+| Comment améliorer la cohérence ? | [MEMOIRE_CONTEXTUELLE.md](MEMOIRE_CONTEXTUELLE.md)                   |
+| Vue d'ensemble complète ?        | [RAPPORT_FINAL.md](RAPPORT_FINAL.md)                                 |
+| Tests disponibles ?              | [test_performance.py](test_performance.py)                           |
+| Dashboard temps réel ?           | [performance_dashboard.html](performance_dashboard.html)             |
 
 ---
 
 ## 📅 Historique Session
 
 **21 Novembre 2025**
+
 - Analyse architecture complète
 - Création visualisations_architecture.html
 - Tests performance (identification 26.6s moyenne)
 - Création RAPPORT_PERFORMANCE.md
 
 **22 Novembre 2025**
+
 - Analyse ollama-gateway et ollama-orchestrator
 - Création model_router.py (routing intelligent)
 - Création INTEGRATION_COMPLETE.md
@@ -641,6 +688,7 @@ python test_performance.py
 **Tout est prêt pour l'implémentation !**
 
 Vous avez maintenant:
+
 - ✅ Une analyse complète de l'architecture
 - ✅ Une compréhension des bottlenecks performance
 - ✅ Deux services Python prêts à l'emploi

@@ -7,16 +7,17 @@
 
 ## 🏆 TABLEAU RÉCAPITULATIF
 
-| Projet | Score Global | IA Locale | Godot | Backend | Features | Réutilisable |
-|--------|--------------|-----------|-------|---------|----------|--------------|
-| **Votre Projet** | **9.5/10** | ✅✅✅ | ⏳ | ✅✅✅ | ✅✅ | **BASE** |
-| GodotDynamicDialog | 9/10 | ❌ | ✅✅✅ | ✅✅ | ✅✅ | **HAUTE** |
-| ai-dungeon-master | 8/10 | ✅✅ | ❌ | ✅✅✅ | ✅✅✅ | **MOYENNE** |
-| Dungeo_ai | 7/10 | ✅✅✅ | ❌ | ✅ | ✅ | **FAIBLE** |
-| td-llm-dnd | 6/10 | ✅✅ | ❌ | ❌ | ✅✅ | **FAIBLE** |
-| fastapi_websocket_pubsub | 7/10 | ❌ | ❌ | ✅✅✅ | ❌ | **MOYENNE** |
+| Projet                   | Score Global | IA Locale | Godot  | Backend | Features | Réutilisable |
+| ------------------------ | ------------ | --------- | ------ | ------- | -------- | ------------ |
+| **Votre Projet**         | **9.5/10**   | ✅✅✅    | ⏳     | ✅✅✅  | ✅✅     | **BASE**     |
+| GodotDynamicDialog       | 9/10         | ❌        | ✅✅✅ | ✅✅    | ✅✅     | **HAUTE**    |
+| ai-dungeon-master        | 8/10         | ✅✅      | ❌     | ✅✅✅  | ✅✅✅   | **MOYENNE**  |
+| Dungeo_ai                | 7/10         | ✅✅✅    | ❌     | ✅      | ✅       | **FAIBLE**   |
+| td-llm-dnd               | 6/10         | ✅✅      | ❌     | ❌      | ✅✅     | **FAIBLE**   |
+| fastapi_websocket_pubsub | 7/10         | ❌        | ❌     | ✅✅✅  | ❌       | **MOYENNE**  |
 
 **Légende** :
+
 - ✅✅✅ Excellent
 - ✅✅ Bon
 - ✅ Basique
@@ -30,31 +31,38 @@
 ### Points Forts ⭐⭐⭐⭐⭐
 
 **Architecture** (10/10):
+
 ```python
 FastAPI (async) + WebSocket + Ollama + SQLite
 ```
+
 - ✅ Production-ready
 - ✅ Scalable
 - ✅ Moderne (Python 3.13)
 
 **IA Locale** (10/10):
+
 ```python
 ModelRouter + NarrativeMemory + SmartHistory
 ```
+
 - ✅ Multi-modèles intelligent
 - ✅ Mémoire contextuelle avancée
 - ✅ Routing automatique
 - ✅ 9 modèles supportés
 
 **Sécurité** (10/10):
+
 ```python
 Blacklist + Rate-limiting + Sanitization + Content filter
 ```
+
 - ✅ Adapté enfants
 - ✅ PIN parents
 - ✅ Session TTL
 
 **Code Quality** (9/10):
+
 - ✅ Structure modulaire
 - ✅ Services bien séparés
 - ✅ Pydantic validation
@@ -72,6 +80,7 @@ Blacklist + Rate-limiting + Sanitization + Content filter
 ✅ **CONSERVER COMME BASE**
 
 **Ne PAS réécrire, seulement améliorer** :
+
 1. Optimiser config (URGENT)
 2. Ajouter client Godot
 3. Implémenter features JDR
@@ -87,6 +96,7 @@ Blacklist + Rate-limiting + Sanitization + Content filter
 Système de dialogue dynamique pour Godot basé sur contexte environnement.
 
 ### Stack
+
 ```
 Godot 4.x + OpenAI API
 ```
@@ -94,6 +104,7 @@ Godot 4.x + OpenAI API
 ### Features
 
 ✅ **Dialogue contexte-aware**
+
 ```gdscript
 # Détecte environnement joueur
 - Objets proches
@@ -103,11 +114,13 @@ Godot 4.x + OpenAI API
 ```
 
 ✅ **UI Godot Native**
+
 - Dialogue boxes
 - Choix multiples
 - Animations UI
 
 ✅ **API Integration**
+
 ```gdscript
 # HTTP requests vers OpenAI
 var http = HTTPRequest.new()
@@ -132,6 +145,7 @@ http.request(url, headers, method, data)
 **PRIORITÉ HAUTE** - Copier directement :
 
 1. **Structure projet Godot** `/Docs/Installation.md`
+
 ```
 scenes/
 ├── DialogueManager/
@@ -142,6 +156,7 @@ scripts/
 ```
 
 2. **UI Dialogue**
+
 ```gdscript
 # scenes/DialogueBox.tscn
 - RichTextLabel pour narration
@@ -150,6 +165,7 @@ scripts/
 ```
 
 3. **Gestion Contexte**
+
 ```gdscript
 # DialogueController.gd
 func get_context() -> Dictionary:
@@ -161,6 +177,7 @@ func get_context() -> Dictionary:
 ```
 
 4. **Système Choix**
+
 ```gdscript
 func display_choices(choices: Array):
     for choice in choices:
@@ -173,6 +190,7 @@ func display_choices(choices: Array):
 ### Adaptation pour Ollama
 
 **Changer** :
+
 ```gdscript
 # Remplacer HTTP → OpenAI
 var http = HTTPRequest.new()
@@ -180,6 +198,7 @@ http.request("https://api.openai.com/...")
 ```
 
 **Par** :
+
 ```gdscript
 # WebSocket → Backend local
 var socket = WebSocketPeer.new()
@@ -212,6 +231,7 @@ socket.send_text(JSON.stringify({
 DM Discord bot avec dual-model (Claude-3 + Mistral-7B) et mémoire vectorielle.
 
 ### Stack
+
 ```
 Node.js + Discord.js + Claude-3 (critique) + Mistral-7B (draft) + PostgreSQL + Redis + ChromaDB
 ```
@@ -232,6 +252,7 @@ Memory Service
 ### Features
 
 ✅ **Dual-Model Pattern**
+
 ```javascript
 // 1. Draft avec modèle rapide
 const draft = await mistral.generate(prompt);
@@ -244,16 +265,18 @@ return validated.approved ? draft : validated.improved;
 ```
 
 ✅ **Mémoire Vectorielle**
+
 ```javascript
 // Embeddings pour recherche sémantique
 const embedding = await openai.embeddings(text);
 await chromadb.add(embedding, metadata);
 
 // Recherche contexte pertinent
-const similar = await chromadb.query(query_embedding, top_k=5);
+const similar = await chromadb.query(query_embedding, (top_k = 5));
 ```
 
 ✅ **Service Orchestration**
+
 ```javascript
 DungeonMasterService
 ├── handlePlayerAction()
@@ -283,6 +306,7 @@ DungeonMasterService
 1. **Pattern Dual-Model**
 
 **Adapter pour Ollama** :
+
 ```python
 # services/validation_service.py
 
@@ -290,7 +314,7 @@ class ValidationService:
     def __init__(self):
         self.draft_model = "llama3.2"  # Rapide
         self.critic_model = "mistral"  # Expert
-    
+
     async def generate_validated_narrative(self, prompt: str):
         # 1. Draft rapide
         draft = await ollama.generate(
@@ -298,26 +322,26 @@ class ValidationService:
             prompt=prompt,
             num_predict=100
         )
-        
+
         # 2. Validation experte
         critique_prompt = f"""
         Narration générée: {draft}
-        
+
         Valide:
         - Approprié enfants 10-14 ans ?
         - Grammaire correcte ?
         - Engage le joueur ?
-        
+
         Si oui: réponds "APPROVED"
         Si non: améliore la narration
         """
-        
+
         validation = await ollama.generate(
             model=self.critic_model,
             prompt=critique_prompt,
             num_predict=150
         )
-        
+
         # 3. Retour
         if "APPROVED" in validation:
             return draft
@@ -326,6 +350,7 @@ class ValidationService:
 ```
 
 **Quand utiliser** :
+
 - ⏳ Phase 2 (après MVP)
 - Si qualité narrative insuffisante
 - Si budget performance OK (+50% temps)
@@ -333,11 +358,13 @@ class ValidationService:
 2. **Mémoire Vectorielle (ChromaDB)**
 
 **Quand ajouter** :
+
 - ⏳ Phase 3+ (si mémoire actuelle insuffisante)
 - Si besoin recherche sémantique avancée
 - Si projet devient très grand (1000+ events)
 
 **Ne PAS implémenter maintenant** :
+
 - ❌ Complexité inutile pour MVP
 - ❌ NarrativeMemory actuel suffit largement
 - ❌ ChromaDB = dépendance lourde
@@ -358,6 +385,7 @@ class ValidationService:
 AI Dungeon local avec TTS narration, adapté tous âges.
 
 ### Stack
+
 ```
 Python + Ollama + AllTalk TTS + Tkinter UI
 ```
@@ -365,6 +393,7 @@ Python + Ollama + AllTalk TTS + Tkinter UI
 ### Features
 
 ✅ **TTS Narration**
+
 ```python
 # AllTalk TTS pour voix narrative
 import alltalk_tts
@@ -374,11 +403,13 @@ narrator.speak(narrative_text)
 ```
 
 ✅ **Focus Enfants**
+
 - Content filter
 - Vocabulaire adapté
 - UI simple
 
 ✅ **Local 100%**
+
 - Pas de cloud
 - Privé
 
@@ -399,6 +430,7 @@ narrator.speak(narrative_text)
 **PRIORITÉ FAIBLE** - TTS seulement :
 
 **AllTalk TTS** (Phase 3+)
+
 ```python
 # services/tts_service.py
 
@@ -408,13 +440,14 @@ class TTSService:
     def __init__(self):
         self.tts = TTS()
         self.enabled = False  # Désactivé par défaut
-    
+
     async def narrate(self, text: str):
         if self.enabled:
             self.tts.speak(text)
 ```
 
 **Intégration Godot**:
+
 ```gdscript
 # AudioStreamPlayer pour TTS
 @onready var narrator = $NarratorAudio
@@ -427,6 +460,7 @@ func play_narration(audio_data: PackedByteArray):
 ```
 
 **Quand ajouter** :
+
 - ⏳ Phase 3+ (après visuels)
 - Si feedback utilisateurs positif
 - Optionnel (pas critique)
@@ -446,6 +480,7 @@ func play_narration(audio_data: PackedByteArray):
 DM D&D avec génération personnages et aventures, interface Streamlit.
 
 ### Stack
+
 ```
 Python + Streamlit + Ollama + LangChain
 ```
@@ -453,6 +488,7 @@ Python + Streamlit + Ollama + LangChain
 ### Features
 
 ✅ **Génération Personnages**
+
 ```python
 def generate_character(race, class_type):
     prompt = f"Generate D&D character: {race} {class_type}"
@@ -460,10 +496,12 @@ def generate_character(race, class_type):
 ```
 
 ✅ **DM Automatisé**
+
 - Narration tour par tour
 - Gestion actions joueurs
 
 ✅ **Multi-joueurs (limité)**
+
 - Plusieurs personnages IA
 - Interactions NPCs
 
@@ -483,6 +521,7 @@ def generate_character(race, class_type):
 **PRIORITÉ TRÈS FAIBLE** :
 
 **Génération Personnages** (inspiration seulement)
+
 ```python
 # Votre projet a déjà mieux:
 @dataclass
@@ -494,6 +533,7 @@ class Player:
 ```
 
 **Ne PAS utiliser** :
+
 - ❌ Streamlit (vous avez FastAPI)
 - ❌ Architecture simpliste
 
@@ -508,6 +548,7 @@ class Player:
 PubSub durable sur WebSocket avec FastAPI, support multi-serveurs.
 
 ### Stack
+
 ```
 FastAPI + WebSocket + Redis/PostgreSQL/Kafka
 ```
@@ -515,6 +556,7 @@ FastAPI + WebSocket + Redis/PostgreSQL/Kafka
 ### Features
 
 ✅ **PubSub Pattern**
+
 ```python
 # Server
 endpoint = PubSubEndpoint()
@@ -525,6 +567,7 @@ client.subscribe("my_event", callback)
 ```
 
 ✅ **Multi-Serveurs**
+
 ```python
 # Broadcaster Redis
 endpoint = PubSubEndpoint(broadcaster="redis://localhost:6379")
@@ -533,6 +576,7 @@ endpoint = PubSubEndpoint(broadcaster="redis://localhost:6379")
 ```
 
 ✅ **Durable**
+
 - Reconnexion auto
 - Messages persistants
 
@@ -552,11 +596,13 @@ endpoint = PubSubEndpoint(broadcaster="redis://localhost:6379")
 **PRIORITÉ FAIBLE** - Phase 2+ seulement :
 
 **Quand utiliser** :
+
 - ⏳ Phase 2+ (multi-serveurs)
 - Si > 100 joueurs simultanés
 - Si déploiement distribué
 
 **Ne PAS utiliser maintenant** :
+
 - ❌ Overkill pour 4 joueurs max
 - ❌ WebSocket simple suffit
 
@@ -570,13 +616,14 @@ endpoint = PubSubEndpoint(broadcaster="redis://localhost:6379")
 
 ### PRIORITÉ URGENTE 🔴 (Cette semaine)
 
-| Solution | Feature | Effort | Gain | Décision |
-|----------|---------|--------|------|----------|
+| Solution               | Feature         | Effort | Gain   | Décision      |
+| ---------------------- | --------------- | ------ | ------ | ------------- |
 | **GodotDynamicDialog** | Structure Godot | 1 jour | ✅✅✅ | **FAIRE NOW** |
-| **GodotDynamicDialog** | UI Dialogue | 4h | ✅✅✅ | **FAIRE NOW** |
-| **Votre projet** | Optimisations | 2h | ✅✅✅ | **FAIRE NOW** |
+| **GodotDynamicDialog** | UI Dialogue     | 4h     | ✅✅✅ | **FAIRE NOW** |
+| **Votre projet**       | Optimisations   | 2h     | ✅✅✅ | **FAIRE NOW** |
 
 **Actions** :
+
 ```bash
 # 1. Cloner GodotDynamicDialog
 cd C:\Dev
@@ -596,12 +643,13 @@ explorer scripts/
 
 ### PRIORITÉ IMPORTANTE 🟡 (Semaine 2-3)
 
-| Solution | Feature | Effort | Gain | Décision |
-|----------|---------|--------|------|----------|
-| **ai-dungeon-master** | Dual-Model | 1 jour | ✅✅ | Phase 2 |
-| **ai-dungeon-master** | Service Orchestration | 2h | ✅ | **Inspiration** |
+| Solution              | Feature               | Effort | Gain | Décision        |
+| --------------------- | --------------------- | ------ | ---- | --------------- |
+| **ai-dungeon-master** | Dual-Model            | 1 jour | ✅✅ | Phase 2         |
+| **ai-dungeon-master** | Service Orchestration | 2h     | ✅   | **Inspiration** |
 
 **Actions** :
+
 ```bash
 # 1. Cloner pour référence
 git clone https://github.com/davidpm1021/ai-dungeon-master.git
@@ -618,13 +666,14 @@ cat src/services/dungeon-master.service.ts
 
 ### PRIORITÉ FAIBLE 🟢 (Phase 3+)
 
-| Solution | Feature | Effort | Gain | Décision |
-|----------|---------|--------|------|----------|
-| **Dungeo_ai** | TTS | 1 jour | ✅ | Optionnel |
-| **ai-dungeon-master** | Mémoire Vectorielle | 3 jours | ✅ | Si besoin |
-| **fastapi_websocket_pubsub** | Multi-serveurs | 1 semaine | ✅ | Phase 3+ |
+| Solution                     | Feature             | Effort    | Gain | Décision  |
+| ---------------------------- | ------------------- | --------- | ---- | --------- |
+| **Dungeo_ai**                | TTS                 | 1 jour    | ✅   | Optionnel |
+| **ai-dungeon-master**        | Mémoire Vectorielle | 3 jours   | ✅   | Si besoin |
+| **fastapi_websocket_pubsub** | Multi-serveurs      | 1 semaine | ✅   | Phase 3+  |
 
 **Actions** :
+
 ```bash
 # Garder en veille
 # Implémenter seulement si feedback utilisateurs
@@ -637,6 +686,7 @@ cat src/services/dungeon-master.service.ts
 ### Semaine 1 : Optimisations + Godot Base
 
 **Jour 1-2** :
+
 ```bash
 # Optimisations backend
 1. Modifier config.yaml (max_tokens: 150)
@@ -650,6 +700,7 @@ git clone ai-dungeon-master
 ```
 
 **Jour 3-5** :
+
 ```bash
 # Setup Godot
 1. Créer projet jdvlh-godot-client
@@ -699,16 +750,19 @@ git clone ai-dungeon-master
 ### Ce qui VAUT LE COUP
 
 ✅ **GodotDynamicDialog** → **ROI: 500%**
+
 - Effort: 1 jour
 - Gain: Structure complète Godot + UI pro
 - **FAIRE ABSOLUMENT**
 
 ✅ **Optimisations Config** → **ROI: 1000%**
+
 - Effort: 2h
 - Gain: -91% temps réponse
 - **FAIRE EN PREMIER**
 
 ✅ **ai-dungeon-master (inspiration)** → **ROI: 200%**
+
 - Effort: 2h étude
 - Gain: Idées architecture services
 - **LIRE ET S'INSPIRER**
@@ -716,16 +770,19 @@ git clone ai-dungeon-master
 ### Ce qui NE VAUT PAS LE COUP (pour l'instant)
 
 ❌ **TTS Narration** → ROI: 50%
+
 - Effort: 1-2 jours
 - Gain: Feature secondaire
 - **Phase 3+ seulement**
 
 ❌ **Mémoire Vectorielle** → ROI: 30%
+
 - Effort: 3-4 jours
 - Gain: Marginal (mémoire actuelle suffit)
 - **Seulement si projet très grand**
 
 ❌ **Multi-serveurs PubSub** → ROI: 10%
+
 - Effort: 1 semaine
 - Gain: Inutile pour 4 joueurs max
 - **Phase 2+ si vraiment nécessaire**
@@ -737,6 +794,7 @@ git clone ai-dungeon-master
 ### Votre Projet EST DÉJÀ Excellent
 
 **Score comparatif** :
+
 ```
 Votre Projet:         9.5/10 ⭐⭐⭐⭐⭐
 GodotDynamicDialog:   9.0/10 ⭐⭐⭐⭐⭐
@@ -768,4 +826,3 @@ Autres:               6-7/10 ⭐⭐⭐
 
 **Document généré le 22 Novembre 2025**  
 **Version**: 1.0 - Matrice Comparative
-

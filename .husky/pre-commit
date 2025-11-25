@@ -1,14 +1,44 @@
 echo "🔍 Running pre-commit checks..."
 
-# Format Python code with black
+# AUTO-CLEANUP: Move misplaced files
+echo "📁 Auto-organizing files..."
+
+# Move stray .md files to docs/
+for f in *.md; do
+  [ -f "$f" ] || continue
+  case "$f" in
+    README.md) ;; # Keep at root
+    CHANGELOG.md) mv "$f" docs/ 2>/dev/null && echo "  Moved $f → docs/" ;;
+    ANALYSE_*|RAPPORT_*) mv "$f" docs/reports/ 2>/dev/null && echo "  Moved $f → docs/reports/" ;;
+    GUIDE_*|DEMARRAGE_*) mv "$f" docs/guides/ 2>/dev/null && echo "  Moved $f → docs/guides/" ;;
+    ROADMAP*|CONTEXTE_*) mv "$f" docs/project/ 2>/dev/null && echo "  Moved $f → docs/project/" ;;
+    INDEX*|*PLAN*|*TASK*) mv "$f" docs/plans/ 2>/dev/null && echo "  Moved $f → docs/plans/" ;;
+    *) mv "$f" docs/ 2>/dev/null && echo "  Moved $f → docs/" ;;
+  esac
+done
+
+# Move stray scripts to scripts/
+for f in *.py; do
+  [ -f "$f" ] || continue
+  case "$f" in
+    conftest.py|setup.py) ;; # Keep at root
+    test_*) mv "$f" tests/ 2>/dev/null && echo "  Moved $f → tests/" ;;
+    *) mv "$f" scripts/ 2>/dev/null && echo "  Moved $f → scripts/" ;;
+  esac
+done
+
+# Delete garbage
+rm -f nul commit-message.txt *.log 2>/dev/null
+
+# Format Python code
 echo "📝 Formatting Python code..."
 python -m black . --quiet
 
-# Check Python code quality (non-blocking for now)
+# Check Python code quality
 echo "🔎 Checking Python code quality..."
-python -m flake8 . --max-line-length=100 --extend-ignore=E203,W503 || echo "⚠️  Flake8 warnings (non-blocking)"
+python -m flake8 . --max-line-length=100 --extend-ignore=E203,W503 || echo "⚠️  Flake8 warnings"
 
-# Run tests if they exist
+# Run tests
 if [ -d "tests" ]; then
   echo "🧪 Running tests..."
   python -m pytest -q || exit 1

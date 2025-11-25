@@ -10,6 +10,7 @@
 ✅ **VOTRE PROJET EST DÉJÀ MEILLEUR QUE LES SOLUTIONS GITHUB**
 
 **Ce que vous avez déjà** :
+
 - ✅ Backend FastAPI production-ready
 - ✅ ModelRouter intelligent (routing multi-modèles)
 - ✅ NarrativeMemory avancée (cohérence narrative)
@@ -17,6 +18,7 @@
 - ✅ Persistance SQLite + cache
 
 **Ce qui manque** :
+
 - ⏳ Optimisations performance (26.6s → 2.5s)
 - ⏳ Client Godot 3D
 - ⏳ Features JDR avancées (combat, inventaire, quêtes)
@@ -25,12 +27,12 @@
 
 ## 📊 COMPARAISON AVEC GITHUB
 
-| Solution | Stack | IA Locale | Qualité | Votre Projet |
-|----------|-------|-----------|---------|--------------|
-| td-llm-dnd | Streamlit | ✅ | 6/10 | **MEILLEUR** |
-| Dungeo_ai | Python | ✅ | 7/10 | **MEILLEUR** |
-| ai-dungeon-master | Node/Discord | ✅ | 8/10 | **ÉQUIVALENT** |
-| GodotDynamicDialog | Godot | ❌ API | 9/10 | **À INTÉGRER** |
+| Solution           | Stack        | IA Locale | Qualité | Votre Projet   |
+| ------------------ | ------------ | --------- | ------- | -------------- |
+| td-llm-dnd         | Streamlit    | ✅        | 6/10    | **MEILLEUR**   |
+| Dungeo_ai          | Python       | ✅        | 7/10    | **MEILLEUR**   |
+| ai-dungeon-master  | Node/Discord | ✅        | 8/10    | **ÉQUIVALENT** |
+| GodotDynamicDialog | Godot        | ❌ API    | 9/10    | **À INTÉGRER** |
 
 **Conclusion** : Vous êtes sur la bonne voie, continuez !
 
@@ -48,17 +50,18 @@ code config.yaml
 ```
 
 **Changements à faire** :
+
 ```yaml
 ollama:
   model: mistral
   max_retries: 3
-  temperature: 0.75  # Au lieu de 0.8
-  max_tokens: 150    # AU LIEU DE 400 ⚡ CRITIQUE
+  temperature: 0.75 # Au lieu de 0.8
+  max_tokens: 150 # AU LIEU DE 400 ⚡ CRITIQUE
 
 cache:
   dir: cache
-  ttl: 7200  # Déjà bon
-  pregenerate: true  # ⚡ AJOUTER CETTE LIGNE
+  ttl: 7200 # Déjà bon
+  pregenerate: true # ⚡ AJOUTER CETTE LIGNE
 
 prompts:
   system: "Tu es un maître du jeu D&D/Tolkien pour enfants francophones de 10-14 ans. Raconte TOUJOURS en FRANÇAIS une histoire épique et immersive. 8-12 phrases maximum, descriptions riches mais concises. IMPORTANT: JAMAIS d'anglais, TOUJOURS du français."
@@ -86,29 +89,31 @@ code src/jdvlh_ia_game/services/narrative.py
 ```
 
 **Ajouter au début du fichier** :
+
 ```python
 from .model_router import get_router, TaskType
 ```
 
 **Modifier la classe NarrativeService** :
+
 ```python
 class NarrativeService:
     def __init__(self):
         self.cache = CacheService()
         self.memory = NarrativeMemory()  # ⚡ Déjà présent
         self.router = get_router()       # ⚡ AJOUTER CETTE LIGNE
-        
+
     async def generate_narrative(self, prompt: str, context: str = ""):
         # ⚡ AJOUTER CES 2 LIGNES
         model, options = self.router.select_model(prompt, context)
-        
+
         # Modifier l'appel Ollama pour utiliser le modèle sélectionné
         response = ollama.generate(
             model=model,  # ⚡ Au lieu de "mistral"
             prompt=prompt,
             **options  # ⚡ Au lieu de hardcoded options
         )
-        
+
         return response
 ```
 
@@ -132,16 +137,17 @@ python test_performance.py
 
 #### Quelle solution utiliser ?
 
-| Outil | Avantages | Inconvénients | Recommandation |
-|-------|-----------|---------------|----------------|
-| **ModelRouter intégré** | ✅ Déjà dans code<br>✅ Python natif<br>✅ 0 latence | ❌ Aucun | ⭐⭐⭐⭐⭐ **UTILISER** |
-| Ollama Gateway | ✅ Compatible OpenAI<br>✅ Pour outils externes | ❌ Serveur séparé<br>❌ Latence réseau | ⚠️ Phase 2 seulement |
-| Ollama Orchestrator Node | ✅ Dashboard joli | ❌ Node.js<br>❌ Bridge requis | 🔧 Tests uniquement |
-| Scripts Bash | ✅ Ultra-simple | ❌ Pas d'API | 🔧 Debug uniquement |
+| Outil                    | Avantages                                            | Inconvénients                          | Recommandation          |
+| ------------------------ | ---------------------------------------------------- | -------------------------------------- | ----------------------- |
+| **ModelRouter intégré**  | ✅ Déjà dans code<br>✅ Python natif<br>✅ 0 latence | ❌ Aucun                               | ⭐⭐⭐⭐⭐ **UTILISER** |
+| Ollama Gateway           | ✅ Compatible OpenAI<br>✅ Pour outils externes      | ❌ Serveur séparé<br>❌ Latence réseau | ⚠️ Phase 2 seulement    |
+| Ollama Orchestrator Node | ✅ Dashboard joli                                    | ❌ Node.js<br>❌ Bridge requis         | 🔧 Tests uniquement     |
+| Scripts Bash             | ✅ Ultra-simple                                      | ❌ Pas d'API                           | 🔧 Debug uniquement     |
 
 **DÉCISION** : ✅ **Utiliser ModelRouter intégré** (déjà fait dans code ci-dessus)
 
 **Utilisation des autres outils** :
+
 ```bash
 # Ollama Orchestrator - Pour tests manuels modèles
 cd C:\Dev\ollama-orchestrator
@@ -165,6 +171,7 @@ python main.py
 #### Projets à analyser en détail
 
 **1. GodotDynamicDialog** (PRIORITÉ HAUTE)
+
 ```bash
 # Cloner pour référence
 cd C:\Dev
@@ -172,42 +179,50 @@ git clone https://github.com/Godot-Dynamic-Dialog/GodotDynamicDialog.git
 ```
 
 **À étudier** :
+
 - Structure projet Godot
 - Intégration WebSocket
 - UI dialogue
 - Gestion contexte
 
 **À réutiliser** :
+
 - ✅ Structure scènes Godot
 - ✅ Système dialogue UI
 - ⚠️ Adapter pour Ollama local (au lieu d'OpenAI API)
 
 **2. ai-dungeon-master** (INSPIRATION)
+
 ```bash
 cd C:\Dev
 git clone https://github.com/davidpm1021/ai-dungeon-master.git
 ```
 
 **À étudier** :
+
 - Dual-model pattern (critique + draft)
 - Mémoire vectorielle (ChromaDB)
 - Service orchestration
 
 **À réutiliser** :
+
 - ✅ Pattern dual-model (pour validation narration)
 - ⚠️ Mémoire vectorielle (Phase 2 si nécessaire)
 
 **3. fastapi_websocket_pubsub** (FUTUR)
+
 ```bash
 cd C:\Dev
 git clone https://github.com/permitio/fastapi_websocket_pubsub.git
 ```
 
 **À étudier** :
+
 - PubSub multi-serveurs
 - Scalabilité
 
 **Quand utiliser** :
+
 - ⏳ Phase 2+ (quand multi-joueurs avancé)
 
 ---
@@ -315,6 +330,7 @@ python main.py
 - [ ] Test connexion WebSocket
 
 **Résultat attendu** :
+
 - ✅ Temps réponse < 3s
 - ✅ Multi-modèles fonctionnel
 - ✅ Godot connecté au backend
@@ -465,6 +481,7 @@ git push
 ## 📊 METRICS DE SUCCÈS
 
 ### Avant Optimisations
+
 ```
 Temps moyen: 26.6s
 Modèles utilisés: 1 (Mistral)
@@ -472,6 +489,7 @@ Cohérence: 7/10
 ```
 
 ### Après Optimisations (Objectif)
+
 ```
 Temps moyen: < 3s  ✅
 Modèles utilisés: 3+ (Mistral, Llama3.2, Gemma2)
@@ -479,6 +497,7 @@ Cohérence: 9/10 ✅
 ```
 
 ### MVP Godot (Semaine 4)
+
 ```
 Backend: ✅ Complet
 Godot Client: ✅ Fonctionnel
@@ -487,6 +506,7 @@ Visuels: ⏳ Placeholders low-poly
 ```
 
 ### Version Finale (Mois 2)
+
 ```
 Tout ci-dessus +
 Visuels 3D: ✅ Low-poly complets
@@ -505,9 +525,10 @@ Features avancées: ✅ Crafting, économie
 ✅ Système IA avancé (mémoire + routing)  
 ✅ Outils d'orchestration disponibles  
 ✅ Références GitHub pour inspiration  
-✅ Roadmap claire et réaliste  
+✅ Roadmap claire et réaliste
 
 **Action NOW** :
+
 1. ⚡ Appliquer optimisations (30min)
 2. 🧪 Tester performance (15min)
 3. 🎮 Setup Godot (45min)
@@ -519,4 +540,3 @@ Features avancées: ✅ Crafting, économie
 
 **Document généré le 22 Novembre 2025**  
 **Version**: 1.0 - Guide Action Rapide
-

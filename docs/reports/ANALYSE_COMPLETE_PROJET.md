@@ -1,4 +1,5 @@
 # 🎯 ANALYSE COMPLÈTE - JDR Narratif IA + Godot
+
 ## Projet "jdvlh-ia-game" - Orchestration Multi-IA Locale
 
 **Date**: 22 Novembre 2025  
@@ -24,11 +25,13 @@
 #### ✅ Points Forts
 
 **Architecture Solide** (Score: 8/10)
+
 ```
 FastAPI (backend) + WebSocket (temps réel) + Ollama (IA locale) + SQLite (persistance)
 ```
 
 **Features Implémentées**:
+
 - ✅ Backend FastAPI fonctionnel avec WebSocket
 - ✅ Service NarrativeService avec Ollama/Mistral
 - ✅ **ModelRouter intelligent** (routing automatique multi-modèles)
@@ -41,6 +44,7 @@ FastAPI (backend) + WebSocket (temps réel) + Ollama (IA locale) + SQLite (persi
 - ✅ Client HTML simple (MVP test)
 
 **Métriques Actuelles**:
+
 - Temps réponse: **26.6s moyenne** (sans optimisations)
 - Temps optimal attendu: **2-3s** (avec optimisations)
 - Modèles utilisés: 1 (Mistral) → Peut supporter 9+
@@ -49,12 +53,14 @@ FastAPI (backend) + WebSocket (temps réel) + Ollama (IA locale) + SQLite (persi
 #### ⚠️ Points à Améliorer
 
 **Client actuel**:
+
 - ❌ HTML pur (pas Godot)
 - ❌ Pas de visuels 3D
 - ❌ Pas d'animations
 - ❌ UX basique
 
 **Optimisations en attente**:
+
 - ⏳ Réduire `num_predict` (400 → 150) → **-50% temps**
 - ⏳ Cache hit rate optimisé → **-80% temps moyen**
 - ⏳ Intégration ModelRouter dans NarrativeService → **-40% temps**
@@ -85,6 +91,7 @@ jdvlh-ia-game/
 ```
 
 **Technologies**:
+
 - Python 3.13
 - FastAPI (async ASGI)
 - Ollama 0.3.3 (API IA locale)
@@ -103,6 +110,7 @@ Vous disposez de **3 outils d'orchestration Ollama** :
 **Stack**: Node.js + Express + détection automatique modèles
 
 **Fonctionnalités**:
+
 ```javascript
 ✅ Détection auto modèles locaux (ollama list)
 ✅ Analyse nom → spécialités (code, chess, creative, etc.)
@@ -113,6 +121,7 @@ Vous disposez de **3 outils d'orchestration Ollama** :
 ```
 
 **Exemple routing**:
+
 ```
 "Écris une fonction Python" → deepseek-coder-v2
 "Quelle est la meilleure ouverture aux échecs ?" → deepseek-chess
@@ -121,12 +130,14 @@ Vous disposez de **3 outils d'orchestration Ollama** :
 ```
 
 **Points forts**:
+
 - Simple et léger
 - Dashboard visuel pratique
 - API REST facile
 - Bon pour prototypage rapide
 
 **Limites**:
+
 - Séparé du projet Python (nécessite bridge)
 - Pas d'intégration directe Godot
 - Node.js dépendance supplémentaire
@@ -136,6 +147,7 @@ Vous disposez de **3 outils d'orchestration Ollama** :
 **Stack**: Python + FastAPI + OpenAI-compatible API
 
 **Fonctionnalités**:
+
 ```python
 ✅ API compatible OpenAI (v1/chat/completions)
 ✅ Routing automatique intelligent
@@ -145,11 +157,13 @@ Vous disposez de **3 outils d'orchestration Ollama** :
 ```
 
 **Architecture**:
+
 ```
 Claude-Code/Continue → Gateway (localhost:4000) → Routing → Ollama
 ```
 
 **Configuration modèles**:
+
 ```json
 {
   "deepseek-coder-v2": {
@@ -166,12 +180,14 @@ Claude-Code/Continue → Gateway (localhost:4000) → Routing → Ollama
 ```
 
 **Points forts**:
+
 - Python natif (même stack que projet)
 - OpenAI-compatible (outils externes)
 - Streaming temps réel
 - Bien documenté
 
 **Limites**:
+
 - Serveur séparé (port 4000)
 - Configuration externe (config.json)
 
@@ -180,6 +196,7 @@ Claude-Code/Continue → Gateway (localhost:4000) → Routing → Ollama
 **Stack**: Bash scripts + direct Ollama CLI
 
 **Fonctionnalités**:
+
 ```bash
 ✅ Scripts simples ./ask.sh <role> "<prompt>"
 ✅ Agents pré-configurés (coder, chess, creative, etc.)
@@ -188,6 +205,7 @@ Claude-Code/Continue → Gateway (localhost:4000) → Routing → Ollama
 ```
 
 **Exemple usage**:
+
 ```bash
 ./ask.sh coder "Write a Python function"
 ./ask.sh chess "Best opening move?"
@@ -195,12 +213,14 @@ Claude-Code/Continue → Gateway (localhost:4000) → Routing → Ollama
 ```
 
 **Points forts**:
+
 - Ultra-simple
 - Pas de serveur
 - Idéal pour tests rapides
 - Pas de dépendances
 
 **Limites**:
+
 - Bash seulement
 - Pas d'API programmatique
 - Pas de streaming
@@ -213,60 +233,70 @@ Claude-Code/Continue → Gateway (localhost:4000) → Routing → Ollama
 #### Projets Similaires Analysés
 
 **1. td-llm-dnd** (GitHub - tegridydev)
+
 ```python
 Stack: Streamlit + Ollama
 Features: Génération personnages, DM automatisé, turn-based
 Limite: Streamlit (pas production-ready)
 ```
+
 **Réutilisable**: ❌ (Stack différent)  
 **Inspirant**: ✅ (Concept DM multi-agents)
 
 **2. Dungeo_ai** (GitHub - Laszlobeer)
+
 ```python
 Stack: Python + Ollama + AllTalk TTS
 Features: Local, TTS narration, adapté enfants
 Limite: UI basique
 ```
+
 **Réutilisable**: ⚠️ (TTS intéressant)  
 **Inspirant**: ✅ (Focus enfants)
 
 **3. ai-dungeon-master** (GitHub - davidpm1021)
+
 ```javascript
 Stack: Node.js + Discord bot + Claude-3 + Mistral-7B (Ollama) + PostgreSQL + Redis
 Features: Dual-model (critique + draft), mémoire vectorielle
 Limite: Discord seulement, complexe
 ```
+
 **Réutilisable**: ❌ (Trop complexe)  
 **Inspirant**: ✅✅ (Dual-model pattern, mémoire vectorielle)
 
 **4. GodotDynamicDialog** (GitHub)
+
 ```gdscript
 Stack: Godot + OpenAI API
 Features: Dialogue dynamique basé contexte
 Limite: OpenAI seulement (pas local)
 ```
+
 **Réutilisable**: ⚠️ (Structure Godot)  
 **Inspirant**: ✅✅ (Intégration Godot + IA)
 
 **5. fastapi_websocket_pubsub** (GitHub - permitio)
+
 ```python
 Stack: FastAPI + WebSocket + PubSub + Redis/Postgres/Kafka
 Features: Multi-serveurs, scalable, durable
 Limite: Overkill pour MVP
 ```
+
 **Réutilisable**: ❌ (Trop avancé)  
 **Inspirant**: ✅ (Pour Phase 2)
 
 #### Tableau Comparatif
 
-| Projet | Stack | IA Locale | Godot | Pertinence | Note |
-|--------|-------|-----------|-------|------------|------|
-| **Votre projet** | Python/FastAPI | ✅ Ollama | ⏳ À faire | 🎯 Cible | 10/10 |
-| td-llm-dnd | Streamlit | ✅ | ❌ | Concept | 6/10 |
-| Dungeo_ai | Python | ✅ | ❌ | TTS | 7/10 |
-| ai-dungeon-master | Node/Discord | ✅ | ❌ | Architecture | 8/10 |
-| GodotDynamicDialog | Godot | ❌ API | ✅ | Intégration | 9/10 |
-| fastapi_websocket_pubsub | FastAPI | ❌ | ❌ | Scalabilité | 7/10 |
+| Projet                   | Stack          | IA Locale | Godot      | Pertinence   | Note  |
+| ------------------------ | -------------- | --------- | ---------- | ------------ | ----- |
+| **Votre projet**         | Python/FastAPI | ✅ Ollama | ⏳ À faire | 🎯 Cible     | 10/10 |
+| td-llm-dnd               | Streamlit      | ✅        | ❌         | Concept      | 6/10  |
+| Dungeo_ai                | Python         | ✅        | ❌         | TTS          | 7/10  |
+| ai-dungeon-master        | Node/Discord   | ✅        | ❌         | Architecture | 8/10  |
+| GodotDynamicDialog       | Godot          | ❌ API    | ✅         | Intégration  | 9/10  |
+| fastapi_websocket_pubsub | FastAPI        | ❌        | ❌         | Scalabilité  | 7/10  |
 
 **Verdict**: ✅ **Votre architecture actuelle est déjà meilleure que la plupart des solutions GitHub**
 
@@ -281,6 +311,7 @@ Limite: Overkill pour MVP
 **Description**: Utiliser le `model_router.py` déjà créé dans votre projet
 
 **Avantages**:
+
 ```python
 ✅ Déjà dans votre code (services/model_router.py)
 ✅ Python natif - même stack
@@ -292,6 +323,7 @@ Limite: Overkill pour MVP
 ```
 
 **Architecture**:
+
 ```python
 # Dans narrative.py
 from .model_router import get_router
@@ -302,6 +334,7 @@ response = ollama.generate(model=model, **options)
 ```
 
 **Performances attendues**:
+
 - Latence routing: **< 1ms** (local)
 - Temps total: **2-3s** (optimisé)
 - Hit rate optimal: **90%+**
@@ -313,6 +346,7 @@ response = ollama.generate(model=model, **options)
 **Description**: Serveur FastAPI séparé compatible OpenAI
 
 **Avantages**:
+
 ```python
 ✅ Compatible outils externes (Claude-Code, Continue, Cursor)
 ✅ API standard OpenAI
@@ -321,6 +355,7 @@ response = ollama.generate(model=model, **options)
 ```
 
 **Inconvénients**:
+
 ```
 ❌ Serveur séparé (port 4000)
 ❌ Latence réseau locale (~5-10ms)
@@ -329,6 +364,7 @@ response = ollama.generate(model=model, **options)
 ```
 
 **Quand utiliser**:
+
 - Si vous voulez un service centralisé pour plusieurs projets
 - Si vous utilisez Claude-Code/Continue pour développer
 - Phase 2+ quand projet mature
@@ -340,6 +376,7 @@ response = ollama.generate(model=model, **options)
 **Description**: Dashboard Node.js avec API REST
 
 **Avantages**:
+
 ```javascript
 ✅ Dashboard web joli
 ✅ Test rapide modèles
@@ -347,6 +384,7 @@ response = ollama.generate(model=model, **options)
 ```
 
 **Inconvénients**:
+
 ```
 ❌ Node.js (stack différent)
 ❌ Bridge Python ↔ Node requis
@@ -355,6 +393,7 @@ response = ollama.generate(model=model, **options)
 ```
 
 **Quand utiliser**:
+
 - Pour tests manuels modèles
 - Prototypage rapide
 - Démo
@@ -366,6 +405,7 @@ response = ollama.generate(model=model, **options)
 **Description**: Scripts bash CLI simples
 
 **Avantages**:
+
 ```bash
 ✅ Ultra-simple
 ✅ Pas de serveur
@@ -373,6 +413,7 @@ response = ollama.generate(model=model, **options)
 ```
 
 **Inconvénients**:
+
 ```
 ❌ Bash (pas intégrable projet)
 ❌ Pas d'API programmatique
@@ -380,6 +421,7 @@ response = ollama.generate(model=model, **options)
 ```
 
 **Quand utiliser**:
+
 - Tests terminaux rapides
 - Debugging modèles
 
@@ -388,6 +430,7 @@ response = ollama.generate(model=model, **options)
 ### 2.2 Décision: Intégration ModelRouter Natif
 
 **Pourquoi ?**
+
 1. ✅ **Déjà dans votre code** (services/model_router.py)
 2. ✅ **Python natif** - pas de bridge
 3. ✅ **Performances optimales** - pas de latence réseau
@@ -396,6 +439,7 @@ response = ollama.generate(model=model, **options)
 6. ✅ **Facile à tester** - pytest direct
 
 **Comment ?**
+
 ```python
 # 1. Modifier services/narrative.py
 
@@ -405,22 +449,23 @@ class NarrativeService:
     def __init__(self):
         self.router = get_router()  # Singleton
         self.memory = NarrativeMemory()
-        
+
     async def generate_response(self, prompt, context):
         # Router sélectionne modèle optimal
         model, options = self.router.select_model(prompt, context)
-        
+
         # Génération avec modèle sélectionné
         response = ollama.generate(
             model=model,
             prompt=prompt,
             **options
         )
-        
+
         return response
 ```
 
 **Résultat attendu**:
+
 - **-40% temps** (choix modèle optimal par tâche)
 - **+100% qualité** (spécialisation)
 - **+300% variété** (plusieurs modèles)
@@ -432,6 +477,7 @@ class NarrativeService:
 ### 3.1 Vision Cible
 
 **Stack Final**:
+
 ```
 [Godot 4.3 Client 3D] ← WebSocket → [FastAPI Backend] ← [Ollama Multi-Modèles]
                                            ↓
@@ -439,6 +485,7 @@ class NarrativeService:
 ```
 
 **Features Avancées JDR**:
+
 - ✅ Univers persistant scénarisé
 - ✅ Inventaire dynamique (items, armes, potions)
 - ✅ Système sorts (magie élémentaire)
@@ -451,6 +498,7 @@ class NarrativeService:
 - ✅ Relations NPC (réputation)
 
 **Visuels Godot**:
+
 - 🎨 Low-poly 3D (art direction > détails)
 - 🎬 Animations personnage (marche, combat, sorts)
 - 🌍 Environnements LOTR-inspirés
@@ -590,7 +638,7 @@ class Player:
     name: str
     race: str  # "hobbit", "elfe", "nain", "humain"
     class_type: str  # "guerrier", "mage", "ranger", "voleur"
-    
+
     # Stats
     level: int = 1
     xp: int = 0
@@ -600,29 +648,29 @@ class Player:
     max_mana: int = 50
     stamina: int = 100
     max_stamina: int = 100
-    
+
     # Attributs
     strength: int = 10
     intelligence: int = 10
     agility: int = 10
     wisdom: int = 10
-    
+
     # Progression
     skill_points: int = 0
     learned_skills: List[str] = field(default_factory=list)
-    
+
     # Inventaire
     inventory: List['Item'] = field(default_factory=list)
     equipped: Dict[str, 'Item'] = field(default_factory=dict)
     gold: int = 100
-    
+
     # Position
     current_location: str = "la Comté"
-    
+
     # Quêtes
     active_quests: List['Quest'] = field(default_factory=list)
     completed_quests: List[str] = field(default_factory=list)
-    
+
     # Relations
     npc_reputation: Dict[str, int] = field(default_factory=dict)
 
@@ -633,17 +681,17 @@ class Item:
     name: str
     type: str  # "weapon", "armor", "potion", "quest_item"
     rarity: str  # "common", "uncommon", "rare", "epic", "legendary"
-    
+
     # Stats (si équipement)
     damage: int = 0
     armor: int = 0
     magic_power: int = 0
-    
+
     # Propriétés
     stackable: bool = False
     quantity: int = 1
     value: int = 10  # Or
-    
+
     # Description
     description: str = ""
 
@@ -658,7 +706,7 @@ class Spell:
     healing: int = 0
     cooldown: int = 0  # Nombre de tours
     description: str = ""
-    
+
     # Animations Godot
     cast_animation: str = "cast_spell"
     effect_scene: str = "res://effects/fireball.tscn"
@@ -685,11 +733,11 @@ class Enemy:
     max_hp: int
     damage: int
     armor: int
-    
+
     # IA Combat
     ai_strategy: str  # "aggressive", "defensive", "balanced"
     skills: List[str] = field(default_factory=list)
-    
+
     # Loot
     loot_table: Dict[str, float] = field(default_factory=dict)  # item_id: drop_chance
 ```
@@ -702,7 +750,7 @@ class Enemy:
 class CombatEngine:
     def __init__(self):
         self.router = get_router()  # Pour narration combat
-        
+
     async def start_combat(
         self,
         player: Player,
@@ -710,58 +758,58 @@ class CombatEngine:
         location: str
     ) -> CombatState:
         """Initialise un combat tactique"""
-        
+
         # Narration d'entrée en combat
         model, options = self.router.select_model(
             prompt=f"Décris le début d'un combat épique à {location}",
             context="",
             task_type=TaskType.EPIC_ACTION
         )
-        
+
         intro_narrative = await self._generate_narrative(
             model=model,
             prompt=f"Le joueur {player.name} fait face à {', '.join([e.name for e in enemies])}",
             options=options
         )
-        
+
         return CombatState(
             player=player,
             enemies=enemies,
             turn=1,
             intro_text=intro_narrative
         )
-    
+
     async def execute_turn(
         self,
         combat_state: CombatState,
         action: CombatAction
     ) -> CombatResult:
         """Exécute un tour de combat"""
-        
+
         # Calcul dégâts
         damage = self._calculate_damage(
             attacker=combat_state.player,
             defender=combat_state.enemies[action.target_index],
             action=action
         )
-        
+
         # Appliquer dégâts
         combat_state.enemies[action.target_index].hp -= damage
-        
+
         # Narration résultat
         narrative = await self._generate_combat_narrative(
             action=action,
             damage=damage,
             combat_state=combat_state
         )
-        
+
         # Tour ennemi (IA)
         enemy_actions = await self._enemy_ai_turn(combat_state)
-        
+
         # Vérifier fin combat
         is_victory = all(e.hp <= 0 for e in combat_state.enemies)
         is_defeat = combat_state.player.hp <= 0
-        
+
         return CombatResult(
             player_damage=damage,
             enemy_damages=enemy_actions,
@@ -773,6 +821,7 @@ class CombatEngine:
 ```
 
 **Narration de Combat (Multi-Modèles)**:
+
 ```python
 # Combat épique → Gemma2 (créatif, dramatique)
 "Tu brandis Dard et fonces vers l'orc ! Un éclair d'acier fend l'air..."
@@ -812,7 +861,7 @@ func connect_to_server():
 func _process(delta):
     socket.poll()
     var state = socket.get_ready_state()
-    
+
     if state == WebSocketPeer.STATE_OPEN:
         while socket.get_available_packet_count():
             var packet = socket.get_packet()
@@ -863,10 +912,10 @@ func _ready():
 
 func cast_spell(spell_name: String):
     current_state = State.CASTING
-    
+
     # Animation casting
     anim_player.play("cast_spell_" + spell_name)
-    
+
     # Envoyer action au serveur
     NetworkManager.send_action("combat_action", {
         "action": "cast_spell",
@@ -879,7 +928,7 @@ func _on_combat_update(result: Dictionary):
     if result.animations:
         for anim_name in result.animations:
             _play_effect(anim_name)
-    
+
     # Mettre à jour HP
     $UI/HealthBar.value = result.hp_remaining
 ```
@@ -918,22 +967,25 @@ light_energy = 2.0
 **Objectif**: Réduire temps réponse de 26.6s → **2-3s**
 
 **Actions**:
+
 1. ✅ Modifier `config.yaml`
+
    ```yaml
    ollama:
-     num_predict: 150  # au lieu de 400
+     num_predict: 150 # au lieu de 400
      temperature: 0.75
-   
+
    cache:
-     ttl: 7200  # 2h
-     pregenerate: true  # Pré-générer au démarrage
+     ttl: 7200 # 2h
+     pregenerate: true # Pré-générer au démarrage
    ```
 
 2. ✅ Intégrer ModelRouter dans NarrativeService
+
    ```python
    # services/narrative.py
    from .model_router import get_router
-   
+
    self.router = get_router()
    model, options = self.router.select_model(prompt, context)
    ```
@@ -947,11 +999,13 @@ light_energy = 2.0
    ```
 
 **Gains attendus**:
+
 - Temps moyen: **26.6s → 2.5s** (-91%)
 - Cohérence: **+300%** (mémoire déjà en place)
 - Variété: **+400%** (multi-modèles)
 
 **Tests**:
+
 ```bash
 python test_performance.py
 # Vérifier temps < 3s
@@ -975,6 +1029,7 @@ python test_performance.py
 ```
 
 **Tests**:
+
 ```python
 # tests/test_models.py
 def test_player_level_up():
@@ -994,6 +1049,7 @@ def test_player_level_up():
 ```
 
 **Formules**:
+
 ```python
 # Dégâts de base
 base_damage = attacker.strength * weapon.damage
@@ -1007,12 +1063,13 @@ if random() < 0.1:
 ```
 
 **Tests**:
+
 ```python
 def test_combat_damage_calculation():
     player = Player(strength=20)
     weapon = Item(type="weapon", damage=10)
     enemy = Enemy(armor=50)
-    
+
     damage = calculate_damage(player, weapon, enemy)
     assert 100 <= damage <= 200  # Range attendu
 ```
@@ -1028,6 +1085,7 @@ def test_combat_damage_calculation():
 ```
 
 **Slots d'équipement**:
+
 ```python
 EQUIPMENT_SLOTS = {
     "head": "casque",
@@ -1052,6 +1110,7 @@ EQUIPMENT_SLOTS = {
 ```
 
 **Templates de quêtes**:
+
 ```python
 QUEST_TEMPLATES = {
     "destroy_ring": {
@@ -1077,6 +1136,7 @@ QUEST_TEMPLATES = {
 ```
 
 **Formule XP**:
+
 ```python
 def xp_for_level(level: int) -> int:
     return int(100 * (1.5 ** (level - 1)))
@@ -1087,6 +1147,7 @@ def xp_for_level(level: int) -> int:
 ```
 
 **Skill Tree** (exemple):
+
 ```python
 SKILL_TREE = {
     "guerrier": {
@@ -1110,21 +1171,21 @@ SKILL_TREE = {
 def test_complete_game_session():
     # 1. Créer personnage
     player = create_character(name="Bilbo", race="hobbit", class_type="voleur")
-    
+
     # 2. Démarrer quête
     quest = start_quest(player, "find_ring")
-    
+
     # 3. Combat
     enemy = Enemy(name="Gollum", level=3)
     combat = start_combat(player, [enemy])
     result = execute_combat_turn(combat, CombatAction(type="attack"))
-    
+
     # 4. Loot
     assert result.loot_gained == ["anneau_unique"]
-    
+
     # 5. Compléter quête
     complete_quest(player, "find_ring")
-    
+
     # 6. Vérifier récompenses
     assert player.level == 2
     assert player.xp >= 100
@@ -1167,6 +1228,7 @@ game_client/
 ```
 
 **Assets low-poly gratuits**:
+
 - [Kenney](https://kenney.nl/) - Packs gratuits
 - [Quaternius](https://quaternius.com/) - Modèles low-poly
 - [OpenGameArt](https://opengameart.org/) - Assets CC
@@ -1190,15 +1252,15 @@ func _physics_process(delta):
     # Gravité
     if not is_on_floor():
         velocity.y -= gravity * delta
-    
+
     # Saut
     if Input.is_action_just_pressed("jump") and is_on_floor():
         velocity.y = JUMP_VELOCITY
-    
+
     # Mouvement
     var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
     var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-    
+
     if direction:
         velocity.x = direction.x * SPEED
         velocity.z = direction.z * SPEED
@@ -1207,11 +1269,12 @@ func _physics_process(delta):
         velocity.x = move_toward(velocity.x, 0, SPEED)
         velocity.z = move_toward(velocity.z, 0, SPEED)
         anim_tree.set("parameters/move/blend_position", 0.0)  # Idle
-    
+
     move_and_slide()
 ```
 
 **Animations** (Animation Tree):
+
 ```
 Idle → Walk → Run
      ↓
@@ -1249,7 +1312,7 @@ func connect_to_server():
 func _process(_delta):
     socket.poll()
     var state = socket.get_ready_state()
-    
+
     if state == WebSocketPeer.STATE_OPEN:
         while socket.get_available_packet_count():
             _handle_packet()
@@ -1260,11 +1323,11 @@ func _handle_packet():
     var packet = socket.get_packet()
     var json_string = packet.get_string_from_utf8()
     var data = JSON.parse_string(json_string)
-    
+
     if data == null:
         push_error("Invalid JSON: " + json_string)
         return
-    
+
     match data.get("type"):
         "narrative_update":
             narrative_received.emit(data.text)
@@ -1298,6 +1361,7 @@ func send_combat_action(action: String, target_id: String = ""):
 #### 2.4 UI système (2 jours)
 
 **HUD** (scenes/ui/hud.tscn):
+
 ```gdscript
 # scripts/hud.gd
 
@@ -1311,17 +1375,18 @@ extends Control
 func update_player_stats(player_data: Dictionary):
     health_bar.value = player_data.hp
     health_bar.max_value = player_data.max_hp
-    
+
     mana_bar.value = player_data.mana
     mana_bar.max_value = player_data.max_mana
-    
+
     stamina_bar.value = player_data.stamina
     stamina_bar.max_value = player_data.max_stamina
-    
+
     level_label.text = "Niveau " + str(player_data.level)
 ```
 
 **Inventaire** (scenes/ui/inventory.tscn):
+
 ```gdscript
 # scripts/inventory.gd
 
@@ -1335,7 +1400,7 @@ func update_inventory(items: Array):
     # Effacer slots existants
     for child in grid.get_children():
         child.queue_free()
-    
+
     # Créer nouveaux slots
     for item in items:
         var slot = SLOT_SCENE.instantiate()
@@ -1350,6 +1415,7 @@ func _on_slot_selected(item_data: Dictionary):
 ```
 
 **DialogueBox** (scenes/ui/dialogue.tscn):
+
 ```gdscript
 # scripts/dialogue_box.gd
 
@@ -1364,11 +1430,11 @@ func display_narrative(text: String, choices: Array):
     # Afficher texte avec effet typing
     narrative_label.text = ""
     _type_text(text)
-    
+
     # Afficher choix
     for child in choices_container.get_children():
         child.queue_free()
-    
+
     for i in range(choices.size()):
         var button = CHOICE_BUTTON_SCENE.instantiate()
         button.text = choices[i]
@@ -1378,7 +1444,7 @@ func display_narrative(text: String, choices: Array):
 func _type_text(text: String):
     var tween = create_tween()
     tween.set_trans(Tween.TRANS_LINEAR)
-    
+
     for i in range(text.length()):
         tween.tween_callback(func(): narrative_label.text += text[i])
         tween.tween_interval(0.03)  # 30ms par caractère
@@ -1401,38 +1467,38 @@ func _on_choice_selected(choice_index: int):
 @app.websocket("/ws/godot/{player_id}")
 async def godot_websocket(websocket: WebSocket, player_id: str):
     await manager.connect(websocket, player_id)
-    
+
     try:
         while True:
             data = await websocket.receive_json()
-            
+
             # Router vers handlers appropriés
             result = await handle_godot_action(
                 player_id=player_id,
                 action_type=data["type"],
                 action_data=data.get("data", {})
             )
-            
+
             # Réponse avec format Godot-friendly
             await websocket.send_json({
                 "type": f"{data['type']}_result",
                 "success": result.get("success", True),
                 "data": result
             })
-            
+
     except WebSocketDisconnect:
         manager.disconnect(player_id)
 
 
 async def handle_godot_action(player_id, action_type, action_data):
     """Route actions Godot vers services appropriés"""
-    
+
     if action_type == "player_choice":
         return await narrative_service.process_choice(
             player_id,
             action_data["choice_index"]
         )
-    
+
     elif action_type == "combat_action":
         return await combat_engine.execute_turn(
             player_id,
@@ -1441,13 +1507,13 @@ async def handle_godot_action(player_id, action_type, action_data):
                 target=action_data.get("target")
             )
         )
-    
+
     elif action_type == "use_item":
         return await inventory_manager.use_item(
             player_id,
             action_data["item_id"]
         )
-    
+
     elif action_type == "travel":
         return await world_manager.travel_to(
             player_id,
@@ -1462,12 +1528,12 @@ async def handle_godot_action(player_id, action_type, action_data):
 
 class GameStateSync:
     """Synchronise état jeu entre backend et Godot"""
-    
+
     async def send_full_state(self, player_id: str):
         """Envoie état complet au client Godot"""
-        
+
         player = await state_manager.get_player(player_id)
-        
+
         # État complet
         full_state = {
             "type": "full_state_update",
@@ -1489,17 +1555,17 @@ class GameStateSync:
                 "weather": "clear"
             }
         }
-        
+
         await manager.send_personal_message(full_state, player_id)
-    
+
     async def send_delta_update(self, player_id: str, changes: Dict):
         """Envoie seulement les changements"""
-        
+
         delta = {
             "type": "delta_update",
             "changes": changes
         }
-        
+
         await manager.send_personal_message(delta, player_id)
 ```
 
@@ -1527,7 +1593,7 @@ func update_from_server(data: Dictionary):
         quests = data.quests
     elif data.type == "delta_update":
         _apply_changes(data.changes)
-    
+
     state_updated.emit()
 
 func _apply_changes(changes: Dictionary):
@@ -1543,33 +1609,33 @@ func _apply_changes(changes: Dictionary):
 
 async def test_complete_godot_flow():
     """Test workflow complet backend ↔ Godot"""
-    
+
     # 1. Connexion WebSocket
     async with TestClient(app) as client:
         async with client.websocket_connect("/ws/godot/test_player") as ws:
-            
+
             # 2. Recevoir état initial
             data = await ws.receive_json()
             assert data["type"] == "full_state_update"
             assert data["player"]["location"] == "la Comté"
-            
+
             # 3. Faire un choix
             await ws.send_json({
                 "type": "player_choice",
                 "data": {"choice_index": 0}
             })
-            
+
             # 4. Recevoir narration
             narrative = await ws.receive_json()
             assert narrative["type"] == "narrative_update"
             assert len(narrative["text"]) > 0
-            
+
             # 5. Démarrer combat
             await ws.send_json({
                 "type": "combat_action",
                 "data": {"action": "attack", "target": "orc_01"}
             })
-            
+
             # 6. Recevoir résultat
             result = await ws.receive_json()
             assert result["type"] == "combat_result"
@@ -1585,12 +1651,14 @@ async def test_complete_godot_flow():
 **Assets à créer/acquérir**:
 
 **Personnage Joueur** (4 races):
+
 - Hobbit (petit, pieds poilus)
 - Elfe (élancé, oreilles pointues)
 - Nain (trapu, barbu)
 - Humain (classique)
 
 **Ennemis**:
+
 - Orc (vert, agressif)
 - Gobelin (petit, sournois)
 - Troll (grand, lent)
@@ -1598,6 +1666,7 @@ async def test_complete_godot_flow():
 - Dragon (boss final)
 
 **Props**:
+
 - Arbres (forêt)
 - Rochers (montagne)
 - Coffres (trésors)
@@ -1605,6 +1674,7 @@ async def test_complete_godot_flow():
 - Potions (rouge=HP, bleu=mana)
 
 **Optimisation low-poly**:
+
 ```
 Personnage: 500-1000 triangles
 Ennemi: 300-800 triangles
@@ -1613,6 +1683,7 @@ Coffre: 50-100 triangles
 ```
 
 **Workflow Blender → Godot**:
+
 1. Modéliser en Blender
 2. UV unwrap
 3. Texture simple (palette 8-16 couleurs)
@@ -1623,6 +1694,7 @@ Coffre: 50-100 triangles
 #### 4.2 Animations (3 jours)
 
 **Player Animations**:
+
 ```
 - idle (respiration)
 - walk (marche)
@@ -1637,6 +1709,7 @@ Coffre: 50-100 triangles
 ```
 
 **Enemy Animations**:
+
 ```
 - idle
 - walk
@@ -1646,6 +1719,7 @@ Coffre: 50-100 triangles
 ```
 
 **Animation Tree Setup**:
+
 ```gdscript
 # Godot AnimationTree
 
@@ -1664,6 +1738,7 @@ StateMachine:
 #### 4.3 Effets Visuels (3 jours)
 
 **Particles Systems**:
+
 - Boule de feu (FireballEffect.tscn)
 - Éclair (LightningEffect.tscn)
 - Soin (HealingEffect.tscn)
@@ -1671,6 +1746,7 @@ StateMachine:
 - Sang (pas pour enfants !) → Étincelles
 
 **Shaders**:
+
 ```glsl
 // res://shaders/outline.gdshader (ennemis)
 shader_type spatial;
@@ -1688,6 +1764,7 @@ void fragment() {
 ```
 
 **Post-Processing**:
+
 - Bloom (lueur magique)
 - Vignette (focus)
 - Color correction (ambiance)
@@ -1695,18 +1772,21 @@ void fragment() {
 #### 4.4 Audio (2 jours)
 
 **Musiques** (looped):
+
 - Comté: Paisible, flûte
 - Forêt: Mystérieux, cordes
 - Combat: Intense, percussions
 - Boss: Épique, orchestre
 
 **SFX**:
+
 - Épée: Swing, impact
 - Sorts: Feu, foudre, soin
 - UI: Clic, hover, erreur
 - Ambiance: Vent, rivière, oiseaux
 
 **Implementation Godot**:
+
 ```gdscript
 # scripts/audio_manager.gd
 
@@ -1720,7 +1800,7 @@ var current_music := ""
 func play_music(music_name: String):
     if music_name == current_music:
         return
-    
+
     var stream = load("res://assets/sounds/music/" + music_name + ".ogg")
     music_player.stream = stream
     music_player.play()
@@ -1767,24 +1847,24 @@ class EconomySystem:
                 ]
             }
         }
-    
+
     async def buy_item(self, player: Player, item_id: str, shop_location: str):
         shop = self.shops.get(shop_location)
         if not shop:
             return {"success": False, "error": "Pas de magasin ici"}
-        
+
         item_data = next((i for i in shop["items"] if i["id"] == item_id), None)
         if not item_data:
             return {"success": False, "error": "Item non disponible"}
-        
+
         if player.gold < item_data["price"]:
             return {"success": False, "error": "Pas assez d'or"}
-        
+
         # Transaction
         player.gold -= item_data["price"]
         new_item = Item(**self.item_database[item_id])
         player.inventory.append(new_item)
-        
+
         return {"success": True, "item": new_item}
 ```
 
@@ -1803,16 +1883,16 @@ class ReputationSystem:
         50: "Allié",
         100: "Héros légendaire"
     }
-    
+
     def modify_reputation(self, player: Player, npc_id: str, change: int):
         current = player.npc_reputation.get(npc_id, 0)
         new_rep = max(-100, min(100, current + change))
         player.npc_reputation[npc_id] = new_rep
-        
+
         # Unlock contenu si réputation élevée
         if new_rep >= 50:
             self._unlock_special_quest(player, npc_id)
-    
+
     def get_reputation_level(self, reputation: int) -> str:
         for threshold, level in sorted(self.REPUTATION_LEVELS.items(), reverse=True):
             if reputation >= threshold:
@@ -1849,32 +1929,32 @@ class CraftingSystem:
         recipe = RECIPES.get(recipe_id)
         if not recipe:
             return False
-        
+
         # Vérifier skill
         if player.crafting_skill < recipe["skill_required"]:
             return False
-        
+
         # Vérifier ingrédients
         for ingredient in recipe["ingredients"]:
             if not self._has_ingredient(player, ingredient):
                 return False
-        
+
         return True
-    
+
     def craft_item(self, player: Player, recipe_id: str):
         if not self.can_craft(player, recipe_id):
             return {"success": False}
-        
+
         recipe = RECIPES[recipe_id]
-        
+
         # Consommer ingrédients
         for ingredient in recipe["ingredients"]:
             self._consume_ingredient(player, ingredient)
-        
+
         # Créer item
         result_item = Item(**self.item_database[recipe["result"]])
         player.inventory.append(result_item)
-        
+
         return {"success": True, "item": result_item}
 ```
 
@@ -1885,6 +1965,7 @@ class CraftingSystem:
 ### 5.1 Stack Définitive
 
 **Backend**:
+
 ```
 ✅ Python 3.13
 ✅ FastAPI (ASGI async)
@@ -1894,6 +1975,7 @@ class CraftingSystem:
 ```
 
 **Frontend**:
+
 ```
 ✅ Godot 4.3
 ✅ GDScript
@@ -1902,6 +1984,7 @@ class CraftingSystem:
 ```
 
 **Orchestration IA**:
+
 ```
 ✅ ModelRouter intégré (services/model_router.py)
 ✅ NarrativeMemory (cohérence)
@@ -1911,6 +1994,7 @@ class CraftingSystem:
 ### 5.2 Modèles Ollama Recommandés
 
 **Installés et configurés**:
+
 ```bash
 # Déjà installé
 ollama list
@@ -1924,6 +2008,7 @@ ollama pull deepseek-coder-v2  # Si génération code dynamique
 ```
 
 **Routing automatique**:
+
 - Description lieu → Gemma2 (créatif)
 - Choix rapide → Llama3.2 (rapide)
 - Combat épique → Gemma2 (dramatique)
@@ -1933,21 +2018,23 @@ ollama pull deepseek-coder-v2  # Si génération code dynamique
 ### 5.3 Optimisations Critiques
 
 **Configuration Ollama**:
+
 ```yaml
 # config.yaml
 ollama:
-  num_predict: 150  # Au lieu de 400
+  num_predict: 150 # Au lieu de 400
   temperature: 0.75
   top_k: 40
   top_p: 0.9
-  
+
 cache:
-  ttl: 7200  # 2h
+  ttl: 7200 # 2h
   pregenerate: true
   locations: [all 12 locations]
 ```
 
 **Gains attendus**:
+
 ```
 Temps actuel: 26.6s
 Temps optimisé: 2.5s
@@ -1957,6 +2044,7 @@ Amélioration: -91%
 ### 5.4 Sécurité Enfants
 
 **Filtres en place**:
+
 ```python
 # middleware/security.py
 - Blacklist mots (violence, sexe, etc.)
@@ -1968,6 +2056,7 @@ Amélioration: -91%
 ```
 
 **À ajouter**:
+
 ```python
 # Validation stricte sorties IA
 def validate_narrative(text: str) -> bool:
@@ -1981,6 +2070,7 @@ def validate_narrative(text: str) -> bool:
 ### 5.5 Déploiement
 
 **Phase 1 (Local)**:
+
 ```bash
 # Backend
 python main.py
@@ -1990,9 +2080,10 @@ godot --export "Windows Desktop" game.exe
 ```
 
 **Phase 2 (Production)**:
+
 ```yaml
 # Docker Compose
-version: '3.8'
+version: "3.8"
 services:
   backend:
     build: .
@@ -2002,7 +2093,7 @@ services:
       - OLLAMA_HOST=http://ollama:11434
     volumes:
       - ./game.db:/app/game.db
-  
+
   ollama:
     image: ollama/ollama:latest
     ports:
@@ -2026,21 +2117,15 @@ services:
 ### 6.2 Priorités Immédiates
 
 **🔴 URGENT (Cette semaine)**:
+
 1. Optimiser config Ollama (`num_predict: 150`)
 2. Intégrer ModelRouter dans NarrativeService
 3. Installer Llama3.2 + Gemma2
 4. Tests performance (objectif < 3s)
 
-**🟡 IMPORTANT (2 semaines)**:
-5. Implémenter features JDR (combat, inventaire, quêtes)
-6. Tests backend complets (pytest)
-7. Démarrer projet Godot (setup + networking)
+**🟡 IMPORTANT (2 semaines)**: 5. Implémenter features JDR (combat, inventaire, quêtes) 6. Tests backend complets (pytest) 7. Démarrer projet Godot (setup + networking)
 
-**🟢 NICE-TO-HAVE (1 mois+)**:
-8. Visuels 3D low-poly
-9. Animations + effets
-10. Audio (musiques + SFX)
-11. Features avancées (crafting, économie)
+**🟢 NICE-TO-HAVE (1 mois+)**: 8. Visuels 3D low-poly 9. Animations + effets 10. Audio (musiques + SFX) 11. Features avancées (crafting, économie)
 
 ### 6.3 Timeline Réaliste
 
@@ -2061,6 +2146,7 @@ Semaine 7-8: Polish + audio + features avancées
 ✅ **GREENLIGHT TOTAL**
 
 **Votre projet a tous les atouts pour réussir** :
+
 - Backend déjà fonctionnel et bien architecturé
 - Système IA avancé (mémoire + routing)
 - Stack technique moderne (Python + Godot)
@@ -2068,6 +2154,7 @@ Semaine 7-8: Polish + audio + features avancées
 - Roadmap claire et réaliste
 
 **Prochaine action immédiate** :
+
 1. Copier ce document dans le projet
 2. Appliquer optimisations Phase 0 (1-2h)
 3. Tester performances
@@ -2080,4 +2167,3 @@ Semaine 7-8: Polish + audio + features avancées
 **Document généré le 22 Novembre 2025**  
 **Analyste**: Claude Sonnet 4.5  
 **Version**: 1.0 - Analyse Complète
-

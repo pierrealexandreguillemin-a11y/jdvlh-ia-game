@@ -4,6 +4,7 @@
 
 **Projet** : JDVLH IA Game - JDR Narratif IA + Godot
 **État actuel** :
+
 - ✅ Backend complet (5 services JDR : combat, inventory, quests, character_progression, narrative)
 - ✅ 27 tests unitaires (100% pass)
 - ✅ Performance optimisée (llama3.2, 150 tokens)
@@ -21,281 +22,284 @@
 **Sections UI à créer** :
 
 #### A. Header avec Stats Joueur (HUD)
+
 ```html
 <div id="player-hud">
-    <div class="player-info">
-        <h3 id="player-name">Aragorn</h3>
-        <span id="player-level">Niveau 5</span>
-        <span id="player-class">Guerrier</span>
-    </div>
+  <div class="player-info">
+    <h3 id="player-name">Aragorn</h3>
+    <span id="player-level">Niveau 5</span>
+    <span id="player-class">Guerrier</span>
+  </div>
 
-    <!-- Barres de stats -->
-    <div class="stat-bars">
-        <div class="stat-bar hp">
-            <label>HP:</label>
-            <div class="bar"><div class="fill"></div></div>
-            <span class="value">75/100</span>
-        </div>
-        <div class="stat-bar mana">
-            <label>Mana:</label>
-            <div class="bar"><div class="fill"></div></div>
-            <span class="value">25/50</span>
-        </div>
-        <div class="stat-bar stamina">
-            <label>Stamina:</label>
-            <div class="bar"><div class="fill"></div></div>
-            <span class="value">80/100</span>
-        </div>
+  <!-- Barres de stats -->
+  <div class="stat-bars">
+    <div class="stat-bar hp">
+      <label>HP:</label>
+      <div class="bar"><div class="fill"></div></div>
+      <span class="value">75/100</span>
     </div>
+    <div class="stat-bar mana">
+      <label>Mana:</label>
+      <div class="bar"><div class="fill"></div></div>
+      <span class="value">25/50</span>
+    </div>
+    <div class="stat-bar stamina">
+      <label>Stamina:</label>
+      <div class="bar"><div class="fill"></div></div>
+      <span class="value">80/100</span>
+    </div>
+  </div>
 
-    <!-- Stats secondaires -->
-    <div class="secondary-stats">
-        <span>💰 Or: <strong id="gold">250</strong></span>
-        <span>⭐ XP: <strong id="xp">450/600</strong></span>
-    </div>
+  <!-- Stats secondaires -->
+  <div class="secondary-stats">
+    <span>💰 Or: <strong id="gold">250</strong></span>
+    <span>⭐ XP: <strong id="xp">450/600</strong></span>
+  </div>
 </div>
 ```
 
 #### B. Zone Narrative (existant à améliorer)
+
 ```html
 <div id="narrative-panel">
-    <div id="location-banner">📍 <span id="current-location">la Comté</span></div>
-    <div id="narrative-text">
-        <!-- Texte généré par l'IA -->
-    </div>
-    <div id="narrative-choices">
-        <!-- Boutons de choix -->
-    </div>
+  <div id="location-banner">📍 <span id="current-location">la Comté</span></div>
+  <div id="narrative-text">
+    <!-- Texte généré par l'IA -->
+  </div>
+  <div id="narrative-choices">
+    <!-- Boutons de choix -->
+  </div>
 </div>
 ```
 
 #### C. Panneau Combat (conditionnel)
+
 ```html
 <div id="combat-panel" style="display:none">
-    <h3>⚔️ Combat en cours</h3>
+  <h3>⚔️ Combat en cours</h3>
 
-    <!-- Liste des ennemis -->
-    <div id="enemies-list">
-        <div class="enemy-card">
-            <img src="orc.png" alt="Orc">
-            <div class="enemy-info">
-                <h4>Orc des plaines</h4>
-                <div class="hp-bar">
-                    <div class="fill" style="width: 60%"></div>
-                </div>
-                <span class="hp-text">48/80 HP</span>
-            </div>
+  <!-- Liste des ennemis -->
+  <div id="enemies-list">
+    <div class="enemy-card">
+      <img src="orc.png" alt="Orc" />
+      <div class="enemy-info">
+        <h4>Orc des plaines</h4>
+        <div class="hp-bar">
+          <div class="fill" style="width: 60%"></div>
         </div>
+        <span class="hp-text">48/80 HP</span>
+      </div>
     </div>
+  </div>
 
-    <!-- Actions de combat -->
-    <div id="combat-actions">
-        <button class="action-btn attack" onclick="combatAction('attack', 0)">
-            ⚔️ Attaquer
-        </button>
-        <button class="action-btn spell" onclick="showSpells()">
-            ✨ Sort
-        </button>
-        <button class="action-btn item" onclick="showCombatItems()">
-            🧪 Objet
-        </button>
-        <button class="action-btn defend" onclick="combatAction('defend')">
-            🛡️ Défendre
-        </button>
-    </div>
+  <!-- Actions de combat -->
+  <div id="combat-actions">
+    <button class="action-btn attack" onclick="combatAction('attack', 0)">
+      ⚔️ Attaquer
+    </button>
+    <button class="action-btn spell" onclick="showSpells()">✨ Sort</button>
+    <button class="action-btn item" onclick="showCombatItems()">
+      🧪 Objet
+    </button>
+    <button class="action-btn defend" onclick="combatAction('defend')">
+      🛡️ Défendre
+    </button>
+  </div>
 
-    <!-- Sélecteur de sorts -->
-    <div id="spell-selector" style="display:none">
-        <!-- Liste des sorts disponibles -->
-    </div>
+  <!-- Sélecteur de sorts -->
+  <div id="spell-selector" style="display:none">
+    <!-- Liste des sorts disponibles -->
+  </div>
 </div>
 ```
 
 #### D. Inventaire + Équipement
+
 ```html
 <div id="inventory-panel">
-    <h3>📦 Inventaire</h3>
+  <h3>📦 Inventaire</h3>
 
-    <!-- Équipement (slots) -->
-    <div id="equipment-slots">
-        <div class="equipment-grid">
-            <div class="slot head" data-slot="head">
-                <span class="slot-label">Casque</span>
-                <div class="item-slot empty"></div>
-            </div>
-            <div class="slot chest" data-slot="chest">
-                <span class="slot-label">Plastron</span>
-                <div class="item-slot empty"></div>
-            </div>
-            <div class="slot weapon" data-slot="weapon_main">
-                <span class="slot-label">Arme</span>
-                <div class="item-slot">
-                    <img src="sword.png" title="Épée de Fer (+15 dmg)">
-                </div>
-            </div>
-            <!-- ... autres slots ... -->
+  <!-- Équipement (slots) -->
+  <div id="equipment-slots">
+    <div class="equipment-grid">
+      <div class="slot head" data-slot="head">
+        <span class="slot-label">Casque</span>
+        <div class="item-slot empty"></div>
+      </div>
+      <div class="slot chest" data-slot="chest">
+        <span class="slot-label">Plastron</span>
+        <div class="item-slot empty"></div>
+      </div>
+      <div class="slot weapon" data-slot="weapon_main">
+        <span class="slot-label">Arme</span>
+        <div class="item-slot">
+          <img src="sword.png" title="Épée de Fer (+15 dmg)" />
         </div>
+      </div>
+      <!-- ... autres slots ... -->
     </div>
+  </div>
 
-    <!-- Sac d'items -->
-    <div id="inventory-items">
-        <div class="item-grid">
-            <div class="item" data-item-id="health_potion" draggable="true">
-                <img src="potion_red.png">
-                <span class="quantity">x3</span>
-                <div class="tooltip">
-                    <strong>Potion de soin</strong><br>
-                    Restaure 50 HP
-                </div>
-            </div>
-            <!-- ... autres items ... -->
+  <!-- Sac d'items -->
+  <div id="inventory-items">
+    <div class="item-grid">
+      <div class="item" data-item-id="health_potion" draggable="true">
+        <img src="potion_red.png" />
+        <span class="quantity">x3</span>
+        <div class="tooltip">
+          <strong>Potion de soin</strong><br />
+          Restaure 50 HP
         </div>
+      </div>
+      <!-- ... autres items ... -->
     </div>
+  </div>
 
-    <!-- Infos item sélectionné -->
-    <div id="item-details">
-        <h4 id="item-name">-</h4>
-        <p id="item-description">-</p>
-        <div id="item-actions">
-            <button onclick="useItem()">Utiliser</button>
-            <button onclick="equipItem()">Équiper</button>
-            <button onclick="dropItem()">Jeter</button>
-        </div>
+  <!-- Infos item sélectionné -->
+  <div id="item-details">
+    <h4 id="item-name">-</h4>
+    <p id="item-description">-</p>
+    <div id="item-actions">
+      <button onclick="useItem()">Utiliser</button>
+      <button onclick="equipItem()">Équiper</button>
+      <button onclick="dropItem()">Jeter</button>
     </div>
+  </div>
 </div>
 ```
 
 #### E. Journal de Quêtes
+
 ```html
 <div id="quests-panel">
-    <h3>📜 Journal de Quêtes</h3>
+  <h3>📜 Journal de Quêtes</h3>
 
-    <div class="quests-tabs">
-        <button class="tab active" onclick="showQuests('active')">En cours</button>
-        <button class="tab" onclick="showQuests('completed')">Terminées</button>
-    </div>
+  <div class="quests-tabs">
+    <button class="tab active" onclick="showQuests('active')">En cours</button>
+    <button class="tab" onclick="showQuests('completed')">Terminées</button>
+  </div>
 
-    <div id="active-quests">
-        <div class="quest-card main-quest">
-            <div class="quest-header">
-                <h4>🌟 Détruire l'Anneau Unique</h4>
-                <span class="quest-level">Niveau 1</span>
-            </div>
-            <p class="quest-description">
-                Apportez l'Anneau au Mont Destin...
-            </p>
-            <div class="quest-objectives">
-                <div class="objective completed">
-                    ✓ Quitter la Comté
-                </div>
-                <div class="objective in-progress">
-                    ⏳ Rejoindre Gandalf à Fondcombe (1/1)
-                </div>
-                <div class="objective locked">
-                    🔒 Atteindre le Mont Destin (0/1)
-                </div>
-            </div>
-            <div class="quest-rewards">
-                <span>🏆 1000 XP</span>
-                <span>⭐ Gloire éternelle</span>
-            </div>
+  <div id="active-quests">
+    <div class="quest-card main-quest">
+      <div class="quest-header">
+        <h4>🌟 Détruire l'Anneau Unique</h4>
+        <span class="quest-level">Niveau 1</span>
+      </div>
+      <p class="quest-description">Apportez l'Anneau au Mont Destin...</p>
+      <div class="quest-objectives">
+        <div class="objective completed">✓ Quitter la Comté</div>
+        <div class="objective in-progress">
+          ⏳ Rejoindre Gandalf à Fondcombe (1/1)
         </div>
+        <div class="objective locked">🔒 Atteindre le Mont Destin (0/1)</div>
+      </div>
+      <div class="quest-rewards">
+        <span>🏆 1000 XP</span>
+        <span>⭐ Gloire éternelle</span>
+      </div>
     </div>
+  </div>
 </div>
 ```
 
 #### F. Panneau Progression
+
 ```html
 <div id="character-panel">
-    <h3>📊 Personnage</h3>
+  <h3>📊 Personnage</h3>
 
-    <!-- Attributs -->
-    <div class="attributes">
-        <div class="attribute">
-            <span class="attr-name">💪 Force:</span>
-            <span class="attr-value">15</span>
-            <button class="attr-increase" onclick="increaseAttr('strength')">+</button>
-        </div>
-        <div class="attribute">
-            <span class="attr-name">🧠 Intelligence:</span>
-            <span class="attr-value">10</span>
-            <button class="attr-increase" onclick="increaseAttr('intelligence')">+</button>
-        </div>
-        <!-- ... autres attributs ... -->
+  <!-- Attributs -->
+  <div class="attributes">
+    <div class="attribute">
+      <span class="attr-name">💪 Force:</span>
+      <span class="attr-value">15</span>
+      <button class="attr-increase" onclick="increaseAttr('strength')">
+        +
+      </button>
     </div>
+    <div class="attribute">
+      <span class="attr-name">🧠 Intelligence:</span>
+      <span class="attr-value">10</span>
+      <button class="attr-increase" onclick="increaseAttr('intelligence')">
+        +
+      </button>
+    </div>
+    <!-- ... autres attributs ... -->
+  </div>
 
-    <div class="skill-points">
-        Points disponibles: <strong id="skill-points">3</strong>
-    </div>
+  <div class="skill-points">
+    Points disponibles: <strong id="skill-points">3</strong>
+  </div>
 
-    <!-- Arbre de compétences -->
-    <div id="skill-tree">
-        <h4>🌳 Compétences - Guerrier</h4>
-        <div class="skills-grid">
-            <div class="skill learned" data-skill="charge">
-                <img src="skill_charge.png">
-                <span>Charge</span>
-                <div class="skill-tooltip">
-                    <strong>Charge</strong><br>
-                    Foncez vers l'ennemi<br>
-                    +50% dégâts<br>
-                    <em>Coût: 1 point</em>
-                </div>
-            </div>
-            <div class="skill available" data-skill="tourbillon">
-                <img src="skill_whirlwind.png">
-                <span>Tourbillon</span>
-                <div class="skill-tooltip">
-                    <strong>Tourbillon d'acier</strong><br>
-                    Attaque tous les ennemis<br>
-                    <em>Niveau 5 requis</em><br>
-                    <em>Prérequis: Charge</em><br>
-                    <em>Coût: 2 points</em>
-                </div>
-            </div>
-            <div class="skill locked" data-skill="rage">
-                <img src="skill_rage.png" class="grayscale">
-                <span>Rage</span>
-            </div>
+  <!-- Arbre de compétences -->
+  <div id="skill-tree">
+    <h4>🌳 Compétences - Guerrier</h4>
+    <div class="skills-grid">
+      <div class="skill learned" data-skill="charge">
+        <img src="skill_charge.png" />
+        <span>Charge</span>
+        <div class="skill-tooltip">
+          <strong>Charge</strong><br />
+          Foncez vers l'ennemi<br />
+          +50% dégâts<br />
+          <em>Coût: 1 point</em>
         </div>
+      </div>
+      <div class="skill available" data-skill="tourbillon">
+        <img src="skill_whirlwind.png" />
+        <span>Tourbillon</span>
+        <div class="skill-tooltip">
+          <strong>Tourbillon d'acier</strong><br />
+          Attaque tous les ennemis<br />
+          <em>Niveau 5 requis</em><br />
+          <em>Prérequis: Charge</em><br />
+          <em>Coût: 2 points</em>
+        </div>
+      </div>
+      <div class="skill locked" data-skill="rage">
+        <img src="skill_rage.png" class="grayscale" />
+        <span>Rage</span>
+      </div>
     </div>
+  </div>
 </div>
 ```
 
 #### G. CSS Moderne (glassmorphism)
+
 ```css
 /* Variables globales */
 :root {
-    --primary: #667eea;
-    --secondary: #764ba2;
-    --success: #10b981;
-    --danger: #ef4444;
-    --warning: #f59e0b;
-    --glass-bg: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(255, 255, 255, 0.2);
+  --primary: #667eea;
+  --secondary: #764ba2;
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
 }
 
 /* Glassmorphism cards */
 .glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 /* Barres de stats animées */
 .stat-bar .fill {
-    transition: width 0.5s ease;
-    background: linear-gradient(90deg, var(--success), #34d399);
+  transition: width 0.5s ease;
+  background: linear-gradient(90deg, var(--success), #34d399);
 }
 
 /* Drag & drop inventaire */
 .item[draggable="true"] {
-    cursor: grab;
+  cursor: grab;
 }
 .item[draggable="true"]:active {
-    cursor: grabbing;
+  cursor: grabbing;
 }
 ```
 
@@ -306,6 +310,7 @@
 **Fichier** : `src/jdvlh_ia_game/core/game_server.py`
 
 #### A. Endpoint Combat
+
 ```python
 @app.websocket("/ws/combat/{player_id}")
 async def combat_websocket(
@@ -463,6 +468,7 @@ async def combat_websocket(
 ```
 
 #### B. Endpoint Inventaire
+
 ```python
 @app.websocket("/ws/inventory/{player_id}")
 async def inventory_websocket(
@@ -554,6 +560,7 @@ async def inventory_websocket(
 ```
 
 #### C. Endpoint Quêtes
+
 ```python
 @app.websocket("/ws/quests/{player_id}")
 async def quests_websocket(
@@ -608,6 +615,7 @@ async def quests_websocket(
 ```
 
 #### D. Endpoint Personnage
+
 ```python
 @app.websocket("/ws/character/{player_id}")
 async def character_websocket(
@@ -670,129 +678,139 @@ async def character_websocket(
 
 ```javascript
 class GameWebSocketManager {
-    constructor(playerId) {
-        this.playerId = playerId;
-        this.connections = {
-            narrative: null,
-            combat: null,
-            inventory: null,
-            quests: null,
-            character: null
-        };
-    }
+  constructor(playerId) {
+    this.playerId = playerId;
+    this.connections = {
+      narrative: null,
+      combat: null,
+      inventory: null,
+      quests: null,
+      character: null,
+    };
+  }
 
-    // Connexion narrative (existant)
-    connectNarrative() {
-        const ws = new WebSocket(`ws://localhost:8000/ws/${this.playerId}`);
+  // Connexion narrative (existant)
+  connectNarrative() {
+    const ws = new WebSocket(`ws://localhost:8000/ws/${this.playerId}`);
 
-        ws.onmessage = (e) => {
-            const data = JSON.parse(e.data);
-            this.handleNarrativeMessage(data);
-        };
+    ws.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      this.handleNarrativeMessage(data);
+    };
 
-        this.connections.narrative = ws;
-    }
+    this.connections.narrative = ws;
+  }
 
-    // Connexion combat
-    connectCombat() {
-        const ws = new WebSocket(`ws://localhost:8000/ws/combat/${this.playerId}`);
+  // Connexion combat
+  connectCombat() {
+    const ws = new WebSocket(`ws://localhost:8000/ws/combat/${this.playerId}`);
 
-        ws.onmessage = (e) => {
-            const data = JSON.parse(e.data);
-            this.handleCombatMessage(data);
-        };
+    ws.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      this.handleCombatMessage(data);
+    };
 
-        this.connections.combat = ws;
-    }
+    this.connections.combat = ws;
+  }
 
-    // Connexion inventaire
-    connectInventory() {
-        const ws = new WebSocket(`ws://localhost:8000/ws/inventory/${this.playerId}`);
+  // Connexion inventaire
+  connectInventory() {
+    const ws = new WebSocket(
+      `ws://localhost:8000/ws/inventory/${this.playerId}`,
+    );
 
-        ws.onmessage = (e) => {
-            const data = JSON.parse(e.data);
-            this.handleInventoryMessage(data);
-        };
+    ws.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      this.handleInventoryMessage(data);
+    };
 
-        this.connections.inventory = ws;
-    }
+    this.connections.inventory = ws;
+  }
 
-    // Handlers de messages
-    handleCombatMessage(data) {
-        switch(data.type) {
-            case 'combat_start':
-                showCombatUI();
-                displayEnemies(data.enemies);
-                updatePlayerStats(data.player);
-                showNarrative(data.intro);
-                break;
+  // Handlers de messages
+  handleCombatMessage(data) {
+    switch (data.type) {
+      case "combat_start":
+        showCombatUI();
+        displayEnemies(data.enemies);
+        updatePlayerStats(data.player);
+        showNarrative(data.intro);
+        break;
 
-            case 'combat_result':
-                showNarrative(data.narrative);
-                animateDamage(data.enemy_damages, data.player_damage);
-                updateCombatState(data);
-                break;
+      case "combat_result":
+        showNarrative(data.narrative);
+        animateDamage(data.enemy_damages, data.player_damage);
+        updateCombatState(data);
+        break;
 
-            case 'combat_end':
-                if (data.victory) {
-                    showVictory(data);
-                    displayLoot(data.loot);
-                    updatePlayerXP(data.xp_gained);
-                    updatePlayerGold(data.gold_gained);
-                } else {
-                    showDefeat(data);
-                }
-                hideCombatUI();
-                break;
+      case "combat_end":
+        if (data.victory) {
+          showVictory(data);
+          displayLoot(data.loot);
+          updatePlayerXP(data.xp_gained);
+          updatePlayerGold(data.gold_gained);
+        } else {
+          showDefeat(data);
         }
+        hideCombatUI();
+        break;
     }
+  }
 
-    handleInventoryMessage(data) {
-        switch(data.type) {
-            case 'inventory_full':
-                displayInventory(data.inventory);
-                displayEquipment(data.equipped);
-                updateStatsDisplay(data.stats);
-                break;
+  handleInventoryMessage(data) {
+    switch (data.type) {
+      case "inventory_full":
+        displayInventory(data.inventory);
+        displayEquipment(data.equipped);
+        updateStatsDisplay(data.stats);
+        break;
 
-            case 'item_action_result':
-                showNotification(data.message, data.success ? 'success' : 'error');
-                if (data.success) {
-                    displayInventory(data.inventory);
-                    displayEquipment(data.equipped);
-                }
-                break;
+      case "item_action_result":
+        showNotification(data.message, data.success ? "success" : "error");
+        if (data.success) {
+          displayInventory(data.inventory);
+          displayEquipment(data.equipped);
         }
+        break;
     }
+  }
 
-    // Actions
-    combatAction(action, targetIndex = 0, spellId = null, itemId = null) {
-        this.connections.combat.send(JSON.stringify({
-            action: action,
-            target_index: targetIndex,
-            spell_id: spellId,
-            item_id: itemId
-        }));
-    }
+  // Actions
+  combatAction(action, targetIndex = 0, spellId = null, itemId = null) {
+    this.connections.combat.send(
+      JSON.stringify({
+        action: action,
+        target_index: targetIndex,
+        spell_id: spellId,
+        item_id: itemId,
+      }),
+    );
+  }
 
-    equipItem(itemId, slot) {
-        this.connections.inventory.send(JSON.stringify({
-            action: 'equip',
-            item_id: itemId,
-            slot: slot
-        }));
-    }
+  equipItem(itemId, slot) {
+    this.connections.inventory.send(
+      JSON.stringify({
+        action: "equip",
+        item_id: itemId,
+        slot: slot,
+      }),
+    );
+  }
 
-    learnSkill(skillId) {
-        this.connections.character.send(JSON.stringify({
-            action: 'learn_skill',
-            skill_id: skillId
-        }));
-    }
+  learnSkill(skillId) {
+    this.connections.character.send(
+      JSON.stringify({
+        action: "learn_skill",
+        skill_id: skillId,
+      }),
+    );
+  }
 }
 
 // Initialisation
-const wsManager = new GameWebSocketManager('player_' + Math.random().toString(36).substr(2, 9));
+const wsManager = new GameWebSocketManager(
+  "player_" + Math.random().toString(36).substr(2, 9),
+);
 wsManager.connectNarrative();
 wsManager.connectCombat();
 wsManager.connectInventory();
@@ -807,56 +825,59 @@ wsManager.connectCharacter();
 ```javascript
 // UI Updates
 function updatePlayerStats(stats) {
-    document.getElementById('player-hp').style.width = `${(stats.hp / stats.max_hp) * 100}%`;
-    document.getElementById('player-hp-text').textContent = `${stats.hp}/${stats.max_hp}`;
-    document.getElementById('player-mana').style.width = `${(stats.mana / stats.max_mana) * 100}%`;
-    // ...
+  document.getElementById("player-hp").style.width =
+    `${(stats.hp / stats.max_hp) * 100}%`;
+  document.getElementById("player-hp-text").textContent =
+    `${stats.hp}/${stats.max_hp}`;
+  document.getElementById("player-mana").style.width =
+    `${(stats.mana / stats.max_mana) * 100}%`;
+  // ...
 }
 
 function displayInventory(items) {
-    const grid = document.getElementById('inventory-grid');
-    grid.innerHTML = '';
+  const grid = document.getElementById("inventory-grid");
+  grid.innerHTML = "";
 
-    items.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'item';
-        div.dataset.itemId = item.item_id;
-        div.innerHTML = `
+  items.forEach((item) => {
+    const div = document.createElement("div");
+    div.className = "item";
+    div.dataset.itemId = item.item_id;
+    div.innerHTML = `
             <img src="assets/${item.icon_path}" alt="${item.name}">
-            ${item.stackable ? `<span class="quantity">x${item.quantity}</span>` : ''}
+            ${item.stackable ? `<span class="quantity">x${item.quantity}</span>` : ""}
         `;
-        div.onclick = () => selectItem(item);
-        grid.appendChild(div);
-    });
+    div.onclick = () => selectItem(item);
+    grid.appendChild(div);
+  });
 }
 
 function showCombatUI() {
-    document.getElementById('combat-panel').style.display = 'block';
-    document.getElementById('narrative-panel').classList.add('compact');
+  document.getElementById("combat-panel").style.display = "block";
+  document.getElementById("narrative-panel").classList.add("compact");
 }
 
 function animateDamage(enemyDamages, playerDamage) {
-    enemyDamages.forEach((dmg, i) => {
-        if (dmg > 0) {
-            showDamageNumber(dmg, `enemy-${i}`);
-        }
-    });
-
-    if (playerDamage > 0) {
-        showDamageNumber(playerDamage, 'player-hud', true);
+  enemyDamages.forEach((dmg, i) => {
+    if (dmg > 0) {
+      showDamageNumber(dmg, `enemy-${i}`);
     }
+  });
+
+  if (playerDamage > 0) {
+    showDamageNumber(playerDamage, "player-hud", true);
+  }
 }
 
 function showDamageNumber(amount, targetId, isPlayerDamage = false) {
-    const target = document.getElementById(targetId);
-    const dmgSpan = document.createElement('span');
-    dmgSpan.className = `damage-number ${isPlayerDamage ? 'player-damage' : 'enemy-damage'}`;
-    dmgSpan.textContent = `-${amount}`;
-    dmgSpan.style.position = 'absolute';
-    dmgSpan.style.animation = 'floatUp 1s ease-out';
-    target.appendChild(dmgSpan);
+  const target = document.getElementById(targetId);
+  const dmgSpan = document.createElement("span");
+  dmgSpan.className = `damage-number ${isPlayerDamage ? "player-damage" : "enemy-damage"}`;
+  dmgSpan.textContent = `-${amount}`;
+  dmgSpan.style.position = "absolute";
+  dmgSpan.style.animation = "floatUp 1s ease-out";
+  target.appendChild(dmgSpan);
 
-    setTimeout(() => dmgSpan.remove(), 1000);
+  setTimeout(() => dmgSpan.remove(), 1000);
 }
 ```
 

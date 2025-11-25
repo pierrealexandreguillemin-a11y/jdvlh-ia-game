@@ -5,12 +5,14 @@
 ### ❌ Limitations Identifiées
 
 #### 1. **Mémoire Simple (history[-10:])**
+
 ```python
 # Actuel: Seulement 10 dernières lignes
 history[-10:]
 ```
 
 **Problèmes:**
+
 - ✗ Perd le contexte après 10 tours
 - ✗ Oublie les personnages mentionnés plus tôt
 - ✗ Aucun tracking des objets/lieux
@@ -18,6 +20,7 @@ history[-10:]
 - ✗ Incohérences narratives
 
 **Exemple d'incohérence:**
+
 ```
 Tour 1: "Tu rencontres un hobbit nommé Bilbo"
 Tour 15: "Un hobbit inconnu apparaît" (Bilbo oublié!)
@@ -26,6 +29,7 @@ Tour 15: "Un hobbit inconnu apparaît" (Bilbo oublié!)
 ---
 
 #### 2. **Pas de Contexte Structuré**
+
 ```python
 # Actuel: Juste du texte brut
 state = {
@@ -36,6 +40,7 @@ state = {
 ```
 
 **Problèmes:**
+
 - ✗ Aucun tracking d'entités (personnages, objets)
 - ✗ Pas de gestion de relations
 - ✗ Pas de timeline des événements
@@ -48,7 +53,9 @@ state = {
 ### 🎯 Fonctionnalités Implémentées
 
 #### 1. **Extraction d'Entités**
+
 Détecte automatiquement:
+
 - **Personnages:** hobbits, elfes, nains, noms propres
 - **Objets:** épées, anneaux, potions, trésors
 - **Lieux:** Comté, Fondcombe, Moria, etc.
@@ -71,7 +78,9 @@ memory.update_entities(
 ---
 
 #### 2. **Tracking Temporel**
+
 Chaque entité tracke:
+
 - Premier tour de mention
 - Dernier tour de mention
 - Nombre total de mentions
@@ -90,6 +99,7 @@ entity = memory.entities["hobbit"]
 ---
 
 #### 3. **Événements Importants**
+
 Détecte et priorise les événements:
 
 ```python
@@ -107,6 +117,7 @@ event = memory.detect_important_events(narrative)
 ```
 
 **Niveaux d'importance:**
+
 - **5:** Dragon, bataille, découverte majeure
 - **4:** Combat, rencontre importante
 - **3:** Exploration, dialogue
@@ -122,6 +133,7 @@ summary = memory.get_context_summary()
 ```
 
 **Output exemple:**
+
 ```
 Lieu actuel: Fondcombe
 Personnages présents: Bilbo, Gandalf, Elrond
@@ -134,6 +146,7 @@ Quêtes actives: Détruire l'anneau, Trouver Frodon
 ```
 
 **Avantages:**
+
 - ✅ Contexte dense en ~200 tokens (vs 1000+ avant)
 - ✅ Informations structurées
 - ✅ Priorisées par importance
@@ -244,15 +257,16 @@ class StateManager:
 
 #### ❌ **AVANT** (Système Simple)
 
-| Tour | Action | Problème |
-|------|--------|----------|
-| 1 | "Tu rencontres Bilbo" | OK |
-| 5 | "Bilbo te donne une épée" | OK |
-| 12 | "Un hobbit inconnu apparaît" | ❌ Oubli de Bilbo |
-| 15 | "Tu perds l'épée" | ❌ L'épée n'était plus en contexte |
-| 20 | "Tu arrives à Fondcombe" | ❌ Déjà visité tour 3 |
+| Tour | Action                       | Problème                           |
+| ---- | ---------------------------- | ---------------------------------- |
+| 1    | "Tu rencontres Bilbo"        | OK                                 |
+| 5    | "Bilbo te donne une épée"    | OK                                 |
+| 12   | "Un hobbit inconnu apparaît" | ❌ Oubli de Bilbo                  |
+| 15   | "Tu perds l'épée"            | ❌ L'épée n'était plus en contexte |
+| 20   | "Tu arrives à Fondcombe"     | ❌ Déjà visité tour 3              |
 
 **Contexte envoyé à l'IA (Tour 15):**
+
 ```
 Historique récent:
 Joueur: Continuer
@@ -261,6 +275,7 @@ Joueur: Chercher
 MJ: Tu trouves un sentier...
 ... (seulement 10 dernières lignes)
 ```
+
 **Tokens:** ~500
 **Cohérence:** ⭐⭐ (2/5)
 
@@ -268,15 +283,16 @@ MJ: Tu trouves un sentier...
 
 #### ✅ **APRÈS** (NarrativeMemory)
 
-| Tour | Action | Résultat |
-|------|--------|----------|
-| 1 | "Tu rencontres Bilbo" | ✅ Bilbo tracké |
-| 5 | "Bilbo te donne l'épée de Sting" | ✅ Épée + relation tracké |
-| 12 | "Bilbo revient te voir" | ✅ Cohérent! |
-| 15 | "Tu utilises l'épée de Sting" | ✅ Objet connu |
-| 20 | "Tu retournes à Fondcombe" | ✅ Retour identifié |
+| Tour | Action                           | Résultat                  |
+| ---- | -------------------------------- | ------------------------- |
+| 1    | "Tu rencontres Bilbo"            | ✅ Bilbo tracké           |
+| 5    | "Bilbo te donne l'épée de Sting" | ✅ Épée + relation tracké |
+| 12   | "Bilbo revient te voir"          | ✅ Cohérent!              |
+| 15   | "Tu utilises l'épée de Sting"    | ✅ Objet connu            |
+| 20   | "Tu retournes à Fondcombe"       | ✅ Retour identifié       |
 
 **Contexte envoyé à l'IA (Tour 15):**
+
 ```
 Lieu actuel: Forêt de Mirkwood
 Personnages présents: Bilbo
@@ -291,6 +307,7 @@ Derniers échanges:
 Joueur: Utiliser l'épée
 MJ: Tu brandis l'épée de Sting qui brille...
 ```
+
 **Tokens:** ~300 (plus dense!)
 **Cohérence:** ⭐⭐⭐⭐⭐ (5/5)
 
@@ -370,24 +387,24 @@ stats = memory.get_stats()
 
 ### Cohérence Narrative
 
-| Métrique | Avant | Après | Amélioration |
-|----------|-------|-------|--------------|
-| **Entités trackées** | 0 | ✅ Toutes | +∞ |
-| **Contexte pertinent** | 10 lignes | ✅ Résumé intelligent | +500% |
-| **Tokens utilisés** | 500-1000 | ✅ 200-400 | **-60%** |
-| **Répétitions** | Fréquentes | ✅ Rares | -80% |
-| **Incohérences** | 30-40% | ✅ <5% | **-85%** |
-| **Immersion** | ⭐⭐ | ✅ ⭐⭐⭐⭐⭐ | +150% |
+| Métrique               | Avant      | Après                 | Amélioration |
+| ---------------------- | ---------- | --------------------- | ------------ |
+| **Entités trackées**   | 0          | ✅ Toutes             | +∞           |
+| **Contexte pertinent** | 10 lignes  | ✅ Résumé intelligent | +500%        |
+| **Tokens utilisés**    | 500-1000   | ✅ 200-400            | **-60%**     |
+| **Répétitions**        | Fréquentes | ✅ Rares              | -80%         |
+| **Incohérences**       | 30-40%     | ✅ <5%                | **-85%**     |
+| **Immersion**          | ⭐⭐       | ✅ ⭐⭐⭐⭐⭐         | +150%        |
 
 ---
 
 ### Performance
 
-| Aspect | Impact |
-|--------|--------|
-| **Temps génération** | -20% (contexte plus court) |
-| **Qualité réponses** | +300% (contexte enrichi) |
-| **Expérience joueur** | +500% (cohérence) |
+| Aspect                | Impact                     |
+| --------------------- | -------------------------- |
+| **Temps génération**  | -20% (contexte plus court) |
+| **Qualité réponses**  | +300% (contexte enrichi)   |
+| **Expérience joueur** | +500% (cohérence)          |
 
 ---
 
@@ -524,18 +541,22 @@ def load_state(self, player_id):
 ## 🎉 Résultat Attendu
 
 ### Avant
+
 ```
 "Tu explores la forêt. Un personnage apparaît."
 "Que fais-tu ?"
 ```
+
 ❌ Générique, sans contexte
 
 ### Après
+
 ```
 "Tu continues ton exploration de la forêt de Mirkwood.
 Soudain, Bilbo réapparaît, l'épée de Sting à la main.
 'J'ai trouvé le passage secret dont Gandalf parlait!' dit-il."
 ```
+
 ✅ Cohérent, immersif, contextualisé!
 
 ---

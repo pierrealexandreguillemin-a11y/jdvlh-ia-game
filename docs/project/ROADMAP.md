@@ -30,6 +30,7 @@
 | **Deploy** | **Uvicorn → Docker/Gunicorn** | `python main.py` → `docker run` config. | Heroku (coût). |
 
 **Extensibilité Garantie**:
+
 - **Config YAML** : Modèles, prompts, lieux, filtres → Hot-reload sans restart.
 - **EventBus** : Pub/sub pour triggers (SFX, UI, analytics) → Plugins zero-code.
 - **DI FastAPI** : Swap services (ex: MockOllama pour tests).
@@ -40,6 +41,7 @@
 ## 📈 **PHASES ROADMAP (Temps Réaliste, Zéro Refactor)**
 
 ### **Phase 0: Setup Extensible (30min - ✅ Complété)**
+
 - [x] `requirements.txt` (stables: fastapi==0.115.0, uvicorn[standard]==0.32.0, pydantic==2.9.2, ollama==0.3.3, sqlalchemy==2.0.0, slowapi==0.1.9)
 - [x] Structure dirs: `src/jdvlh_ia_game/{core,services,models,config,prompts,db,migrations}` (package-mode activé)
 - [x] `config.yaml` (modèles, TTL=1800s, max_players=4, blacklist_words)
@@ -48,6 +50,7 @@
 **Ext**: Ajout lieu/prompt = edit YAML.
 
 ### **Phase 1: MVP Core (1h - ✅ Complété)**
+
 - [x] `src/core/game_server.py` : FastAPI + WS, GameState Pydantic.
 - [x] `services/narrative.py` : Ollama + retry3x + fallback.
 - [x] `services/cache.py` : Lazy file + TTL.
@@ -57,6 +60,7 @@
 **Ext**: Nouveau modèle = `config.models.append(\"llama3\")`.
 
 ### **Phase 2: Robustesse Critiques (1h - ✅ Production-ready)**
+
 - [x] `services/state_manager.py` : Redis/SQLite, TTL cleanup asyncio, max_players.
 - [x] `middleware/security.py` : Sanitize (len<100, no-script), rate-limit (10/min/player), content_filter (regex blacklist).
 - [x] `db/models.py` : SQLAlchemy GameState (auto-save 2min).
@@ -65,6 +69,7 @@
 **Ext**: Nouveau filtre = `config.filters.new_rule()`.
 
 ### **Phase 3: UX Enfants + Multi (1h - ✅ En cours)**
+
 - [x] Client : Boutons save/load/reset, progress bar IA, thèmes LOTR CSS.
 - [ ] Logs parents : `/api/logs/{player_id}` JSON export.
 - [ ] PIN auth famille (config pin).
@@ -72,6 +77,7 @@
 **Ext**: Thème = CSS swap config.
 
 ### **Phase 4: Tests/Docs/Polish (30min - Prochain)**
+
 - [ ] Pytest : 90% coverage (`test_services.py`).
 - [ ] `install.bat` / `README.md` : Screenshots, one-click.
 - [ ] Docker : `Dockerfile` multi-stage.
@@ -79,6 +85,7 @@
 **Ext**: CI GitHub Actions config.
 
 ### **Phase 5: Déploiement & Scale (Future)**
+
 - [ ] Docker + Render/Heroku.
 - [ ] Godot client intégration.
 - **Cloud** : Swap SQLite→Postgres, deploy Render.
@@ -89,6 +96,7 @@
 ---
 
 ## 🔍 **CODE REVIEW CRITÈRES (Pour Implémentation)**
+
 1. **Modularité** : Chaque service injectable (`Depends()`).
 2. **Tests** : Unit + integration Ollama mock.
 3. **Docs** : FastAPI /docs auto + README.

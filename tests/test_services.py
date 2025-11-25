@@ -10,7 +10,9 @@ from jdvlh_ia_game.services.narrative import NarrativeService
 sys.path.append("src")
 
 # Load config
-CONFIG_PATH = Path(__file__).parent / "src" / "jdvlh_ia_game" / "config" / "config.yaml"
+CONFIG_PATH = (
+    Path(__file__).parent.parent / "src" / "jdvlh_ia_game" / "config" / "config.yaml"
+)
 with open(CONFIG_PATH, "r", encoding="utf-8") as f:
     config = yaml.safe_load(f)
 

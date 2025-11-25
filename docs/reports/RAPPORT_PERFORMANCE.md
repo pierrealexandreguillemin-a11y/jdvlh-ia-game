@@ -10,19 +10,19 @@
 
 ### Métriques Clés AVANT Optimisations
 
-| Métrique | Valeur | Objectif | Status |
-|----------|--------|----------|--------|
-| **Temps Réponse Moyen** | 26.6s | < 8s | ❌ LENT |
-| **P95** | 75.8s | < 8s | ❌ CRITIQUE |
+| Métrique                | Valeur | Objectif | Status      |
+| ----------------------- | ------ | -------- | ----------- |
+| **Temps Réponse Moyen** | 26.6s  | < 8s     | ❌ LENT     |
+| **P95**                 | 75.8s  | < 8s     | ❌ CRITIQUE |
 
 ### Métriques Clés APRÈS Optimisations (llama3.2 + prompts courts + cache lieux)
 
-| Métrique | Valeur | Objectif | Status |
-|----------|--------|----------|--------|
-| **Court (1 phrase)** | 4.5s | < 3s | ✅ BON |
-| **Moyen (3 phrases)** | 8.2s | < 5s | ⚠️ AMÉLIORABLE |
-| **Cache lieux** | <10ms | <50ms | ✅ EXCELLENT |
-| **Moyenne globale estimée** | ~2.5s | <3s | ✅ RÉUSSI |
+| Métrique                    | Valeur | Objectif | Status         |
+| --------------------------- | ------ | -------- | -------------- |
+| **Court (1 phrase)**        | 4.5s   | < 3s     | ✅ BON         |
+| **Moyen (3 phrases)**       | 8.2s   | < 5s     | ⚠️ AMÉLIORABLE |
+| **Cache lieux**             | <10ms  | <50ms    | ✅ EXCELLENT   |
+| **Moyenne globale estimée** | ~2.5s  | <3s      | ✅ RÉUSSI      |
 
 ### Score Global: **8/10** ✅
 
@@ -35,16 +35,17 @@
 ### 1. Tests de Performance Ollama
 
 #### Test 1: Prompt Court (1 phrase)
+
 ```
 Prompt: "Decris la Comte en 1 phrase"
 Tentatives: 3
 ```
 
-| Métrique | Valeur |
-|----------|--------|
-| Moyenne | 6.2 secondes |
-| Min | 3.4 secondes |
-| Max | 9.9 secondes |
+| Métrique   | Valeur                    |
+| ---------- | ------------------------- |
+| Moyenne    | 6.2 secondes              |
+| Min        | 3.4 secondes              |
+| Max        | 9.9 secondes              |
 | Évaluation | ⚠️ Acceptable mais limite |
 
 **Analyse:** Les réponses courtes restent dans une fourchette acceptable (3-10s) mais avec une forte variabilité.
@@ -52,33 +53,35 @@ Tentatives: 3
 ---
 
 #### Test 2: Prompt Moyen (3 phrases)
+
 ```
 Prompt: "Raconte une aventure dans Fondcombe pour un enfant de 10 ans en 3 phrases"
 Tentatives: 3
 ```
 
-| Métrique | Valeur |
-|----------|--------|
-| Moyenne | 36.9 secondes |
-| Min | 14.9 secondes |
-| Max | **75.8 secondes** |
-| Évaluation | ❌ TROP LENT |
+| Métrique   | Valeur            |
+| ---------- | ----------------- |
+| Moyenne    | 36.9 secondes     |
+| Min        | 14.9 secondes     |
+| Max        | **75.8 secondes** |
+| Évaluation | ❌ TROP LENT      |
 
 **Analyse:** **Point critique** - Une réponse a pris 75.8 secondes, ce qui est inacceptable pour un jeu interactif. Les enfants perdront patience.
 
 ---
 
 #### Test 3: Prompt Long (description détaillée)
+
 ```
 Prompt: "Decris les Mines de la Moria de maniere detaillee et immersive pour enfants"
 Tentatives: 3
 ```
 
-| Métrique | Valeur |
-|----------|--------|
-| Moyenne | 36.7 secondes |
-| Min | 35.8 secondes |
-| Max | 37.8 secondes |
+| Métrique   | Valeur              |
+| ---------- | ------------------- |
+| Moyenne    | 36.7 secondes       |
+| Min        | 35.8 secondes       |
+| Max        | 37.8 secondes       |
 | Évaluation | ❌ LENT mais stable |
 
 **Analyse:** Temps cohérents mais trop longs. La stabilité est bonne (±1s de variation).
@@ -90,6 +93,7 @@ Tentatives: 3
 ### Causes Identifiées
 
 #### 1. Configuration Ollama
+
 - **Modèle:** Mistral (4.4 GB)
 - **Paramètres actuels:**
   - `temperature: 0.7` ✅ (optimal)
@@ -98,6 +102,7 @@ Tentatives: 3
 **Problème:** `num_predict` trop grand génère des réponses longues inutilement.
 
 #### 2. Charge Système
+
 - **RAM Ollama:** 6-8 Go (normal)
 - **CPU:** Probablement saturé pendant génération
 - **GPU:** Non utilisé (mode CPU only)
@@ -105,6 +110,7 @@ Tentatives: 3
 **Problème:** Pas d'accélération GPU = génération très lente.
 
 #### 3. Architecture Réseau
+
 - **Latence WebSocket:** < 50ms ✅
 - **Goulot d'étranglement:** Génération IA (pas le réseau)
 
@@ -115,6 +121,7 @@ Tentatives: 3
 ### 🔴 Urgentes (Impact Immédiat)
 
 #### 1. Réduire `num_predict`
+
 ```yaml
 # config.yaml - AVANT
 num_predict: 500
@@ -129,16 +136,19 @@ num_predict: 150  # Réduction de 70%
 ---
 
 #### 2. Augmenter Cache Hit Rate
+
 ```python
 # Objectif: 70% cache, 30% Ollama
 ```
 
 **Stratégie:**
+
 - Pré-générer **tous** les lieux au démarrage
 - Cache choix fréquents (top 20)
 - TTL cache: 3600s → 7200s (2h)
 
 **Impact attendu:**
+
 - 70% requêtes: **50-200ms** (cache)
 - 30% requêtes: **10-15s** (Ollama optimisé)
 - **Moyenne globale: ~3.5 secondes** ✅
@@ -146,6 +156,7 @@ num_predict: 150  # Réduction de 70%
 ---
 
 #### 3. Optimiser Prompts
+
 ```python
 # AVANT
 prompt = f"Raconte une aventure dans {lieu} pour un enfant de 10 ans en 3 phrases avec détails immersifs..."
@@ -161,7 +172,9 @@ prompt = f"En 2 phrases courtes: aventure {lieu} enfant 10 ans."
 ### 🟡 Importantes (Impact Moyen Terme)
 
 #### 4. Modèle Plus Léger
+
 **Options:**
+
 - Mistral 7B → **Gemma2:latest** (5.4 GB, 20% plus rapide)
 - Mistral 7B → **Llama3.2:latest** (2.0 GB, **50% plus rapide**)
 
@@ -175,6 +188,7 @@ ollama pull llama3.2
 ---
 
 #### 5. Utiliser GPU si Disponible
+
 ```bash
 # Vérifier support GPU
 nvidia-smi
@@ -189,11 +203,13 @@ nvidia-smi
 ### 🟢 Nice-to-Have (Long Terme)
 
 #### 6. System de Queue Asynchrone
+
 - Traiter requêtes en background
 - Afficher animation "l'IA réfléchit..." pendant génération
 - Permet navigation UI pendant attente
 
 #### 7. Streaming de Réponses
+
 ```python
 # Afficher texte mot par mot au fur et à mesure
 for chunk in ollama.generate_stream(...):
@@ -207,45 +223,48 @@ for chunk in ollama.generate_stream(...):
 ## 📊 Projections Après Optimisations
 
 ### Scénario 1: Optimisations Urgentes Uniquement
+
 ```
 num_predict: 150 + Cache 70%
 ```
 
-| Métrique | Avant | Après | Amélioration |
-|----------|-------|-------|--------------|
-| Temps Moyen | 26.6s | **3.5s** | **-87%** ✅ |
-| Cache Hit | 0% | 70% | +70% ✅ |
-| P95 | 75.8s | 15s | -80% ✅ |
+| Métrique    | Avant | Après    | Amélioration |
+| ----------- | ----- | -------- | ------------ |
+| Temps Moyen | 26.6s | **3.5s** | **-87%** ✅  |
+| Cache Hit   | 0%    | 70%      | +70% ✅      |
+| P95         | 75.8s | 15s      | -80% ✅      |
 
 **Verdict:** **Acceptable** pour MVP, expérience utilisateur correcte.
 
 ---
 
 ### Scénario 2: Optimisations + Llama3.2
+
 ```
 num_predict: 150 + Cache 70% + Modèle léger
 ```
 
-| Métrique | Avant | Après | Amélioration |
-|----------|-------|-------|--------------|
+| Métrique    | Avant | Après    | Amélioration  |
+| ----------- | ----- | -------- | ------------- |
 | Temps Moyen | 26.6s | **2.1s** | **-92%** ✅✅ |
-| Cache Hit | 0% | 70% | +70% ✅ |
-| P95 | 75.8s | 8s | -89% ✅✅ |
+| Cache Hit   | 0%    | 70%      | +70% ✅       |
+| P95         | 75.8s | 8s       | -89% ✅✅     |
 
 **Verdict:** **Excellent**, expérience fluide même pour enfants impatients.
 
 ---
 
 ### Scénario 3: Optimisations + GPU
+
 ```
 num_predict: 150 + Cache 70% + NVIDIA GPU
 ```
 
-| Métrique | Avant | Après | Amélioration |
-|----------|-------|-------|--------------|
+| Métrique    | Avant | Après    | Amélioration    |
+| ----------- | ----- | -------- | --------------- |
 | Temps Moyen | 26.6s | **0.8s** | **-97%** ✅✅✅ |
-| Cache Hit | 0% | 70% | +70% ✅ |
-| P95 | 75.8s | 3s | -96% ✅✅✅ |
+| Cache Hit   | 0%    | 70%      | +70% ✅         |
+| P95         | 75.8s | 3s       | -96% ✅✅✅     |
 
 **Verdict:** **Performant**, qualité production.
 
@@ -254,6 +273,7 @@ num_predict: 150 + Cache 70% + NVIDIA GPU
 ## 🛠️ Optimisations Appliquées (Cline)
 
 ### Phase 1: Quick Wins ✅
+
 - [x] config.yaml: llama3.2 + max_tokens:150
 - [x] Pré-générer cache 12 lieux Ollama (cache.py)
 - [x] TTL cache: 7200s
@@ -269,16 +289,17 @@ num_predict: 150 + Cache 70% + NVIDIA GPU
 ### 1. Tests de Performance Ollama
 
 #### Test 1: Prompt Court (1 phrase)
+
 ```
 Prompt: "Decris la Comte en 1 phrase"
 Tentatives: 3
 ```
 
-| Métrique | Valeur |
-|----------|--------|
-| Moyenne | 6.2 secondes |
-| Min | 3.4 secondes |
-| Max | 9.9 secondes |
+| Métrique   | Valeur                    |
+| ---------- | ------------------------- |
+| Moyenne    | 6.2 secondes              |
+| Min        | 3.4 secondes              |
+| Max        | 9.9 secondes              |
 | Évaluation | ⚠️ Acceptable mais limite |
 
 **Analyse:** Les réponses courtes restent dans une fourchette acceptable (3-10s) mais avec une forte variabilité.
@@ -286,33 +307,35 @@ Tentatives: 3
 ---
 
 #### Test 2: Prompt Moyen (3 phrases)
+
 ```
 Prompt: "Raconte une aventure dans Fondcombe pour un enfant de 10 ans en 3 phrases"
 Tentatives: 3
 ```
 
-| Métrique | Valeur |
-|----------|--------|
-| Moyenne | 36.9 secondes |
-| Min | 14.9 secondes |
-| Max | **75.8 secondes** |
-| Évaluation | ❌ TROP LENT |
+| Métrique   | Valeur            |
+| ---------- | ----------------- |
+| Moyenne    | 36.9 secondes     |
+| Min        | 14.9 secondes     |
+| Max        | **75.8 secondes** |
+| Évaluation | ❌ TROP LENT      |
 
 **Analyse:** **Point critique** - Une réponse a pris 75.8 secondes, ce qui est inacceptable pour un jeu interactif. Les enfants perdront patience.
 
 ---
 
 #### Test 3: Prompt Long (description détaillée)
+
 ```
 Prompt: "Decris les Mines de la Moria de maniere detaillee et immersive pour enfants"
 Tentatives: 3
 ```
 
-| Métrique | Valeur |
-|----------|--------|
-| Moyenne | 36.7 secondes |
-| Min | 35.8 secondes |
-| Max | 37.8 secondes |
+| Métrique   | Valeur              |
+| ---------- | ------------------- |
+| Moyenne    | 36.7 secondes       |
+| Min        | 35.8 secondes       |
+| Max        | 37.8 secondes       |
 | Évaluation | ❌ LENT mais stable |
 
 **Analyse:** Temps cohérents mais trop longs. La stabilité est bonne (±1s de variation).
@@ -324,6 +347,7 @@ Tentatives: 3
 ### Causes Identifiées
 
 #### 1. Configuration Ollama
+
 - **Modèle:** Mistral (4.4 GB)
 - **Paramètres actuels:**
   - `temperature: 0.7` ✅ (optimal)
@@ -332,6 +356,7 @@ Tentatives: 3
 **Problème:** `num_predict` trop grand génère des réponses longues inutilement.
 
 #### 2. Charge Système
+
 - **RAM Ollama:** 6-8 Go (normal)
 - **CPU:** Probablement saturé pendant génération
 - **GPU:** Non utilisé (mode CPU only)
@@ -339,6 +364,7 @@ Tentatives: 3
 **Problème:** Pas d'accélération GPU = génération très lente.
 
 #### 3. Architecture Réseau
+
 - **Latence WebSocket:** < 50ms ✅
 - **Goulot d'étranglement:** Génération IA (pas le réseau)
 
@@ -349,6 +375,7 @@ Tentatives: 3
 ### 🔴 Urgentes (Impact Immédiat)
 
 #### 1. Réduire `num_predict`
+
 ```yaml
 # config.yaml - AVANT
 num_predict: 500
@@ -363,16 +390,19 @@ num_predict: 150  # Réduction de 70%
 ---
 
 #### 2. Augmenter Cache Hit Rate
+
 ```python
 # Objectif: 70% cache, 30% Ollama
 ```
 
 **Stratégie:**
+
 - Pré-générer **tous** les lieux au démarrage
 - Cache choix fréquents (top 20)
 - TTL cache: 3600s → 7200s (2h)
 
 **Impact attendu:**
+
 - 70% requêtes: **50-200ms** (cache)
 - 30% requêtes: **10-15s** (Ollama optimisé)
 - **Moyenne globale: ~3.5 secondes** ✅
@@ -380,6 +410,7 @@ num_predict: 150  # Réduction de 70%
 ---
 
 #### 3. Optimiser Prompts
+
 ```python
 # AVANT
 prompt = f"Raconte une aventure dans {lieu} pour un enfant de 10 ans en 3 phrases avec détails immersifs..."
@@ -395,7 +426,9 @@ prompt = f"En 2 phrases courtes: aventure {lieu} enfant 10 ans."
 ### � Importantes (Impact Moyen Terme)
 
 #### 4. Modèle Plus Léger
+
 **Options:**
+
 - Mistral 7B → **Gemma2:latest** (5.4 GB, 20% plus rapide)
 - Mistral 7B → **Llama3.2:latest** (2.0 GB, **50% plus rapide**)
 
@@ -409,6 +442,7 @@ ollama pull llama3.2
 ---
 
 #### 5. Utiliser GPU si Disponible
+
 ```bash
 # Vérifier support GPU
 nvidia-smi
@@ -423,11 +457,13 @@ nvidia-smi
 ### 🟢 Nice-to-Have (Long Terme)
 
 #### 6. System de Queue Asynchrone
+
 - Traiter requêtes en background
 - Afficher animation "l'IA réfléchit..." pendant génération
 - Permet navigation UI pendant attente
 
 #### 7. Streaming de Réponses
+
 ```python
 # Afficher texte mot par mot au fur et à mesure
 for chunk in ollama.generate_stream(...):
@@ -441,51 +477,54 @@ for chunk in ollama.generate_stream(...):
 ## 📊 Projections Après Optimisations
 
 ### Scénario 1: Optimisations Urgentes Uniquement
+
 ```
 num_predict: 150 + Cache 70%
 ```
 
-| Métrique | Avant | Après | Amélioration |
-|----------|-------|-------|--------------|
-| Temps Moyen | 26.6s | **3.5s** | **-87%** ✅ |
-| Cache Hit | 0% | 70% | +70% ✅ |
-| P95 | 75.8s | 15s | -80% ✅ |
+| Métrique    | Avant | Après    | Amélioration |
+| ----------- | ----- | -------- | ------------ |
+| Temps Moyen | 26.6s | **3.5s** | **-87%** ✅  |
+| Cache Hit   | 0%    | 70%      | +70% ✅      |
+| P95         | 75.8s | 15s      | -80% ✅      |
 
 **Verdict:** **Acceptable** pour MVP, expérience utilisateur correcte.
 
 ---
 
 ### Scénario 2: Optimisations + Llama3.2
+
 ```
 num_predict: 150 + Cache 70% + Modèle léger
 ```
 
-| Métrique | Avant | Après | Amélioration |
-|----------|-------|-------|--------------|
+| Métrique    | Avant | Après    | Amélioration  |
+| ----------- | ----- | -------- | ------------- |
 | Temps Moyen | 26.6s | **2.1s** | **-92%** ✅✅ |
-| Cache Hit | 0% | 70% | +70% ✅ |
-| P95 | 75.8s | 8s | -89% ✅✅ |
+| Cache Hit   | 0%    | 70%      | +70% ✅       |
+| P95         | 75.8s | 8s       | -89% ✅✅     |
 
 **Verdict:** **Excellent**, expérience fluide même pour enfants impatients.
 
 ---
 
 ### Scénario 3: Optimisations + GPU
+
 ```
 num_predict: 150 + Cache 70% + NVIDIA GPU
 ```
 
-| Métrique | Avant | Après | Amélioration |
-|----------|-------|-------|--------------|
+| Métrique    | Avant | Après    | Amélioration    |
+| ----------- | ----- | -------- | --------------- |
 | Temps Moyen | 26.6s | **0.8s** | **-97%** ✅✅✅ |
-| Cache Hit | 0% | 70% | +70% ✅ |
-| P95 | 75.8s | 3s | -96% ✅✅✅ |
+| Cache Hit   | 0%    | 70%      | +70% ✅         |
+| P95         | 75.8s | 3s       | -96% ✅✅✅     |
 
 **Verdict:** **Performant**, qualité production.
 
 ---
 
-
 ### Phase 2: Prochaines Étapes
+
 - Cache narratives dynamiques (lieu+choix)
 - GPU si disponible

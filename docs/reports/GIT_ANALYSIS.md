@@ -31,6 +31,7 @@ gitGraph
 **Tag:** v0.1.0-base
 
 **Contenu:**
+
 ```
 .gitignore        49 lignes   ← Exclusions Python/IDE/OS
 README.md        111 lignes   ← Documentation projet
@@ -51,6 +52,7 @@ pyproject.toml    36 lignes   ← Métadonnées projet Python
 **Tag:** v0.2.0-services
 
 **Contenu:**
+
 ```
 game_server.py                  319 lignes   ← Serveur FastAPI principal
 services/narrative.py           103 lignes   ← Génération narrative Ollama
@@ -74,6 +76,7 @@ middleware/security.py           44 lignes   ← Middleware sécurité
 **Tag:** v0.3.0-analysis
 
 **Contenu:**
+
 ```
 visualisations_architecture.html  1095 lignes   ← 10+ diagrammes Mermaid
 performance_dashboard.html         562 lignes   ← Dashboard Chart.js temps réel
@@ -82,6 +85,7 @@ performance_monitor.py             345 lignes   ← Classes monitoring avancé
 ```
 
 **Résultats tests:**
+
 - Temps moyen: 26.6s (trop lent ❌)
 - Médian: 20.2s
 - P95: 75.8s
@@ -98,6 +102,7 @@ performance_monitor.py             345 lignes   ← Classes monitoring avancé
 **Tag:** v0.4.0-docs
 
 **Contenu:**
+
 ```
 RAPPORT_FINAL.md          565 lignes   ← Synthèse complète session
 INDEX_COMPLET.md          662 lignes   ← Guide navigation master
@@ -124,6 +129,7 @@ ROADMAP.md                 98 lignes   ← Feuille de route
 **Tag:** v0.5.0-deps
 
 **Contenu:**
+
 ```
 requirements.txt     10 lignes      ← Dépendances pip
 poetry.lock        1628 lignes      ← Lock file Poetry
@@ -139,12 +145,12 @@ package-lock.json    25 lignes      ← Lock npm
 
 ### Par Type de Fichier
 
-| Type | Fichiers | Lignes | % Total |
-|------|----------|--------|---------|
-| **Python (.py)** | 10 | ~1900 | 19% |
-| **Markdown (.md)** | 11 | ~4800 | 48% |
-| **HTML** | 3 | ~1800 | 18% |
-| **Config (YAML/JSON/TOML)** | 6 | ~1500 | 15% |
+| Type                        | Fichiers | Lignes | % Total |
+| --------------------------- | -------- | ------ | ------- |
+| **Python (.py)**            | 10       | ~1900  | 19%     |
+| **Markdown (.md)**          | 11       | ~4800  | 48%     |
+| **HTML**                    | 3        | ~1800  | 18%     |
+| **Config (YAML/JSON/TOML)** | 6        | ~1500  | 15%     |
 
 **Total:** ~10,000 lignes de code/documentation
 
@@ -152,14 +158,14 @@ package-lock.json    25 lignes      ← Lock npm
 
 ### Par Catégorie Fonctionnelle
 
-| Catégorie | Lignes | Fichiers | Description |
-|-----------|--------|----------|-------------|
-| **Backend Services** | 1560 | 20 | FastAPI, Ollama, SQLite, Cache |
-| **Routing & Memory** | 730 | 2 | model_router.py + narrative_memory.py |
-| **Analysis Tools** | 2100 | 4 | Dashboards, tests, monitoring |
-| **Documentation** | 4800 | 11 | Guides, rapports, roadmaps |
-| **Frontend** | 120 | 1 | index.html (simple) |
-| **Config & Deps** | 1700 | 6 | YAML, TOML, requirements, lock files |
+| Catégorie            | Lignes | Fichiers | Description                           |
+| -------------------- | ------ | -------- | ------------------------------------- |
+| **Backend Services** | 1560   | 20       | FastAPI, Ollama, SQLite, Cache        |
+| **Routing & Memory** | 730    | 2        | model_router.py + narrative_memory.py |
+| **Analysis Tools**   | 2100   | 4        | Dashboards, tests, monitoring         |
+| **Documentation**    | 4800   | 11       | Guides, rapports, roadmaps            |
+| **Frontend**         | 120    | 1        | index.html (simple)                   |
+| **Config & Deps**    | 1700   | 6        | YAML, TOML, requirements, lock files  |
 
 ---
 
@@ -284,13 +290,13 @@ jdvlh-ia-game/
 
 ## 🏷️ Tags & Versions
 
-| Tag | Commit | Description | Fichiers | Lignes |
-|-----|--------|-------------|----------|--------|
-| **v0.1.0-base** | `2493d26` | Base projet | 6 | 366 |
-| **v0.2.0-services** | `3f8c8fd` | Services core | +20 | +1560 |
-| **v0.3.0-analysis** | `6fc94d8` | Outils analyse | +4 | +2102 |
-| **v0.4.0-docs** | `d670752` | Documentation | +10 | +4312 |
-| **v0.5.0-deps** | `0045fda` | Dépendances | +4 | +1668 |
+| Tag                 | Commit    | Description    | Fichiers | Lignes |
+| ------------------- | --------- | -------------- | -------- | ------ |
+| **v0.1.0-base**     | `2493d26` | Base projet    | 6        | 366    |
+| **v0.2.0-services** | `3f8c8fd` | Services core  | +20      | +1560  |
+| **v0.3.0-analysis** | `6fc94d8` | Outils analyse | +4       | +2102  |
+| **v0.4.0-docs**     | `d670752` | Documentation  | +10      | +4312  |
+| **v0.5.0-deps**     | `0045fda` | Dépendances    | +4       | +1668  |
 
 **Version actuelle:** v0.5.0-deps
 
@@ -300,16 +306,16 @@ jdvlh-ia-game/
 
 ### Par Auteur
 
-| Auteur | Commits | Lignes+ | Lignes- |
-|--------|---------|---------|---------|
-| **Claude Code** | 5 | 10,008 | 0 |
-| Co-Authored-By: Claude | 5 | - | - |
+| Auteur                 | Commits | Lignes+ | Lignes- |
+| ---------------------- | ------- | ------- | ------- |
+| **Claude Code**        | 5       | 10,008  | 0       |
+| Co-Authored-By: Claude | 5       | -       | -       |
 
 ### Par Jour
 
-| Date | Commits | Description |
-|------|---------|-------------|
-| **22 Nov 2025** | 5 | Session complète: Analyse → Implémentation → Documentation |
+| Date            | Commits | Description                                                |
+| --------------- | ------- | ---------------------------------------------------------- |
+| **22 Nov 2025** | 5       | Session complète: Analyse → Implémentation → Documentation |
 
 ---
 
@@ -325,12 +331,12 @@ jdvlh-ia-game/
 
 ### Améliorations Identifiées
 
-| Aspect | État Actuel | Cible | Gain |
-|--------|-------------|-------|------|
-| **Temps réponse** | 26.6s | 2-3s | **-92%** |
-| **Cohérence** | 2/5 ⭐⭐ | 5/5 ⭐⭐⭐⭐⭐ | +300% |
-| **Tokens utilisés** | 500-1000 | 200-400 | -60% |
-| **Cache hit rate** | 0% | 70% | +∞ |
+| Aspect              | État Actuel | Cible          | Gain     |
+| ------------------- | ----------- | -------------- | -------- |
+| **Temps réponse**   | 26.6s       | 2-3s           | **-92%** |
+| **Cohérence**       | 2/5 ⭐⭐    | 5/5 ⭐⭐⭐⭐⭐ | +300%    |
+| **Tokens utilisés** | 500-1000    | 200-400        | -60%     |
+| **Cache hit rate**  | 0%          | 70%            | +∞       |
 
 ---
 
@@ -432,6 +438,7 @@ git push origin master --tags
 - ✅ .gitignore configuré
 
 **Prêt pour:**
+
 - Développement par branches
 - Collaboration en équipe
 - CI/CD si souhaité
