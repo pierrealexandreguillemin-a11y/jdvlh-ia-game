@@ -9,6 +9,7 @@ import yaml
 from .model_router import get_router
 from .narrative_memory import NarrativeMemory, SmartHistoryManager
 from .pf2e_content import get_pf2e_content
+from .content_filter import get_content_filter
 
 # Chemin absolu vers config.yaml
 CONFIG_PATH = Path(__file__).parent.parent / "config" / "config.yaml"
@@ -25,6 +26,7 @@ class NarrativeService:
         self.router = get_router()
         self.memory = NarrativeMemory()
         self.history_mgr = SmartHistoryManager()
+        self.content_filter = get_content_filter(target_age=16, strict_mode=True)
 
         # Intégration PF2e (optionnel)
         try:
@@ -34,9 +36,17 @@ class NarrativeService:
             print(f"[!] PF2e content non disponible: {e}")
             self.pf2e = None
 
+        print("[+] ContentFilter PEGI 16 activé")
+
     async def generate(
         self, context: str, history: List[str], choice: str, blacklist_words: List[str]
     ) -> Dict[str, Any]:
+        # FILTER INPUT: Check player choice for inappropriate content
+        input_result = self.content_filter.filter_input(choice)
+        if not input_result.is_safe:
+            print(f"[!] Input filtré: {input_result.violations}")
+            choice = input_result.filtered_text
+
         # AVANT génération
         self.memory.update_entities(choice)
         self.memory.advance_turn()
@@ -108,10 +118,20 @@ JSON SEULEMENT:
                 if parsed.get("location"):
                     self.memory.update_location(parsed["location"])
 
+                # FILTER OUTPUT: Check AI response for inappropriate content
+                output_result = self.content_filter.filter_output(
+                    parsed.get("narrative", "")
+                )
+                if not output_result.is_safe:
+                    print(f"[!] Output filtré: {output_result.violations}")
+                    parsed["narrative"] = output_result.filtered_text
+                    parsed["content_filtered"] = True
+
+                # Legacy blacklist check (backward compatibility)
                 if not self._is_safe(parsed.get("narrative", ""), blacklist_words):
-                    parsed["narrative"] = (
-                        "Choix non adapté aux enfants, essaie autre chose !"
-                    )
+                    parsed["narrative"] = "L'aventure continue paisiblement..."
+                    parsed["content_filtered"] = True
+
                 parsed["choices"] = parsed.get("choices", fallback["choices"])[:3]
                 return parsed
             except Exception as e:
