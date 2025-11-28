@@ -1,0 +1,25 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Install Ollama
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
+# Copy requirements
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy app
+COPY src/ ./src/
+COPY data/ ./data/
+COPY config/ ./config/
+
+# Expose ports
+EXPOSE 8000
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8000/health || exit 1
+
+# Start server
+CMD ["uvicorn", "src.jdvlh_ia_game.core.game_server:app", "--host", "0.0.0.0", "--port", "8000"]

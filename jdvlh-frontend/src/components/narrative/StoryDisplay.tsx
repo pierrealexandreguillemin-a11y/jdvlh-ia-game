@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { useAudio } from '../../hooks/useAudio';
 
 interface StoryDisplayProps {
   narrative: string;
@@ -19,6 +21,19 @@ export function StoryDisplay({
   isLoading,
   onChoiceSelect,
 }: StoryDisplayProps) {
+  const { playAmbiance, playSFX } = useAudio();
+
+  // Play ambiance on location change
+  useEffect(() => {
+    if (location) {
+      playAmbiance(location.toLowerCase());
+    }
+  }, [location, playAmbiance]);
+
+  const handleChoice = useCallback((choice: string) => {
+    playSFX('choice_click');
+    onChoiceSelect(choice);
+  }, [onChoiceSelect, playSFX]);
   const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
@@ -60,7 +75,14 @@ export function StoryDisplay({
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <motion.div
+      key={location}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5 }}
+      className="flex flex-col h-full"
+    >
       {/* Location Header */}
       <div className="relative mb-4">
         <div
@@ -71,7 +93,7 @@ export function StoryDisplay({
           }}
         >
           <span className="text-lg font-bold tracking-wide text-amber-900">
-            {location || 'Terre du Milieu'}
+            {location || 'Golarion'}
           </span>
         </div>
       </div>
@@ -129,7 +151,7 @@ export function StoryDisplay({
           {choices.map((choice, index) => (
             <button
               key={index}
-              onClick={() => onChoiceSelect(choice)}
+              onClick={() => handleChoice(choice)}
               disabled={isLoading}
               className="w-full text-left px-4 py-3 transition-all duration-200
                          bg-amber-100/80 hover:bg-amber-200/90
@@ -148,7 +170,7 @@ export function StoryDisplay({
           ))}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 

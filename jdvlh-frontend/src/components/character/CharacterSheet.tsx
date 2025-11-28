@@ -1,4 +1,4 @@
-import type { Character } from '../types/game';
+import type { Character } from '../../types/game';
 
 interface CharacterSheetProps {
   character: Character;

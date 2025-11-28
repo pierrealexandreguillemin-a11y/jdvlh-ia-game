@@ -1,113 +1,233 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { GameLayout, StoryDisplay, CharacterSheet } from './components';
+import { useWebSocket } from './hooks/useWebSocket';
+import { DiceRoller } from './components/combat/DiceRoller';
 import type { Character, NarrativeResponse } from './types/game';
 
-// Demo data
-const demoCharacter: Character = {
-  name: 'Frodon Sacquet',
-  race: 'Hobbit',
-  class: 'Porteur',
+// Pathfinder 2e demo character
+const pf2eCharacter: Character = {
+  name: 'Valéria Sanspeur',
+  race: 'Humaine',
+  class: 'Guerrière',
   level: 3,
   stats: {
-    strength: 8,
+    strength: 16,
     dexterity: 14,
-    constitution: 12,
-    intelligence: 13,
-    wisdom: 16,
-    charisma: 15,
-    hp: 18,
-    maxHp: 24,
-    mp: 10,
-    maxMp: 10,
+    constitution: 14,
+    intelligence: 10,
+    wisdom: 12,
+    charisma: 12,
+    hp: 42,
+    maxHp: 42,
+    mp: 0,
+    maxMp: 0,
     xp: 750,
     xpToNext: 1000,
   },
   inventory: [],
   equipment: {
-    weapon: { id: '1', name: 'Dard', description: 'Épée elfique', type: 'weapon', quantity: 1 },
-    armor: { id: '2', name: 'Mithril', description: 'Cotte de mailles', type: 'armor', quantity: 1 },
-    accessory: { id: '3', name: "L'Anneau Unique", description: 'Un anneau pour les gouverner tous', type: 'misc', quantity: 1 },
+    weapon: { id: '1', name: 'Épée longue +1', description: 'Arme martiale PF2e', type: 'weapon', quantity: 1 },
+    armor: { id: '2', name: 'Cotte de mailles', description: 'Armure moyenne CA +4', type: 'armor', quantity: 1 },
+    accessory: { id: '3', name: 'Amulette de vie', description: '+2 aux jets de Vigueur', type: 'misc', quantity: 1 },
   },
 };
 
-const demoNarrative: NarrativeResponse = {
-  narrative: `Vous vous tenez à l'orée de la Forêt de Fangorn. Les arbres anciens murmurent des secrets oubliés, leurs branches tordues semblent vous observer avec une curiosité millénaire.
+// Initial narrative for Pathfinder 2e / Golarion
+const initialNarrative: NarrativeResponse = {
+  narrative: `Vous vous tenez sur les docks animés d'Absalom, la Cité au Centre du Monde. L'air marin se mêle aux effluves d'épices exotiques et au brouhaha des marchands criant leurs prix.
 
-Un sentier sinueux s'enfonce dans les ténèbres verdoyantes, tandis qu'à l'est, vous apercevez les premières lueurs d'un feu de camp.
+Une affiche attire votre attention sur le panneau des annonces : "Aventuriers recherchés - Exploration de ruines anciennes près de Sandpoint. Récompense généreuse. Se présenter à la Taverne du Gobelin Rouillé."
 
-Le vent porte jusqu'à vous l'odeur de la terre humide et quelque chose d'autre... une présence ancienne qui veille.`,
+Les mouettes tournoient au-dessus de vous tandis qu'un groupe de Garde du Grand Conseil passe, leurs armures brillant au soleil.`,
   choices: [
-    'Emprunter le sentier sombre dans la forêt',
-    "S'approcher du feu de camp à l'est",
-    'Appeler pour voir si quelqu\'un répond',
-    'Rebrousser chemin vers la Comté',
+    'Se rendre à la Taverne du Gobelin Rouillé',
+    'Explorer les marchés du port',
+    'Enquêter sur les ruines mentionnées',
+    'Chercher la guilde des aventuriers',
   ],
-  location: 'Forêt de Fangorn',
-  sfx: 'forest_ambiance',
+  location: 'Absalom - Les Docks',
+  sfx: 'port_ambiance',
 };
 
 function App() {
-  const [narrative, setNarrative] = useState<NarrativeResponse>(demoNarrative);
+  const [narrative, setNarrative] = useState<NarrativeResponse>(initialNarrative);
   const [isLoading, setIsLoading] = useState(false);
-  const [character] = useState<Character>(demoCharacter);
+  const [character] = useState<Character>(pf2eCharacter);
+  const [playerId] = useState(() => `player_${Date.now()}`);
+  const [connectionStatus, setConnectionStatus] = useState<'offline' | 'connecting' | 'online'>('offline');
 
-  const handleChoiceSelect = async (choice: string) => {
-    setIsLoading(true);
+  // Dice roller state
+  const [diceRollRequest, setDiceRollRequest] = useState<{
+    skill: string;
+    dc: number;
+    onResult: (result: number, success: boolean) => void;
+  } | null>(null);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+  // WebSocket connection
+  const { socket, isConnected, send } = useWebSocket(playerId);
 
-    // Demo response based on choice
-    const responses: Record<string, NarrativeResponse> = {
-      'Emprunter le sentier sombre dans la forêt': {
-        narrative: `Vous vous enfoncez dans la forêt. Les arbres semblent se refermer derrière vous, plongeant le sentier dans une pénombre mystérieuse.
+  // Handle WebSocket messages
+  useEffect(() => {
+    if (!isConnected) {
+      setConnectionStatus('offline');
+      return;
+    }
 
-Soudain, une voix grave résonne autour de vous : "Petit être... que cherches-tu dans les bois de Fangorn ?"
+    setConnectionStatus('online');
+    const ws = socket();
 
-C'est Sylvebarbe, le plus ancien des Ents !`,
-        choices: [
-          'Demander le chemin vers Isengard',
-          'Raconter votre quête',
-          'Fuir à toutes jambes',
-        ],
-        location: 'Coeur de Fangorn',
-        sfx: 'ent_voice',
-      },
-      "S'approcher du feu de camp à l'est": {
-        narrative: `Vous vous approchez prudemment du feu de camp. Autour des flammes, vous découvrez deux silhouettes familières : Merry et Pippin !
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const data = JSON.parse(event.data);
+        setIsLoading(false);
 
-"Frodon !" s'exclame Pippin. "On ne s'attendait pas à te voir ici ! Viens, on a du pain de lembas et des histoires à partager."`,
-        choices: [
-          'Rejoindre vos amis autour du feu',
-          'Demander ce qu\'ils font ici',
-          'Rester sur vos gardes',
-        ],
-        location: 'Campement',
-        sfx: 'campfire',
-      },
+        // Check for dice roll trigger
+        if (data.animation_trigger?.startsWith('DICE_ROLL:')) {
+          const [, skill, dcStr] = data.animation_trigger.split(':');
+          const dc = parseInt(dcStr, 10);
+
+          // Store narrative but request dice roll first
+          setDiceRollRequest({
+            skill,
+            dc,
+            onResult: (result, success) => {
+              // Append result to narrative
+              const resultText = success
+                ? `\n\n✅ Jet de ${skill} : ${result} vs DC ${dc} - Succès !`
+                : `\n\n❌ Jet de ${skill} : ${result} vs DC ${dc} - Échec...`;
+
+              setNarrative({
+                ...data,
+                narrative: data.narrative + resultText,
+              });
+              setDiceRollRequest(null);
+            },
+          });
+
+          // Show partial narrative while waiting for roll
+          setNarrative({
+            ...data,
+            choices: [], // Hide choices until roll is done
+          });
+        } else {
+          setNarrative(data);
+        }
+      } catch (err) {
+        console.error('Failed to parse WS message:', err);
+      }
     };
 
-    const response = responses[choice] || {
-      narrative: `Vous faites votre choix et l'aventure continue...
+    ws.addEventListener('message', handleMessage);
+    return () => ws.removeEventListener('message', handleMessage);
+  }, [isConnected, socket]);
+
+  const handleChoiceSelect = useCallback(async (choice: string) => {
+    setIsLoading(true);
+
+    if (isConnected) {
+      // Send via WebSocket
+      send({ action: 'choice', choice });
+    } else {
+      // Demo mode fallback
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      const demoResponses: Record<string, NarrativeResponse> = {
+        'Se rendre à la Taverne du Gobelin Rouillé': {
+          narrative: `La Taverne du Gobelin Rouillé est un établissement typique des quartiers portuaires d'Absalom. Une enseigne représentant un gobelin hilare tenant une choppe se balance au vent.
+
+À l'intérieur, l'atmosphère est chaleureuse malgré la fumée des pipes. Un homme barbu portant une cape de voyage usée vous fait signe depuis une table dans le coin. Il correspond à la description du commanditaire.
+
+"Ah, vous êtes là pour les ruines de Sandpoint ? Approchez, j'ai besoin de gens capables..."`,
+          choices: [
+            'Approcher et écouter la proposition',
+            'Commander une bière avant de négocier',
+            'Observer les autres clients de la taverne',
+          ],
+          location: 'Absalom - Taverne du Gobelin Rouillé',
+          animation_trigger: 'DICE_ROLL:perception:14',
+          sfx: 'tavern',
+        },
+        'Explorer les marchés du port': {
+          narrative: `Les marchés d'Absalom sont un kaléidoscope de couleurs et de sons. Des marchands venus des quatre coins de Golarion proposent leurs marchandises : épices du Qadira, armes naines de la Montagne des Cinq Rois, parchemins arcaniques de Nex.
+
+Un marchand halfelin vous interpelle : "Hé, aventurière ! J'ai des potions de guérison, meilleur prix du port !"
+
+Plus loin, vous apercevez un attroupement autour d'un conteur qui narre des légendes sur les ruines de Thassilon.`,
+          choices: [
+            'Acheter des potions au halfelin',
+            'Écouter les légendes du conteur',
+            'Chercher un armurier',
+          ],
+          location: 'Absalom - Grand Marché',
+          sfx: 'market',
+        },
+      };
+
+      const response = demoResponses[choice] || {
+        narrative: `Vous faites votre choix avec détermination. L'aventure vous mène vers de nouveaux horizons sur Golarion.
 
 "${choice}"
 
-Le destin de la Terre du Milieu repose entre vos mains.`,
-      choices: ['Continuer', 'Explorer les environs', 'Se reposer'],
-      location: narrative.location,
-    };
+Les dieux de Golarion observent vos actions avec intérêt...`,
+        choices: ['Continuer l\'exploration', 'Examiner les environs', 'Se reposer'],
+        location: narrative.location,
+        sfx: 'ambient',
+      };
 
-    setNarrative(response);
-    setIsLoading(false);
-  };
+      // Check for dice roll in demo mode
+      if (response.animation_trigger?.startsWith('DICE_ROLL:')) {
+        const [, skill, dcStr] = response.animation_trigger.split(':');
+        const dc = parseInt(dcStr, 10);
+
+        setDiceRollRequest({
+          skill,
+          dc,
+          onResult: (result, success) => {
+            const resultText = success
+              ? `\n\n✅ Jet de ${skill} : ${result} vs DC ${dc} - Succès !`
+              : `\n\n❌ Jet de ${skill} : ${result} vs DC ${dc} - Échec...`;
+
+            setNarrative({
+              ...response,
+              narrative: response.narrative + resultText,
+            });
+            setDiceRollRequest(null);
+            setIsLoading(false);
+          },
+        });
+
+        setNarrative({
+          ...response,
+          choices: [],
+        });
+        setIsLoading(false);
+      } else {
+        setNarrative(response);
+        setIsLoading(false);
+      }
+    }
+  }, [isConnected, send, narrative.location]);
 
   const header = (
     <div className="flex items-center justify-between">
       <h1 className="text-2xl font-bold text-amber-100">
-        🏔️ JDVLH - Livre dont Vous êtes le Héros
+        JDVLH - Pathfinder 2e
       </h1>
-      <div className="text-amber-200 text-sm">
-        Terre du Milieu • Aventure Interactive
+      <div className="flex items-center gap-4">
+        <div className="text-amber-200 text-sm">
+          Golarion - Aventure Interactive
+        </div>
+        <div className={`flex items-center gap-2 text-sm ${
+          connectionStatus === 'online' ? 'text-green-400' :
+          connectionStatus === 'connecting' ? 'text-yellow-400' : 'text-red-400'
+        }`}>
+          <span className={`w-2 h-2 rounded-full ${
+            connectionStatus === 'online' ? 'bg-green-400' :
+            connectionStatus === 'connecting' ? 'bg-yellow-400 animate-pulse' : 'bg-red-400'
+          }`} />
+          {connectionStatus === 'online' ? 'Connecté' :
+           connectionStatus === 'connecting' ? 'Connexion...' : 'Mode Démo'}
+        </div>
       </div>
     </div>
   );
@@ -123,6 +243,16 @@ Le destin de la Terre du Milieu repose entre vos mains.`,
         isLoading={isLoading}
         onChoiceSelect={handleChoiceSelect}
       />
+
+      {/* Dice Roller Modal */}
+      {diceRollRequest && (
+        <DiceRoller
+          skill={diceRollRequest.skill}
+          dc={diceRollRequest.dc}
+          modifier={Math.floor((character.stats.wisdom - 10) / 2)} // Use wisdom for perception by default
+          onRoll={diceRollRequest.onResult}
+        />
+      )}
     </GameLayout>
   );
 }

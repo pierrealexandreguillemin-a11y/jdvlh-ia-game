@@ -8,38 +8,53 @@ ollama:
   model: mistral
   max_retries: 3
   temperature: 0.8
-  max_tokens: 400
+  max_tokens: 500
 
 cache:
   dir: cache
   ttl: 7200 # 2h
 
+# Pathfinder 2e - Golarion locations
 locations:
-  - la Comté
-  - Fondcombe
-  - les Mines de la Moria
-  - la forêt de Fangorn
-  - Minas Tirith
-  - le Mont Destin
-  - les plaines du Rohan
-  - Isengard
-  - Helm's Deep
-  - la forêt de Lothlórien
-  - la rivière Anduin
-  - la montagne solitaire
+  - Absalom
+  - Magnimar
+  - Sandpoint
+  - Korvosa
+  - la forêt de Sombrelune
+  - les Terres Sauvages
+  - le désert du Katapesh
+  - les monts Kodar
+  - la mer Intérieure
+  - Osirion
+  - la Varisie
+  - le Nidal
 
 blacklist_words:
-  - violence
-  - tuer
-  - mort
-  - sang
-  - sexe
-  - nu
-  - porn
-  - drogue
-  - alcool
+  - torture détaillée
+  - pornographie
+  - pédophilie
 
 prompts:
-  system: "Tu es un maître du jeu D&D/Tolkien pour enfants francophones de 10-14 ans. Raconte TOUJOURS en FRANÇAIS une histoire épique et immersive avec des descriptions riches (8-12 phrases minimum). Structure narrative claire : situation, action, conséquence, suspense. Choix simples et excitants. Ton positif et adapté. IMPORTANT: JAMAIS d'anglais, TOUJOURS du français riche et descriptif."
+  system: |
+    Tu es un Maître du Jeu Pathfinder 2e expert pour adolescents francophones (14-18 ans).
+
+    UNIVERS: Golarion, monde de haute fantasy avec magie, dieux, monstres et aventures épiques.
+
+    STYLE NARRATIF:
+    - Descriptions immersives et détaillées (6-10 phrases)
+    - Combats tactiques excitants utilisant les règles PF2e
+    - Mystères et intrigues engageants
+    - Humour et moments légers bienvenus
+    - Violence fantasy acceptable (pas de gore extrême)
+
+    RÈGLES PF2e:
+    - Utilise le système à 3 actions par tour
+    - Mentionne les jets de dés (d20 + modificateur)
+    - Référence les compétences (Perception, Arcanes, Athlétisme...)
+    - Inclus des DC appropriés au niveau du groupe
+
+    FORMAT RÉPONSE: JSON strict avec narrative, choices (3-4), location, animation_trigger, sfx
+
+    LANGUE: Français uniquement, vocabulaire riche adapté ados.
 
 family_pin: "1234" # PIN simple pour auth parents

@@ -66,27 +66,35 @@ class NarrativeService:
                 f"(niveau {spell_info['level']}) - {spell_desc}"
             )
 
-        prompt = f"""Tu es MJ Tolkien enfants 10 ans. Ton positif.
+        prompt = f"""Tu es un Maître du Jeu Pathfinder 2e expert pour adolescents (14-18 ans).
+UNIVERS: Golarion - haute fantasy avec magie, dieux et aventures épiques.
 
-Mémoire: {self.memory.get_context_summary()[:100]}
+STYLE:
+- Descriptions immersives (4-6 phrases)
+- Combats tactiques avec règles PF2e (3 actions/tour)
+- Mentionne jets de dés (d20+mod) et DC appropriés
+
+Mémoire: {self.memory.get_context_summary()[:150]}
 
 Récemment: {smart_history}
 
-Choix: {choice}{spell_context}
+Choix du joueur: {choice}{spell_context}
 
-JSON SEULEMENT:
+Si jet de dé requis: animation_trigger="DICE_ROLL:skill:DC" (ex: perception:15).
+
+JSON STRICT:
 {{
-  "narrative": "1-2 phrases courtes",
-  "choices": ["Continuer","Explorer","Autre"],
-  "location": "la Comté|Fondcombe|Moria|...",
-  "animation_trigger": "none",
-  "sfx": "ambient"
+  "narrative": "description immersive 4-6 phrases",
+  "choices": ["action1","action2","action3"],
+  "location": "Absalom|Sandpoint|Magnimar|...",
+  "animation_trigger": "none|DICE_ROLL:skill:DC",
+  "sfx": "ambient|combat|magic|tavern"
 }}"""
 
         fallback = {
-            "narrative": "L'aventure continue de manière mystérieuse...",
-            "choices": ["Continuer", "Explorer", "Retourner"],
-            "location": "la Comté",
+            "narrative": "Les brumes de Golarion se dissipent, révélant un chemin...",
+            "choices": ["Explorer", "Équipement", "Observer"],
+            "location": "Absalom",
             "animation_trigger": "none",
             "sfx": "ambient",
         }

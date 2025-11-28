@@ -1,4 +1,4 @@
-export { StoryDisplay } from './StoryDisplay';
-export { CharacterSheet } from './CharacterSheet';
-export { ChoiceButton } from './ChoiceButton';
+export { StoryDisplay } from './narrative/StoryDisplay';
+export { ChoiceButton } from './narrative/ChoiceButton';
+export { CharacterSheet } from './character/CharacterSheet';
 export { GameLayout } from './GameLayout';

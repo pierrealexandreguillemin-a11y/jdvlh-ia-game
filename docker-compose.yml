@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ollama-models:/root/.ollama
+      - ./data:/app/data
+      - ./config:/app/config
+    environment:
+      - DATABASE_URL=postgresql://gamemaster:${DB_PASSWORD}@postgres:5432/jdvlh_game
+      - OLLAMA_HOST=http://host.docker.internal:11434
+    depends_on:
+      - postgres
+    networks:
+      - game-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - game-network
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: jdvlh_game
+      POSTGRES_USER: gamemaster
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./src/jdvlh_ia_game/migrations:/app/migrations # For alembic
+    networks:
+      - game-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gamemaster"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  ollama-models:
+  postgres-data:
+
+networks:
+  game-network:
+    driver: bridge

@@ -17,6 +17,7 @@ from ..services.inventory_manager import InventoryManager
 from ..services.quest_manager import QuestManager
 from ..services.character_progression import CharacterProgression
 from ..services.i18n import get_i18n
+from ..services import get_content_filter, get_parental_control, get_session_manager
 from ..models.game_entities import (
     Player,
     Enemy,
@@ -52,6 +53,19 @@ class NarrativeResponse(BaseModel):
     sfx: str = "ambient"
 
 
+class PinRequest(BaseModel):
+    pin: str
+
+
+class SettingsRequest(BaseModel):
+    pin: str
+    settings: Dict
+
+
+class ExportRequest(BaseModel):
+    parent_email: str
+
+
 def get_narrative_service() -> NarrativeService:
     return NarrativeService()
 
@@ -80,6 +94,14 @@ def get_quest_manager() -> QuestManager:
     return QuestManager()
 
 
+def get_parental_control_dep():
+    return get_parental_control()
+
+
+def get_content_filter_dep():
+    return get_content_filter()
+
+
 def get_character_progression() -> CharacterProgression:
     return CharacterProgression()
 
@@ -88,8 +110,10 @@ def get_character_progression() -> CharacterProgression:
 async def startup_event():
     state_manager = get_state_manager()
     cache_service = get_cache_service()
+    session_manager = get_session_manager()
     asyncio.create_task(cache_service.pregenerate())
     asyncio.create_task(state_manager.cleanup_inactive())
+    asyncio.create_task(session_manager.cleanup_inactive())
     if state_manager.get_active_count() >= config["server"]["max_players"]:
         print("Attention: limite max_players atteinte")
 
@@ -102,12 +126,36 @@ async def websocket_endpoint(
     cache_service: CacheService = Depends(get_cache_service),
     state_manager: StateManager = Depends(get_state_manager),
     event_bus: EventBus = Depends(get_event_bus),
+    parental_control=Depends(get_parental_control),
+    content_filter=Depends(get_content_filter),
+    session_manager=Depends(get_session_manager),
 ):
     if state_manager.get_active_count() >= config["server"]["max_players"]:
         await websocket.close(code=503, reason="Serveur plein")
         return
 
     await websocket.accept()
+
+    # Vérifier contrôle parental
+    allowed, msg = parental_control.check_session_allowed(player_id)
+    if not allowed:
+        await websocket.close(code=403, reason=msg)
+        return
+
+    parental_control.start_session(player_id)
+    parental_control.log_event(player_id, "websocket_connect")
+
+    # Créer session multi-device
+    await session_manager.create_session(
+        player_id,
+        {
+            "host": websocket.client.host,
+            "user_agent": websocket.headers.get("user-agent", ""),
+        },
+    )
+
+    await session_manager.add_socket(player_id, websocket)
+
     state = state_manager.load_state(player_id)
     i18n = get_i18n("fr")  # TODO: Get from user preferences
 
@@ -126,6 +174,11 @@ async def websocket_endpoint(
     try:
         while True:
             choice = await websocket.receive_text()
+
+            parental_control.log_event(
+                player_id, "player_choice", {"choice": choice[:50]}
+            )
+
             blacklist = config.get("blacklist_words", [])
             response = await narrative_service.generate(
                 state["context"], state["history"], choice, blacklist
@@ -138,9 +191,31 @@ async def websocket_endpoint(
             state_manager.save_state(player_id, state)
             loc_data = cache_service.get_location_data(state["current_location"])
             full_response = {**response, **loc_data}
+
+            # Filtrer contenu avec ContentFilter
+            filter_result = content_filter.filter_output(full_response["narrative"])
+            full_response["narrative"] = filter_result.filtered_text
+            full_response["filter_result"] = filter_result.to_dict()
+
+            parental_control.log_event(
+                player_id,
+                "ai_response",
+                {
+                    "length": len(full_response["narrative"]),
+                    "filter_violations": len(filter_result.violations),
+                },
+            )
+
+            await session_manager.update_narrative(
+                player_id, full_response["narrative"], full_response["choices"]
+            )
+
             await websocket.send_json(full_response)
             event_bus.emit("narrative_generated", full_response)
     except WebSocketDisconnect:
+        await session_manager.remove_socket(player_id, websocket)
+        parental_control.end_session(player_id)
+        parental_control.log_event(player_id, "session_end")
         print(f"Joueur {player_id} déconnecté")
 
 
@@ -156,6 +231,73 @@ async def reset_game(
     }
     state_manager.save_state(player_id, state)
     return {"status": i18n.get("game.reset")}
+
+
+# ===== HEALTH CHECK =====
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Docker/monitoring"""
+    return {"status": "healthy", "service": "jdvlh-ia-game"}
+
+
+# ===== PARENTAL CONTROL ENDPOINTS =====
+@app.post("/parental/set_pin/{player_id}")
+async def set_parental_pin(
+    player_id: str,
+    request: PinRequest,
+    parental_control=Depends(get_parental_control_dep),
+):
+    """Set parental control PIN (4 digits)"""
+    success = parental_control.set_pin(player_id, request.pin)
+    if success:
+        return {"success": True, "message": "PIN défini avec succès"}
+    return {"success": False, "message": "PIN invalide (4 chiffres requis)"}
+
+
+@app.post("/parental/verify_pin/{player_id}")
+async def verify_parental_pin(
+    player_id: str,
+    request: PinRequest,
+    parental_control=Depends(get_parental_control_dep),
+):
+    """Verify parental control PIN"""
+    valid = parental_control.verify_pin(player_id, request.pin)
+    return {"valid": valid}
+
+
+@app.post("/parental/update_settings/{player_id}")
+async def update_parental_settings(
+    player_id: str,
+    request: SettingsRequest,
+    parental_control=Depends(get_parental_control_dep),
+):
+    """Update parental control settings (requires PIN verification)"""
+    success = parental_control.update_settings(player_id, request.settings, request.pin)
+    if success:
+        return {"success": True, "message": "Paramètres mis à jour"}
+    return {"success": False, "message": "PIN invalide ou erreur"}
+
+
+@app.get("/parental/logs/{player_id}")
+async def get_parental_logs(
+    player_id: str, parental_control=Depends(get_parental_control_dep)
+):
+    """Get session logs for parental review"""
+    logs = parental_control.get_session_logs(player_id)
+    return {"logs": logs}
+
+
+@app.post("/parental/export_logs/{player_id}")
+async def export_parental_logs(
+    player_id: str,
+    request: ExportRequest,
+    parental_control=Depends(get_parental_control_dep),
+):
+    """Export logs to parent email"""
+    success = parental_control.export_logs(player_id, request.parent_email)
+    if success:
+        return {"success": True, "message": f"Rapport envoyé à {request.parent_email}"}
+    return {"success": False, "message": "Erreur lors de l'export"}
 
 
 # ===== COMBAT WEBSOCKET =====

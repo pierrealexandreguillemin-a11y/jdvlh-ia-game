@@ -1,13 +1,15 @@
-# 🗡️ JDVLH IA Game v0.6.0 - Livre Dont Vous Êtes Le Héros 🧙‍♂️
+# 🗡️ JDVLH IA Game v0.7.0 - Livre Dont Vous Êtes Le Héros 🧙‍♂️
 
-[![Version](https://img.shields.io/badge/version-0.6.0-blue.svg)](https://github.com/user/jdvlh-ia-game)
+[![Version](https://img.shields.io/badge/version-0.7.0-blue.svg)](https://github.com/user/jdvlh-ia-game)
 [![Python](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/)
+[![Pathfinder 2e](https://img.shields.io/badge/Pathfinder-2e-red.svg)](https://paizo.com/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Husky](https://img.shields.io/badge/husky-enabled-success.svg)](https://typicode.github.io/husky/)
 
-**Jeu narratif interactif IA pour enfants 10-14 ans** - Thème Terre du Milieu (LOTR/D&D)
+**Jeu narratif interactif IA pour adolescents 14-18 ans** - Univers **Pathfinder 2e / Golarion**
 
-**Stack:** FastAPI + Ollama/Mistral (IA locale) + SQLite + WebSocket temps réel
+**Stack:** FastAPI + Ollama/Mistral (IA locale) + React/Paper UI + WebSocket temps réel
+**Frontend:** React + TypeScript + Framer Motion + Paper UI System (thème médiéval)
 **Développement:** Solo dev + Claude Code + Grok (IA assistants)
 **Qualité:** Hooks Git (Husky), commits conventionnels, formatting auto
 
@@ -33,52 +35,79 @@ poetry run python main.py
 3. `ollama serve` (nouveau terminal)
 4. `python main.py`
 
+### Frontend React
+
+```bash
+cd jdvlh-frontend
+npm install
+npm run dev
+```
+
 ### Vérif
 
-- Serveur : http://localhost:8000/docs (FastAPI Swagger)
+- Backend API : http://localhost:8000/docs (FastAPI Swagger)
 - Health : http://localhost:8000/health
-- WS Test : Ouvrir `index.html`
+- Frontend : http://localhost:5173 (Vite dev server)
 
 ## 🎮 Utilisation
 
-1. Ouvrir `index.html` (double-clic/live server)
-2. Jouer (choix IA 3-8s, WebSocket realtime)
-3. PIN parents (1234) : Save/Load/Reset/Logs
+### Mode Connecté (Backend actif)
 
-**Multi** : Jusqu'à 4 onglets/joueurs (IDs uniques, limite serveur).
+1. Démarrer le backend (`python main.py`)
+2. Démarrer le frontend (`npm run dev` dans `jdvlh-frontend/`)
+3. Jouer (WebSocket temps réel, IA génère les réponses)
 
-## 🛡️ Sécurité Enfants
+### Mode Démo (Offline)
 
+1. Démarrer uniquement le frontend
+2. Le jeu fonctionne avec des réponses pré-définies
+3. Parfait pour tester l'UI sans backend
+
+**Lancé de dés:** Quand l'IA demande un jet de compétence (Perception, Athlétisme, etc.), une interface de dé d20 interactive s'affiche. Le joueur clique pour lancer le dé !
+
+**Multi** : Jusqu'à 4 joueurs simultanés (sessions WebSocket indépendantes).
+
+## 🛡️ Sécurité Ados (PEGI 16)
+
+- **ContentFilter PEGI 16** : Violence fantasy acceptable, pas de gore extrême
 - Blacklist mots sensibles (config.yaml)
 - Rate-limit (SlowAPI)
 - Sanitize inputs (Pydantic)
 - Sessions TTL 30min + max 4 joueurs
-- PIN parents : 1234 (Save/Reset/Logs)
+- **Contrôle parental** : PIN 1234 (Settings/Logs/Export)
 
 ## 🎲 Pathfinder 2e Integration
 
-Le jeu intègre le **SRD Pathfinder 2e complet** avec traduction française prioritaire:
+Le jeu utilise l'univers **Golarion** et les règles **Pathfinder 2e** :
 
-### Contenu Disponible
+### Univers Golarion
 
-- ✅ **1584 sorts** (860 sorts MVP niveau ≤3)
-- ✅ **Traduction FR** (6 sorts prioritaires + fallback EN automatique)
-- ✅ **Feature flags** (MVP/Intermediate/Full)
-- ✅ **API REST** pour accès sorts
-- ✅ **Intégration NarrativeService** (détection automatique sorts)
+- **Absalom** : Cité au Centre du Monde (point de départ)
+- **Sandpoint** : Village côtier, ruines de Thassilon
+- **Magnimar** : Cité des Monuments
+- **Varisie** : Région d'aventures classiques
+- Et bien d'autres lieux mythiques...
 
-### Configuration
+### Règles PF2e Intégrées
 
-```yaml
-# config.yaml
-pf2e:
-  active_level: mvp # mvp (10-12 ans) | intermediate (12-14 ans) | full (14+)
-```
+- **Système à 3 actions** par tour
+- **Jets de dés interactifs** (d20 + modificateur vs DC)
+- **Compétences PF2e** : Perception, Athlétisme, Arcanes, Diplomatie...
+- **Sorts** : 1584 sorts disponibles avec traduction FR
+
+### Lancé de Dés
+
+Quand l'IA demande un jet de compétence :
+
+1. Une modal s'affiche avec un **d20 interactif**
+2. Le joueur **clique** pour lancer le dé
+3. Animation de roulement + résultat (succès/échec/critique)
+4. Le résultat est intégré à la narration
 
 ### API Endpoints
 
 ```bash
-# Liste sorts MVP (niveau ≤3)
+# Liste sorts
 GET /api/pf2e/spells?level=3
 
 # Détails sort avec traduction FR
@@ -86,15 +115,6 @@ GET /api/pf2e/spells/fireball  # → "Boule de feu"
 
 # Recherche full-text
 GET /api/pf2e/spells/search?q=feu&limit=5
-```
-
-### Usage en Jeu
-
-Les joueurs peuvent utiliser des sorts dans leurs actions:
-
-```
-Joueur: "Je lance spell:fireball sur les orques"
-→ IA reçoit: "Sort utilisé: Boule de feu (niveau 3) - Vous créez une explosion de flammes"
 ```
 
 **Documentation complète**: [data/pf2e/README.md](data/pf2e/README.md)
@@ -108,38 +128,62 @@ Joueur: "Je lance spell:fireball sur les orques"
 ## 🏗️ Architecture
 
 ```
-Client (index.html/WS) ───┐
-                          ↓ WS /ws/{player_id}
-FastAPI (game_server.py) ─┼── StateManager (SQLite game.db)
-                          ↓
-Services ────────────────┼── CacheService (JSON lieux: Comté, Moria...)
-  ├── NarrativeService ───┘     (Ollama Mistral + Mémoire/Histoire)
-  ├── EventBus
-  └── ModelRouter
+┌─────────────────────────────────────────────────────────────┐
+│                     FRONTEND (React)                        │
+│  App.tsx ─── StoryDisplay ─── CharacterSheet ─── DiceRoller │
+│      │                                                      │
+│      └── useWebSocket hook (ws://localhost:8000/ws/{id})    │
+└─────────────────────────────────────────────────────────────┘
+                          ↓ WebSocket
+┌─────────────────────────────────────────────────────────────┐
+│                     BACKEND (FastAPI)                       │
+│  game_server.py ─┬── StateManager (SQLite)                  │
+│                  ├── NarrativeService (Ollama + PF2e)       │
+│                  ├── CombatEngine                           │
+│                  ├── ParentalControl                        │
+│                  └── SessionManager                         │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-**Flux** : Choice → Prompt enrichi (mémoire + history) → Ollama JSON → Update state/cache → Response realtime.
+**Flux narratif** :
+
+1. Joueur fait un choix → WebSocket
+2. Backend génère prompt PF2e enrichi (mémoire + history + contexte Golarion)
+3. Ollama génère réponse JSON
+4. Si `DICE_ROLL:skill:DC` détecté → Frontend affiche modal dé
+5. Joueur lance le dé → Résultat intégré → Narration affichée
 
 ## 🗂️ Structure Projet
 
 ```
 jdvlh-ia-game/
 ├── main.py (launcher uvicorn)
-├── config.yaml (central)
+├── config.yaml (central - PF2e config)
 ├── pyproject.toml (Poetry)
-├── cache/*.json (12 lieux LOTR)
+├── cache/*.json (lieux Golarion)
 ├── game.db (SQLite)
 ├── src/jdvlh_ia_game/
 │   ├── core/game_server.py (FastAPI/WS)
 │   ├── services/
-│   │   ├── cache.py
-│   │   ├── narrative.py (Ollama + mémoire)
-│   │   ├── state_manager.py
+│   │   ├── narrative.py (Ollama + PF2e + mémoire)
+│   │   ├── combat_engine.py
+│   │   ├── parental_control.py
+│   │   ├── pf2e_content.py
 │   │   └── ...
 │   ├── db/models.py (SQLAlchemy)
-│   ├── middleware/security.py
-│   └── ...
-└── index.html (Frontend simple)
+│   └── middleware/security.py
+├── jdvlh-frontend/           # React Frontend
+│   ├── src/
+│   │   ├── App.tsx           # Main app + WebSocket
+│   │   ├── components/
+│   │   │   ├── narrative/    # StoryDisplay, ChoiceButton
+│   │   │   ├── character/    # CharacterSheet
+│   │   │   ├── combat/       # DiceRoller, CombatInterface
+│   │   │   └── ui/           # Paper UI components
+│   │   ├── hooks/            # useWebSocket, useAudio
+│   │   └── types/            # TypeScript types
+│   └── public/assets/paper-ui/  # Humble Gift Paper UI sprites
+└── data/pf2e/                # SRD Pathfinder 2e
 ```
 
 ## 📈 Roadmap
@@ -257,6 +301,15 @@ Les hooks Git locaux suffisent pour maintenir la qualité.
 ---
 
 ## 📝 Changelog
+
+### v0.7.0 (2025-11-28)
+
+- ✅ **Pivot Pathfinder 2e** : Univers Golarion remplace Terre du Milieu
+- ✅ **Frontend React** : Interface complète avec Paper UI System
+- ✅ **Lancé de dés** : Modal d20 interactif avec animation
+- ✅ **WebSocket** : Connexion temps réel + mode démo offline
+- ✅ **PEGI 16** : ContentFilter adapté adolescents 14-18 ans
+- ✅ **Paper UI** : Assets Humble Gift intégrés (dialogue, headers, HUD)
 
 ### v0.6.0 (2025-11-22)
 
